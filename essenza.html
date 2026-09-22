@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Essenza —  Candele decorative, wax melts e bomboniere</title>
+<meta name="description" content="Essenza:  candele decorative, wax melts e bomboniere profumate create con cura. Scopri le collezioni e scrivici per ordinare.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem('essenza-theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}</script>
+<style>
+  /* ==========================================================
+     VARIABILI GLOBALI E THEME
+     ========================================================== */
+  :root {
+    --bg: #faf6ee;
+    --bg2: #f1e9db;
+    --card: #fffdf8;
+    --ink: #3a2f28;
+    --muted: #7d7166;
+    --line: #e2d7c5;
+    --accent: #7f8a72;
+    --hl: #fff4dc;
+    --shape: #f4eadb;
+    --shape2: #d4c2a2;
+    --shadow: rgba(90, 70, 45, 0.16);
+    --flame: #eab866;
+
+    --t1a: #f3e9d7;
+    --t1b: #dcc6a3;
+    --t2a: #f5eee3;
+    --t2b: #e3d4bc;
+    --t3a: #ece0cf;
+    --t3b: #cfb994;
+    --t4a: #f1e7de;
+    --t4b: #dcc4b1;
+    --t5a: #eee7da;
+    --t5b: #cdbfa5;
+
+    --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+    --sans: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+    color-scheme: light;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Tema scuro: si attiva solo dal toggle dell'header. */
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    --bg: #1e1a16;
+    --bg2: #27221c;
+    --card: #2b251f;
+    --ink: #f0e8dc;
+    --muted: #ab9f90;
+    --line: #3c342b;
+    --accent: #a3ae94;
+    --hl: #3d3225;
+    --shape: #3a3229;
+    --shape2: #65553f;
+    --shadow: rgba(0, 0, 0, 0.4);
+    --flame: #f2c877;
+
+    --t1a: #302820;
+    --t1b: #4a3c2c;
+    --t2a: #2d2620;
+    --t2b: #43372b;
+    --t3a: #332a21;
+    --t3b: #524231;
+    --t4a: #2f2721;
+    --t4b: #4a3a30;
+    --t5a: #2e2820;
+    --t5b: #48402f;
+  }
+
+  /* ==========================================================
+     BASE LAYOUT E TYPOGRAPHY
+     ========================================================== */
+  html {
+    scroll-padding-top: env(safe-area-inset-top, 0px);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  *, *::before, *::after {
+    box-sizing: inherit;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 17px/1.65 var(--sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body.menu-open {
+    overflow: hidden;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--serif);
+    font-weight: 300;
+    margin: 0;
+    letter-spacing: -0.005em;
+  }
+
+  h2 {
+    font-size: clamp(32px, 5.2vw, 54px);
+    line-height: 1.1;
+  }
+
+  h3 {
+    font-size: 22px;
+    line-height: 1.25;
+    font-weight: 400;
+  }
+
+  p {
+    margin: 0 0 1em;
+    max-width: 62ch;
+  }
+
+  .lead {
+    font: italic 300 clamp(20px, 2.4vw, 26px) / 1.45 var(--serif);
+    color: var(--ink);
+    max-width: 36em;
+  }
+
+  .muted {
+    color: var(--muted);
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 22px;
+  }
+
+  .narrow {
+    max-width: 760px;
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  .center p,
+  .center .lead {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .sec {
+    padding: clamp(56px, 9vw, 112px) 0;
+  }
+
+  .alt {
+    background: var(--bg2);
+  }
+
+  .stack > * + * {
+    margin-top: 22px;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .center .actions {
+    justify-content: center;
+  }
+
+  /* ==========================================================
+     HEADER E NAVIGAZIONE
+     ========================================================== */
+  .hdr {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+
+  .hdr .in {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 62px;
+  }
+
+  .logo {
+    font: 300 28px/1 var(--serif);
+    letter-spacing: 0.14em;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .nav {
+    display: none;
+    gap: 30px;
+  }
+
+  .nav a,
+  .mnav a {
+    text-decoration: none;
+  }
+
+  .nav a {
+    font-size: 15px;
+    color: var(--muted);
+    padding: 6px 0;
+    border-bottom: 1px solid transparent;
+  }
+
+  .nav a:hover {
+    color: var(--ink);
+  }
+
+  .nav a.on {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .tools {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .theme {
+    width: 44px;
+    height: 44px;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    color: var(--ink);
+    display: grid;
+    place-items: center;
+  }
+
+  .theme svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .theme .sun {
+    display: none;
+  }
+
+  :root[data-theme='dark'] .theme .sun {
+    display: block;
+  }
+
+  :root[data-theme='dark'] .theme .moon {
+    display: none;
+  }
+
+  .burger {
+    width: 44px;
+    height: 44px;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    position: relative;
+    color: var(--ink);
+  }
+
+  .burger span {
+    position: absolute;
+    left: 11px;
+    right: 11px;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform 0.3s, top 0.3s;
+  }
+
+  .burger span:nth-child(1) {
+    top: 18px;
+  }
+
+  .burger span:nth-child(2) {
+    top: 26px;
+  }
+
+  body.menu-open .burger span:nth-child(1) {
+    top: 22px;
+    transform: rotate(45deg);
+  }
+
+  body.menu-open .burger span:nth-child(2) {
+    top: 22px;
+    transform: rotate(-45deg);
+  }
+
+  .mnav {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+
+  body.menu-open .mnav {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mnav a {
+    font: 300 36px/1.2 var(--serif);
+    padding: 4px 12px;
+  }
+
+  .mnav a.on {
+    font-style: italic;
+  }
+
+  @media (min-width: 900px) {
+    .nav {
+      display: flex;
+    }
+
+    .burger {
+      display: none;
+    }
+
+    .mnav {
+      display: none;
+    }
+  }
+
+  /* ==========================================================
+     BOTTONI, CHIP E FOCUS
+     ========================================================== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    padding: 0 28px;
+    font: 500 15px/1 var(--sans);
+    text-decoration: none;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .btn:hover {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .btn.solid {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .btn.solid:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .btn.block {
+    width: 100%;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip {
+    min-height: 42px;
+    padding: 0 18px;
+    font: 400 15px/1 var(--sans);
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    cursor: pointer;
+  }
+
+  .chip:hover {
+    border-color: var(--ink);
+  }
+
+  .chip.on {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+
+  .chip:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* ==========================================================
+     MEDIA E ILLUSTRAZIONI
+     ========================================================== */
+  .media {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(165deg, var(--pa), var(--pb));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .christmas-photo img {
+    filter: blur(18px);
+    transform: scale(1.08);
+  }
+
+  .product-photo {
+    position: relative;
+  }
+
+  .photo-countdown {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    gap: 8px;
+    padding: 18px;
+    text-align: center;
+    background: rgba(58, 47, 40, 0.2);
+    color: #fff;
+  }
+
+  .photo-countdown b {
+    font: 400 24px/1.1 var(--serif);
+  }
+
+  .photo-countdown span {
+    font-size: 14px;
+  }
+
+  .media svg {
+    width: 54%;
+    max-width: 250px;
+    height: auto;
+    display: block;
+  }
+
+  .media .ph {
+    position: absolute;
+    left: 14px;
+    bottom: 12px;
+    font-size: 12px;
+    color: var(--ink);
+    opacity: 0.45;
+  }
+
+  .tone1 { --pa: var(--t1a); --pb: var(--t1b); }
+  .tone2 { --pa: var(--t2a); --pb: var(--t2b); }
+  .tone3 { --pa: var(--t3a); --pb: var(--t3b); }
+  .tone4 { --pa: var(--t4a); --pb: var(--t4b); }
+  .tone5 { --pa: var(--t5a); --pb: var(--t5b); }
+
+  .arch {
+    border-radius: 999px 999px 0 0;
+    aspect-ratio: 3 / 4;
+  }
+
+  .arch svg {
+    width: 66%;
+    margin-top: 14%;
+  }
+
+  /* ==========================================================
+     HERO
+     ========================================================== */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--hero-image, linear-gradient(180deg, var(--t2a), var(--t1b))) center / cover no-repeat;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--bg) 86%, transparent), color-mix(in srgb, var(--bg) 34%, transparent) 58%, transparent);
+  }
+
+  .hero .in {
+    display: grid;
+    gap: 30px;
+    padding: 34px 22px 60px;
+    align-items: center;
+  }
+
+  .logo-xl {
+    font: 300 clamp(64px, 15vw, 132px) / 0.95 var(--serif);
+    letter-spacing: 0.05em;
+  }
+
+  .tagline {
+    font: italic 300 clamp(21px, 3vw, 30px) / 1.35 var(--serif);
+    margin: 18px 0 0;
+    max-width: 20em;
+  }
+
+  .hero-text {
+    text-align: center;
+  }
+
+  .hero-text .tagline {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero .actions {
+    justify-content: center;
+  }
+
+  @media (min-width: 900px) {
+    .hero .in {
+      grid-template-columns: 1.1fr 0.9fr;
+      padding: 64px 22px 84px;
+      min-height: min(80svh, 760px);
+    }
+
+    .hero-text {
+      text-align: left;
+    }
+
+    .hero-text .tagline {
+      margin-left: 0;
+    }
+
+    .hero .actions {
+      justify-content: flex-start;
+    }
+  }
+
+  /* Animazioni leggere dell'hero */
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes flick {
+    0%, 100% { transform: scale(1) rotate(0); }
+    30% { transform: scale(0.96, 1.05) rotate(-1.5deg); }
+    60% { transform: scale(1.03, 0.97) rotate(1deg); }
+  }
+
+  @keyframes breathe {
+    0%, 100% { opacity: 0.85; }
+    50% { opacity: 1; }
+  }
+
+  .hero-text > * {
+    animation: rise 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .hero-text > *:nth-child(2) { animation-delay: 0.25s; }
+  .hero-text > *:nth-child(3) { animation-delay: 0.5s; }
+
+  .hero .flame {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: flick 3.4s ease-in-out infinite;
+  }
+
+  .hero .glow {
+    animation: breathe 4s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-text > *,
+    .hero .flame,
+    .hero .glow {
+      animation: none;
+    }
+  }
+
+  /* ==========================================================
+     LAYOUT GENERICO (SEZIONI, GRIGLIE, CARD)
+     ========================================================== */
+  .split {
+    display: grid;
+    gap: 36px;
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .split {
+      grid-template-columns: 1fr 1fr;
+      gap: 88px;
+    }
+
+    .split.rev > .media,
+    .split.rev > .arch {
+      order: 2;
+    }
+  }
+
+  .tiles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 26px 14px;
+    margin-top: 44px;
+  }
+
+  @media (min-width: 900px) {
+    .tiles {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 26px 22px;
+    }
+  }
+
+  .tile {
+    display: block;
+    text-decoration: none;
+  }
+
+  .tile .arch svg {
+    width: 60%;
+  }
+
+  .tile h3 {
+    margin: 14px 0 2px;
+  }
+
+  .tile p {
+    font-size: 15px;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .tile:hover h3 {
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    text-decoration-thickness: 1px;
+  }
+
+  .pgrid-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 34px 14px;
+  }
+
+  @media (min-width: 900px) {
+    .pgrid-list {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px 26px;
+    }
+  }
+
+  .pcard {
+    display: block;
+    text-decoration: none;
+  }
+
+  .pcard h3 {
+    font-size: 20px;
+    margin: 14px 0 2px;
+  }
+
+  .pcard .m {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+
+  .pcard .pr {
+    margin-top: 6px;
+    font-size: 15px;
+  }
+
+  .pcard:hover h3 {
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    text-decoration-thickness: 1px;
+  }
+
+  .pagehead {
+    padding: clamp(48px, 8vw, 96px) 0 clamp(28px, 5vw, 56px);
+  }
+
+  .pagehead h1 {
+    font-size: clamp(44px, 8vw, 88px);
+    line-height: 1;
+  }
+
+  .pagehead .lead {
+    margin-top: 22px;
+  }
+
+  .steps {
+    display: grid;
+    gap: 30px;
+    margin-top: 44px;
+    counter-reset: s;
+  }
+
+  @media (min-width: 760px) {
+    .steps {
+      grid-template-columns: repeat(var(--n, 3), 1fr);
+      gap: 36px;
+    }
+  }
+
+  .step {
+    border-top: 1px solid var(--ink);
+    padding-top: 16px;
+  }
+
+  .step b {
+    display: block;
+    font: italic 300 30px/1 var(--serif);
+    margin-bottom: 10px;
+  }
+
+  .step h3 {
+    font-size: 21px;
+    margin-bottom: 6px;
+  }
+
+  .step p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 16px;
+  }
+
+  .vs {
+    display: grid;
+    gap: 14px;
+    margin-top: 36px;
+  }
+
+  @media (min-width: 760px) {
+    .vs {
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+  }
+
+  .vs > div {
+    padding: 26px;
+    background: var(--card);
+    border: 1px solid var(--line);
+  }
+
+  .vs h3 {
+    margin-bottom: 10px;
+  }
+
+  .vs ul {
+    margin: 0;
+    padding-left: 1.1em;
+    color: var(--muted);
+  }
+
+  .vs li + li {
+    margin-top: 6px;
+  }
+
+  .quote {
+    font: italic 300 clamp(28px, 4.4vw, 46px) / 1.28 var(--serif);
+    max-width: 20em;
+    margin: 0 auto;
+  }
+
+  details {
+    border-top: 1px solid var(--line);
+  }
+
+  details:last-of-type {
+    border-bottom: 1px solid var(--line);
+  }
+
+  summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px 0;
+    font: 400 22px/1.3 var(--serif);
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::after {
+    content: '+';
+    font: 300 26px/1 var(--sans);
+    color: var(--muted);
+  }
+
+  details[open] summary::after {
+    content: '–';
+  }
+
+  details p {
+    color: var(--muted);
+    margin: 0 0 22px;
+  }
+
+  .frlist {
+    display: grid;
+    gap: 0;
+    margin-top: 34px;
+  }
+
+  @media (min-width: 900px) {
+    .frlist {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 64px;
+    }
+  }
+
+  .fr {
+    padding: 22px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .fr h3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .fr h3 small {
+    font: 400 14px var(--sans);
+    color: var(--muted);
+  }
+
+  .fr p {
+    margin: 8px 0 8px;
+    color: var(--muted);
+    font-size: 16px;
+  }
+
+  .notes {
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .notes i {
+    font-style: normal;
+    color: var(--muted);
+  }
+
+  #famout {
+    margin-top: 24px;
+    min-height: 120px;
+  }
+
+  #famout .mood {
+    font: italic 300 22px/1.4 var(--serif);
+    margin-bottom: 6px;
+  }
+
+  /* ==========================================================
+     PRODOTTO E DETTAGLIO
+     ========================================================== */
+  .crumb {
+    font-size: 15px;
+    color: var(--muted);
+    text-decoration: none;
+    display: inline-block;
+    padding: 22px 0 14px;
+  }
+
+  .crumb:hover {
+    color: var(--ink);
+  }
+
+  .pdp {
+    display: grid;
+    gap: 30px;
+    padding-bottom: 70px;
+  }
+
+  @media (min-width: 900px) {
+    .pdp {
+      grid-template-columns: 1.15fr 1fr;
+      gap: 72px;
+      align-items: start;
+    }
+
+    .pinfo {
+      position: sticky;
+      top: 96px;
+    }
+  }
+
+  .gal {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .gal::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gal .media {
+    flex: 0 0 88%;
+    scroll-snap-align: center;
+    aspect-ratio: 4 / 5;
+  }
+
+  @media (min-width: 900px) {
+    .gal {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: visible;
+    }
+
+    .gal .media {
+      flex: none;
+    }
+
+    .gal .media:first-child {
+      grid-column: 1 / -1;
+      aspect-ratio: 1;
+    }
+  }
+
+  .pinfo h1 {
+    font-size: clamp(36px, 5vw, 54px);
+    line-height: 1.05;
+    margin: 4px 0 12px;
+  }
+
+  .pinfo .cat {
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .pinfo .price {
+    font: 400 24px var(--serif);
+    margin-bottom: 18px;
+  }
+
+  .opt {
+    margin-top: 24px;
+  }
+
+  .opt > b {
+    display: block;
+    font: 500 15px var(--sans);
+    margin-bottom: 10px;
+  }
+
+  .frdesc {
+    margin: 14px 0 0;
+    font: italic 300 19px/1.45 var(--serif);
+  }
+
+  .frdesc small {
+    display: block;
+    font: 400 14px var(--sans);
+    font-style: normal;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  dl.spec {
+    margin: 28px 0 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px 22px;
+    font-size: 15px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+
+  dl.spec dt {
+    color: var(--muted);
+  }
+
+  dl.spec dd {
+    margin: 0;
+  }
+
+  .buyrow {
+    display: grid;
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .mix-list {
+    margin: 0;
+    padding-left: 1.1em;
+  }
+
+  /* ==========================================================
+     FORM E CONTATTI
+     ========================================================== */
+  .form {
+    display: grid;
+    gap: 16px;
+  }
+
+  .form label {
+    display: grid;
+    gap: 6px;
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .form .two {
+    display: grid;
+    gap: 16px;
+  }
+
+  @media (min-width: 560px) {
+    .form .two {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  input, select, textarea {
+    width: 100%;
+    font: 400 16px/1.4 var(--sans);
+    padding: 14px;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 0;
+  }
+
+  textarea {
+    min-height: 110px;
+    resize: vertical;
+  }
+
+  .fout {
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .contact-grid {
+    display: grid;
+    gap: 48px;
+  }
+
+  @media (min-width: 900px) {
+    .contact-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 88px;
+    }
+  }
+
+  .contact-lines {
+    display: grid;
+    gap: 8px;
+    margin-top: 22px;
+  }
+
+  .contact-lines a {
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    padding: 14px 0;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .contact-lines a:hover {
+    border-color: var(--ink);
+  }
+
+  /* ==========================================================
+     INSTAGRAM, FOOTER E WHATSAPP
+     ========================================================== */
+  .igrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 34px;
+  }
+
+  @media (min-width: 900px) {
+    .igrid {
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+  }
+
+  .igrid .media svg {
+    width: 50%;
+  }
+
+  .foot {
+    background: var(--bg2);
+    padding: 56px 0 100px;
+    margin-top: 0;
+  }
+
+  .foot .cols {
+    display: grid;
+    gap: 34px;
+  }
+
+  @media (min-width: 760px) {
+    .foot .cols {
+      grid-template-columns: 1.4fr 1fr 1fr;
+    }
+  }
+
+  .foot a {
+    text-decoration: none;
+    color: var(--muted);
+  }
+
+  .foot a:hover {
+    color: var(--ink);
+  }
+
+  .foot ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+    font-size: 15px;
+  }
+
+  .foot small {
+    display: block;
+    margin-top: 36px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .wa {
+    position: fixed;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    z-index: 45;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    height: 50px;
+    padding: 0 20px 0 16px;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 999px;
+    text-decoration: none;
+    font: 500 15px var(--sans);
+    box-shadow: 0 10px 28px var(--shadow);
+  }
+
+  .wa svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+  }
+
+  .wa:hover {
+    background: var(--accent);
+    color: #fff;
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" style="stop-color:var(--flame)" stop-opacity=".6"/><stop offset="1" style="stop-color:var(--flame)" stop-opacity="0"/></radialGradient>
+</defs></svg>
+
+<header class="hdr"><div class="wrap in">
+  <a class="logo" href="#/" aria-label="Essenza, home">essenza</a>
+  <nav class="nav" id="nav" aria-label="Menu principale"></nav>
+  <div class="tools">
+    <button class="theme" id="theme" type="button" aria-label="Passa al tema scuro" aria-pressed="false">
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
+    </button>
+    <button class="burger" id="burger" aria-label="Apri il menu" aria-expanded="false"><span></span><span></span></button>
+  </div>
+</div></header>
+<nav class="mnav" id="mnav" aria-label="Menu"></nav>
+
+<main id="app"></main>
+<footer class="foot" id="foot"></footer>
+<a class="wa" id="wa" href="#" target="_blank" rel="noopener" aria-label="Scrivici su WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-4.2A8 8 0 1 1 8.4 19z" stroke-linejoin="round"/></svg>WhatsApp
+</a>
+
+<script>
+/* =====================================================================
+   CONFIGURAZIONE — modifica qui i dati principali del sito
+   ===================================================================== */
+const CFG = {
+  brand: 'essenza',
+  tagline: 'Diamo forma alle tue emozioni',
+  whatsapp: '3270346632',      // numero locale, senza prefisso
+  whatsappCountryCode: '+39',  // prefisso internazionale predefinito
+  instagram: 'essenza',          // nome profilo Instagram, senza @
+  email: 'toniolo.alessandra01@libero.it',                     // lascia vuoto per nasconderla
+  heroImg: './images/banner.png',                   // URL della foto principale (se vuoto, mostra l'illustrazione)
+  labels: true                   // mostra la scritta "Foto" sui segnaposto; metti false quando hai le foto vere
+};
+
+/* Fragranze: aggiungi/modifica liberamente. */
+const FAMILIES = [
+  {id:'mattina', name:'☀️ Mattina', mood:'Una tazza fumante tra le mani, la luce del mattino e il profumo dolce del miele nell’aria. Latte e Miele sa di casa, di lentezza e di quei piccoli momenti che vorresti durassero un po’ di più.'},
+  {id:'pomeriggio', name:'🍋 Pomeriggio', mood:'Il pranzo è finito, la cucina è in ordine e le finestre sono aperte. Limone sa di fresco e di quella piccola soddisfazione che si prova quando tutto è finalmente al suo posto.'},
+  {id:'sera', name:'🤍 Sera', mood:'La casa è silenziosa, la giornata è finita e tutto ciò che desideri è lasciarti avvolgere dalla morbidezza. Cotone sa di lenzuola pulite e di piccoli momenti di pace.'},
+  {id:'notte', name:'🌙 Notte', mood:'Quel momento dopo la doccia in cui la pelle profuma e tutto sembra più lento. Mandorla è una coccola dolce, morbida e avvolgente.'}
+];
+const FRAGRANCES = [
+  {id:'latte-miele', name:'☀️ Mattina — Latte & Miele', family:'mattina',
+    desc:'Una tazza fumante tra le mani, la luce del mattino e il profumo dolce del miele nell’aria. Latte e Miele sa di casa, di lentezza e di quei piccoli momenti che vorresti durassero un po’ di più.', notes:['Testa: rum · arancio · acacia','Cuore: mandorla dolce · muschio · rosa','Fondo: fava tonka · vaniglia · balsamo del tolù']},
+  {id:'limone', name:'🍋 Pomeriggio — Limone', family:'pomeriggio',
+    desc:'Il pranzo è finito, la cucina è in ordine e le finestre sono aperte. Limone sa di fresco e di quella piccola soddisfazione che si prova quando tutto è finalmente al suo posto.', notes:["Testa: limone scorza · arancia scorza · limetta · aghi di pino",'Cuore: mughetto · rosa bianca',"Fondo: muschio d'albero"]},
+  {id:'cotone', name:'🤍 Sera — Cotone', family:'sera',
+    desc:'La casa è silenziosa, la giornata è finita e tutto ciò che desideri è lasciarti avvolgere dalla morbidezza. Cotone sa di lenzuola pulite e di piccoli momenti di pace.', notes:['Testa: neroli · bergamotto · arancio','Cuore: geranio · violetta · petali di rosa · gelsomino','Fondo: legno di guaiacum · legno di rosa · ambra · muschio · patchouly']},
+  {id:'mandorla', name:'🌙 Notte — Mandorla', family:'notte',
+    desc:'Quel momento dopo la doccia in cui la pelle profuma e tutto sembra più lento. Mandorla è una coccola dolce, morbida e avvolgente.', notes:['Testa: albicocca · mandorla dolce · limone di Sicilia','Cuore: lavanda · gelsomino','Fondo: vaniglia · fava tonka']} 
+];
+
+/* Prodotti — ogni prodotto ha già varianti, profumazioni e prezzo: la struttura è pronta per un e-commerce.
+   price: null = "su richiesta". imgs: elenco di URL foto (se vuoto, segnaposto). I prezzi sono ESEMPI. */
+const CATS = {tutti:'Tutto', candele:'Candele decorative', wax:'Wax melts', bomboniere:'Bomboniere', gift:'Gift'};
+const PRODUCTS = [
+  {
+    id: 'bubble',
+    cat: 'candele',
+    art: 'candle',
+    tone: 1,
+    imgs: ['images/bubble.jpeg'],
+    name: 'Bubble',
+    fragrances: '',
+    custom: 'Etichetta personalizzabile su richiesta.',
+    variants: [
+      { label: '180 g', price: 8, dimensions: '6 cm x 5.5 cm' },
+    ]
+  },
+  {
+    id: 'bubble-mini',
+    cat: 'candele',
+    art: 'candle',
+    tone: 3,
+    imgs: ['images/mini-bubble.jpeg'],
+    name: 'Mini Bubble',
+    fragrances: '',
+    custom: '',
+    variants: [
+      { label: '60 g', price: 4, dimensions: '3.9 cm x 3.6 cm' }
+    ]
+  },
+  {
+    id: 'archi',
+    cat: 'candele',
+    art: 'candle',
+    tone: 2,
+    imgs: ['images/archi.jpeg'],
+    name: 'Archi',
+    fragrances: '',
+    custom: '',
+    variants: [
+      { label: 'L', price: 18, dimensions: '16.5 cm x 17 cm' },
+      { label: 'M', price: 10, dimensions: '7.7 cm x 12,5 cm' },
+      { label: 'S', price: 8, dimensions: '8.3 cm x 12,5 cm' }
+    ]
+  },
+  {
+    id: 'intreccio',
+    cat: 'candele',
+    art: 'candle',
+    tone: 4,
+    imgs: ['images/intreccio.jpeg'],
+    name: 'Intreccio',
+    fragrances: '',
+    custom: '',
+    variants: [
+      { label: 'L', price: 15, dimensions: '9 cm x 8.6 cm' },
+      { label: 'M', price: 7, dimensions: '7.5 cm x 7.2 cm' },
+      { label: 'S', price: 4, dimensions: '6 cm x 5.7 cm' }
+    ]
+  },
+  {
+    id: 'heart-shaped-bubble',
+    cat: 'candele',
+    art: 'candle',
+    tone: 5,
+    imgs: ['images/heart-shaped-bubble.jpeg'],
+    name: 'Heart-Shaped Bubble',
+    fragrances: '',
+    custom: '',
+    variants: [
+      { label: 'Un formato', price: 8, dimensions: '8 cm x 5.7 cm' }
+    ]
+  },
+  {
+    id: 'nodo',
+    cat: 'candele',
+    art: 'candle',
+    tone: 1,
+    imgs: ['images/nodo.jpeg'],
+    name: 'Nodo',
+    fragrances: '',
+    custom: '',
+    variants: [
+      { label: 'Un formato', price: 7, dimensions: '6.9 cm x 8.1 cm' }
+    ]
+  },
+  {
+    id: 'duetto',
+    cat: 'candele',
+    art: 'candle',
+    tone: 2,
+    imgs: ['images/duetto.jpeg'],
+    name: 'Duetto',
+    fragrances: '',
+    custom: '',
+    variants: [
+      { label: 'Un formato', price: 9, dimensions: '8.4 cm x 8.6 cm' }
+    ]
+  },
+  {
+    id: 'germoglio',
+    cat: 'candele',
+    art: 'candle',
+    tone: 3,
+    imgs: ['images/germoglio.jpeg'],
+    name: 'Germoglio',
+    fragrances: '',
+    custom: '',
+    variants: [
+      { label: 'L', price: 9, dimensions: '11.7 cm x 10.7 cm' },
+      { label: 'S', price: 4, dimensions: '5.6 cm x 5.4 cm' }
+    ]
+  },
+  {
+    id: 'melts-classiche',
+    cat: 'wax',
+    art: 'melts',
+    tone: 2,
+    imgs: ['images/wax.jpeg'],
+    name: 'I rituali di Essenza',
+    fragrances: 'all',
+    mixOptions: [1, 2, 3, 4],
+    quantity: { min: 1, max: 10, unitPrice: 1.5 },
+    custom: '',
+    variants: [
+      { label: 'Quantità variabile', price: 1.5, dimensions: 'Da 1 a 10 pezzi' }
+    ]
+  },
+  {
+    id: 'melts-discovery',
+    cat: 'wax',
+    art: 'melts',
+    tone: 4,
+    imgs: ['images/wax.jpeg'],
+    name: 'Discovery Box',
+    fragrances: [],
+    custom: 'Profumazioni scelte a sorpresa. Ogni profumazione contiene 4 tartine.',
+    variants: [
+      { label: 'Discovery Box', price: 20, dimensions: '4 fragranze × 4 tartine = 16 tartine' },
+      { label: 'Discovery Box Plus', price: 30, dimensions: '6 fragranze × 4 tartine = 24 tartine' }
+    ]
+  },
+  {
+    id: 'bomboniera-candela',
+    cat: 'bomboniere',
+    art: 'box',
+    tone: 5,
+    imgs: ['images/bomboniera-candela.jpeg'],
+    name: 'Bomboniera con candela',
+    fragrances: 'all',
+    custom: 'Nome, data, nastro, tag e dettagli su misura. Il prezzo dipende da quantità, modello e personalizzazione.',
+    quote: true,
+    variants: [
+      { label: 'Su misura', price: null, dimensions: 'In base al modello' }
+    ]
+  },
+  {
+    id: 'bomboniera-melts',
+    cat: 'bomboniere',
+    art: 'box',
+    tone: 2,
+    imgs: ['images/bomboniera-wax.jpeg'],
+    name: 'Bomboniera con wax melts',
+    fragrances: 'all',
+    custom: 'Confezione, biglietto e nastro personalizzabili. Il prezzo dipende da quantità e modello.',
+    quote: true,
+    variants: [
+      { label: 'Su misura', price: null, dimensions: 'In base al modello' }
+    ]
+  },
+  {
+    id: 'christmas-scent',
+    cat: 'wax',
+    art: 'gift',
+    tone: 2,
+    imgs: ['images/gift.jpeg'],
+    name: 'Christmas Scent',
+    fragrances: [],
+    custom: 'Fragranze a sorpresa.',
+    countdown: '2026-10-15T00:00:00+02:00',
+    variants: [
+      { label: 'In arrivo', price: null, dimensions: 'Da definire' }
+    ]
+  },
+  {
+    id: 'mystery-christmas-box-mini',
+    cat: 'gift',
+    art: 'gift',
+    tone: 3,
+    imgs: ['images/gift.jpeg'],
+    name: 'Mystery Christmas Box Mini',
+    fragrances: [],
+    custom: 'Fragranze a sorpresa.',
+    countdown: '2026-10-15T00:00:00+02:00',
+    variants: [
+      { label: 'In arrivo', price: null, dimensions: 'Da definire' }
+    ]
+  },
+  {
+    id: 'mystery-christmas-box',
+    cat: 'gift',
+    art: 'gift',
+    tone: 4,
+    imgs: ['images/gift.jpeg'],
+    name: 'Mystery Christmas Box',
+    fragrances: [],
+    custom: 'Fragranze a sorpresa.',
+    countdown: '2026-10-15T00:00:00+02:00',
+    variants: [
+      { label: 'In arrivo', price: null, dimensions: 'Da definire' }
+    ]
+  },
+];
+
+/* =====================================================================
+   Illustrazioni segnaposto (sostituiscile con le tue foto: imgs / heroImg)
+   ===================================================================== */
+const ART = {
+  candle:`<svg viewBox="0 0 200 250" fill="none" aria-hidden="true"><ellipse cx="100" cy="224" rx="64" ry="9" fill="var(--shadow)"/><rect x="58" y="112" width="84" height="108" rx="12" fill="var(--shape)" stroke="var(--shape2)" stroke-width="1.5"/><rect x="67" y="124" width="9" height="84" rx="4.5" fill="#fff" opacity=".35"/><ellipse cx="100" cy="112" rx="42" ry="7" fill="var(--shape2)" opacity=".75"/><rect x="99" y="90" width="2" height="22" fill="var(--ink)" opacity=".5"/><circle class="glow" cx="100" cy="76" r="50" fill="url(#glow)"/><path class="flame" d="M100 56c-9 12-8 25 0 32 8-7 9-20 0-32z" fill="var(--flame)"/></svg>`,
+  melts:`<svg viewBox="0 0 200 250" fill="none" aria-hidden="true"><ellipse cx="100" cy="214" rx="72" ry="9" fill="var(--shadow)"/><rect x="74" y="112" width="52" height="52" rx="15" fill="var(--shape)" stroke="var(--shape2)" stroke-width="1.5"/><g transform="rotate(-9 70 180)"><rect x="42" y="152" width="56" height="56" rx="15" fill="var(--shape)" stroke="var(--shape2)" stroke-width="1.5"/></g><g transform="rotate(7 132 182)"><rect x="106" y="158" width="52" height="52" rx="15" fill="var(--shape)" stroke="var(--shape2)" stroke-width="1.5"/></g></svg>`,
+  box:`<svg viewBox="0 0 200 250" fill="none" aria-hidden="true"><ellipse cx="100" cy="212" rx="60" ry="8" fill="var(--shadow)"/><rect x="52" y="124" width="96" height="86" rx="6" fill="var(--shape)" stroke="var(--shape2)" stroke-width="1.5"/><rect x="94" y="124" width="12" height="86" fill="var(--shape2)" opacity=".55"/><path d="M100 124c-22-30-46-14-30 4 8 8 22 6 30-4zM100 124c22-30 46-14 30 4-8 8-22 6-30-4z" fill="var(--shape)" stroke="var(--shape2)" stroke-width="2"/><g transform="rotate(8 138 170)"><rect x="128" y="150" width="24" height="34" rx="3" fill="var(--card)" stroke="var(--shape2)" stroke-width="1.2"/></g></svg>`,
+  gift:`<svg viewBox="0 0 200 250" fill="none" aria-hidden="true"><ellipse cx="100" cy="214" rx="66" ry="8" fill="var(--shadow)"/><rect x="48" y="138" width="104" height="74" rx="4" fill="var(--shape)" stroke="var(--shape2)" stroke-width="1.5"/><rect x="42" y="116" width="116" height="26" rx="4" fill="var(--shape)" stroke="var(--shape2)" stroke-width="1.5"/><rect x="94" y="116" width="12" height="96" fill="var(--shape2)" opacity=".55"/><path d="M100 116c-20-26-42-12-28 3 7 7 20 5 28-3zM100 116c20-26 42-12 28 3-7 7-20 5-28-3z" fill="var(--shape)" stroke="var(--shape2)" stroke-width="2"/></svg>`
+};
+
+/* =====================================================================
+   Utilità
+   ===================================================================== */
+const $ = s => document.querySelector(s);
+const eur = n => '€ ' + n.toFixed(2).replace('.', ',').replace(',00', '');
+const waNumber = () => {
+  const number = String(CFG.whatsapp).replace(/\D/g, '');
+  const countryCode = String(CFG.whatsappCountryCode).replace(/\D/g, '');
+  const localNumber = number.replace(/^0+/, '');
+  return number.startsWith(countryCode) ? number : countryCode + localNumber;
+};
+const wa = t => `https://wa.me/${waNumber()}?text=${encodeURIComponent(t)}`;
+const igUrl = `https://instagram.com/${CFG.instagram}`;
+const FR = Object.fromEntries(FRAGRANCES.map(f => [f.id, f]));
+const P = Object.fromEntries(PRODUCTS.map(p => [p.id, p]));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function media({src, art='candle', tone=1, ratio='4/5', label='Foto', alt='', cls='', loading='lazy'}) {
+  const inner = src ? `<img src="${esc(src)}" alt="${esc(alt)}" loading="${loading}">`
+                    : ART[art] + (CFG.labels ? `<span class="ph">${label}</span>` : '');
+  return `<div class="media tone${tone} ${cls}" style="${cls.includes('arch') ? '' : 'aspect-ratio:' + ratio}" ${src ? '' : 'role="img" aria-label="' + esc(alt || 'Segnaposto fotografia') + '"'}>${inner}</div>`;
+}
+const priceOf = p => {
+  const ps = p.variants.map(v => v.price).filter(v => v != null);
+  if (!ps.length) return 'Prossimamente';
+  return (new Set(ps).size > 1 ? 'da ' : '') + eur(Math.min(...ps));
+};
+const countdownMarkup = p => p.countdown ? `<div class="photo-countdown" data-countdown="${p.countdown}"><b>Disponibile tra poco</b><span>Calcolo in corso...</span></div>` : '';
+const card = p => `<a class="pcard" href="#/prodotto/${p.id}"><div class="product-photo">${media({src:p.imgs[0], art:p.art, tone:p.tone, alt:p.name, cls:p.countdown ? 'christmas-photo' : ''})}${countdownMarkup(p)}</div><h3>${p.name}</h3><div class="pr">${priceOf(p)}</div></a>`;
+const steps = list => `<div class="steps" style="--n:${list.length}">${list.map((s,i) => `<div class="step"><b>${i+1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>`;
+const externalWA = (t, label, cls='btn') => `<a class="${cls}" href="${wa(t)}" target="_blank" rel="noopener">${label}</a>`;
+
+const ORDER_STEPS = [
+  ['Scegli', 'Sfoglia le collezioni e scegli prodotto e fragranza.'],
+  ['Scrivici', 'Ordina su WhatsApp con un tocco, oppure compila il modulo.'],
+  ['Conferma', 'Ti rispondiamo, ci accordiamo su dettagli e consegna.']
+];
+
+document.addEventListener('input', e => {
+  const input = e.target.closest('[data-qty]');
+  if (!input) return;
+
+  const p = P[location.hash.split('/')[2]];
+  if (!p?.quantity) return;
+
+  if (input.value === '') return;
+  sel.q = Number(input.value);
+  const quantity = selectedQuantity(p);
+  const total = p.quantity.unitPrice * quantity;
+  if (sel.mix && sel.mix > quantity) {
+    sel.mix = null;
+    sel.frags = [];
+    sel.f = fragList(p)[0]?.id || null;
+    $('#buy').innerHTML = Buy(p);
+    return;
+  }
+  $('#buy .price').textContent = eur(total);
+  $('#buy [data-qty-price]').textContent = `Prezzo: ${eur(total)}`;
+  document.querySelectorAll('#buy [data-mix]').forEach(button => {
+    button.disabled = Number(button.dataset.mix) > quantity;
+  });
+  const mix = p.mixOptions?.includes(sel.mix) && sel.mix <= quantity ? sel.mix : null;
+  const selectedFragrances = fragList(p).filter(f => sel.frags.includes(f.id));
+  $('#buy .js-order-wa').href = wa(orderMessage(p));
+});
+
+document.addEventListener('focusin', e => {
+  const input = e.target.closest('[data-qty]');
+  if (input) input.select();
+});
+
+document.addEventListener('change', e => {
+  const input = e.target.closest('[data-qty]');
+  if (!input) return;
+
+  const p = P[location.hash.split('/')[2]];
+  if (!p?.quantity) return;
+
+  sel.q = selectedQuantity(p);
+  input.value = sel.q;
+});
+
+/* =====================================================================
+   Pagine
+   ===================================================================== */
+function Home() {
+  const tiles = [
+    ['Candele decorative',   'Pezzi di design bianchi & senza profumazione', '#/shop/candele', 'candle', 1, 'images/candele.jpeg'],
+    ['Wax melts', 'Il profumo, senza stoppino', '#/wax-melts',   'melts',  2, 'images/wax.jpeg'],
+    ['Bomboniere','Su misura per i tuoi eventi', '#/bomboniere','box', 5, 'images/bomboniere.jpeg'],
+    ['Gift',      'Idee pronte da regalare',   '#/shop/gift',    'gift',   4, 'images/gift.jpeg']
+  ];
+  return `
+<section class="hero" style="--hero-image:${CFG.heroImg ? `url('${esc(CFG.heroImg)}')` : 'none'}"><div class="wrap in">
+  <div class="hero-text">
+    <h1 class="logo-xl">${CFG.brand}</h1>
+    <p class="tagline">${CFG.tagline}</p>
+    <div class="actions">
+      <a class="btn solid" href="#/shop">Scopri le collezioni</a>
+      ${externalWA('Ciao! Vorrei informazioni sui prodotti Essenza.', 'Scrivici su WhatsApp')}
+    </div>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap narrow center stack">
+  <h2>Non solo candele. <br> Un piccolo mondo di profumi, atmosfera e oggetti creati con cura.</h2>
+  <p class="lead">Essenza crea candele, wax melts e bomboniere profumate. Ogni dettaglio, dalla fragranza alla confezione, è pensato per trasformare un momento qualunque in un momento tuo.</p>
+</div>
+<div class="wrap"><div class="tiles">
+  ${tiles.map(t => `<a class="tile" href="${t[2]}">${media({src:t[5], art:t[3], tone:t[4], cls:'arch', label:'Foto', alt:t[0]})}<h3>${t[0]}</h3><p>${t[1]}</p></a>`).join('')}
+</div></div></section>
+
+<section class="sec"><div class="wrap narrow center stack">
+  <h2>Ordinare è semplice</h2>
+  ${steps(ORDER_STEPS)}
+</div></section>
+
+${Insta()}
+
+<section class="sec alt"><div class="wrap narrow center stack">
+  <h2>Parliamone.</h2>
+  <p class="lead">Ogni idea può diventare qualcosa di speciale, raccontaci la tua.</p>
+  <div class="actions">${externalWA('Ciao! Vorrei qualche informazione.', 'Scrivici su WhatsApp', 'btn solid')}<a class="btn" href="#/contatti">Tutti i contatti</a></div>
+</div></section>`;
+}
+
+function Insta() {
+  const tones = [1,3,2,5,4,1];
+  const posts = [
+    'images/lavoro1.jpeg',
+    'images/lavoro2.jpeg',
+    'images/lavoro3.jpeg',
+    'images/bomboniere.jpeg',
+    'images/candele.jpeg',
+    'images/wax.jpeg'
+  ];
+  return `<section class="sec"><div class="wrap center">
+  <h2>Dal nostro Instagram</h2>
+  <p class="lead" style="margin-top:14px">Novità, dietro le quinte e nuove fragranze.</p>
+  <div class="igrid">${posts.map((src, i) => `<a href="${igUrl}" target="_blank" rel="noopener" aria-label="Apri Instagram">${media({src, tone:tones[i], ratio:'1/1', label:'', alt:`Lavoro realizzato ${i + 1}`})}</a>`).join('')}</div>
+  <div class="actions"><a class="btn" href="${igUrl}" target="_blank" rel="noopener">Seguici su Instagram</a></div>
+</div></section>`;
+}
+
+function Shop(cat) {
+  cat = CATS[cat] ? cat : 'tutti';
+  const list = cat === 'tutti' ? PRODUCTS : PRODUCTS.filter(p => p.cat === cat);
+  return `
+<div class="wrap pagehead"><h1>Collezioni</h1><p class="lead">Candele, wax melts, bomboniere e idee regalo.</p></div>
+<div class="wrap">
+  <div class="chips" id="filters" role="group" aria-label="Filtra per categoria">${Object.entries(CATS).map(([k,v]) => `<button class="chip ${k===cat?'on':''}" data-filter="${k}">${v}</button>`).join('')}</div>
+  <div class="pgrid-list" id="grid" style="margin-top:34px">${list.map(card).join('')}</div>
+</div>
+<section class="sec"><div class="wrap">
+  <h2>Le fragranze</h2>
+  <p class="lead" style="margin-top:14px">Quattro profumi, pensati per dare un carattere a ogni momento.</p>
+  <div class="frlist">${FRAGRANCES.map(f => `<div class="fr"><h3>${f.name}<small>${FAMILIES.find(x=>x.id===f.family).name}</small></h3><p>${f.desc}</p><div class="notes"><i>Note:</i><br>${f.notes.join('<br>')}</div></div>`).join('')}</div>
+</div></section>`;
+}
+
+function Product(id) {
+  const p = P[id];
+  if (!p) return Shop('tutti');
+  const availableFragrances = fragList(p);
+  sel = {v:0, f: availableFragrances[0]?.id || null, frags:[], mix:null, q:1};
+  const rel = PRODUCTS.filter(x => x.id !== p.id && (x.cat === p.cat || x.cat === 'gift')).slice(0, 3);
+  const galleryImgs = [p.imgs[0]];
+  const gal = galleryImgs.map((src, i) => `<div class="product-photo">${media({src, art:p.art, tone:((p.tone + i - 1) % 5) + 1, alt:`${p.name}, foto ${i+1}`, label:'Foto principale', cls:p.countdown ? 'christmas-photo' : ''})}${countdownMarkup(p)}</div>`).join('');
+  return `
+<div class="wrap"><a class="crumb" href="#/shop/${p.cat}">‹ ${CATS[p.cat]}</a>
+  <div class="pdp">
+    <div class="gal" aria-label="Fotografie del prodotto">${gal}</div>
+    <div class="pinfo" id="buy">${Buy(p)}</div>
+  </div>
+</div>
+<section class="sec alt"><div class="wrap narrow center stack"><h2>Come ordinare</h2>${steps(ORDER_STEPS)}</div></section>
+<section class="sec"><div class="wrap"><h2>Potrebbe piacerti</h2><div class="pgrid-list" style="margin-top:34px">${rel.map(card).join('')}</div></div></section>`;
+}
+
+let sel = {v:0, f:null, frags:[], mix:null, q:1};
+function fragList(p) {
+  if (p.cat !== 'wax') return [];
+  return p.fragrances === 'all' ? FRAGRANCES : FRAGRANCES.filter(f => (p.fragrances || []).includes(f.id));
+}
+function selectedQuantity(p) {
+  if (!p.quantity) return null;
+  return Math.max(p.quantity.min, Math.min(p.quantity.max, Number(sel.q) || p.quantity.min));
+}
+function mixDistributionItems(p, quantity, mix, selectedFragrances) {
+  if (!p.quantity || !mix) return '';
+  if (selectedFragrances.length < mix) {
+    const remaining = mix - selectedFragrances.length;
+    return `Nota: seleziona ancora ${remaining} ${remaining === 1 ? 'fragranza' : 'fragranze'} per completare il mix.`;
+  }
+  const base = Math.floor(quantity / mix);
+  const remainder = quantity % mix;
+  const details = selectedFragrances.map((fragrance, index) => `${base + (index < remainder ? 1 : 0)} ${fragrance.name}`);
+  return details;
+}
+function mixDistribution(p, quantity, mix, selectedFragrances) {
+  const items = mixDistributionItems(p, quantity, mix, selectedFragrances);
+  return Array.isArray(items) ? items.join('\n') : items;
+}
+function mixDistributionHtml(p, quantity, mix, selectedFragrances) {
+  const items = mixDistributionItems(p, quantity, mix, selectedFragrances);
+  if (!items) return '';
+  if (!Array.isArray(items)) return `<span>${items}</span>`;
+  return `<ul class="mix-list">${items.map(item => `<li>${item}</li>`).join('')}</ul>`;
+}
+function orderMessage(p) {
+  const v = p.variants[sel.v];
+  const frs = fragList(p);
+  const fr = frs.find(f => f.id === sel.f) || null;
+  const quantity = selectedQuantity(p);
+  const mix = p.mixOptions?.includes(sel.mix) && (!quantity || sel.mix <= quantity) ? sel.mix : null;
+  const selectedFragrances = frs.filter(f => sel.frags.includes(f.id));
+  const selection = quantity ? `${quantity} pezzi` : (p.variants.length > 1 ? v.label : '');
+  const fragrance = mix
+    ? `, mix di ${mix} fragranze${selectedFragrances.length ? `: ${selectedFragrances.map(f => f.name).join(', ')}` : ''}`
+    : (fr ? `, fragranza ${fr.name}` : '');
+  const distribution = mixDistribution(p, quantity, mix, selectedFragrances);
+  return p.quote
+    ? `Ciao! Vorrei un preventivo per: ${p.name}${fragrance}. Occasione e quantità: `
+    : `Ciao! Vorrei ordinare: ${p.name}${selection ? ` (${selection})` : ''}${fragrance}${distribution ? `. ${distribution}` : ''}.`;
+}
+function Buy(p) {
+  const v = p.variants[sel.v];
+  const frs = fragList(p);
+  const fr = frs.find(f => f.id === sel.f) || null;
+  const quantity = selectedQuantity(p);
+  const mix = p.mixOptions?.includes(sel.mix) && (!quantity || sel.mix <= quantity) ? sel.mix : null;
+  const selectedFragrances = frs.filter(f => sel.frags.includes(f.id));
+  const distribution = mixDistribution(p, quantity, mix, selectedFragrances);
+  const distributionHtml = mixDistributionHtml(p, quantity, mix, selectedFragrances);
+  const currentPrice = quantity ? p.quantity.unitPrice * quantity : v.price;
+  const msg = orderMessage(p);
+  const quote = !!p.quote;
+  const info = `Ciao! Vorrei qualche informazione su: ${p.name}.`;
+  return `
+<span class="cat">${CATS[p.cat]}</span>
+<h1>${p.name}</h1>
+<div class="price">${currentPrice != null ? eur(currentPrice) : 'Preventivo su richiesta'}</div>
+${p.variants.length > 1 ? `<div class="opt"><b>Formato</b><div class="chips">${p.variants.map((x,i) => `<button class="chip ${i===sel.v?'on':''}" data-var="${i}">${x.label}</button>`).join('')}</div></div>` : ''}
+${p.quantity ? `<div class="opt"><b>Quantità</b><input type="number" min="${p.quantity.min}" max="${p.quantity.max}" step="1" value="${quantity}" data-qty aria-label="Quantità di pezzi"><small class="qty-price" data-qty-price>Prezzo: ${eur(currentPrice)}</small></div>` : ''}
+${p.mixOptions?.length ? `<div class="opt"><b>Mix di fragranze</b><div class="chips">${p.mixOptions.map(n => `<button class="chip ${n===mix?'on':''}" data-mix="${n}" ${quantity && n > quantity ? 'disabled' : ''}>Mix di ${n}</button>`).join('')}</div></div>` : ''}
+${frs.length ? `<div class="opt"><b>${mix ? `Scegli ${mix} fragranze` : 'Fragranza'}</b><div class="chips">${frs.map(f => `<button class="chip ${(mix ? selectedFragrances.some(selected => selected.id === f.id) : f.id===sel.f)?'on':''}" data-fr="${f.id}">${f.name}</button>`).join('')}</div>
+  ${fr ? `<p class="frdesc">${fr.desc}<small>Note:<br>${fr.notes.join('<br>')}</small></p>` : ''}</div>` : ''}
+<dl class="spec">
+  ${p.variants.length > 1 ? `<dt>Formato</dt><dd>${v.label}</dd>` : ''}
+  <dt>Dimensioni</dt><dd>${v.dimensions || 'Da definire'}</dd>
+  ${mix && distributionHtml ? `<dt>Distribuzione</dt><dd data-mix-distribution>${distributionHtml}</dd>` : ''}
+  ${p.custom ? `<dt>Personalizzazione</dt><dd>${p.custom}</dd>` : ''}
+</dl>
+<div class="buyrow">
+  ${externalWA(msg, quote ? 'Richiedi un preventivo' : 'Ordina su WhatsApp', 'btn solid block js-order-wa')}
+  <a class="btn block" href="#/contatti">Chiedi informazioni</a>
+</div>`;
+}
+
+function Wax() {
+  const melts = PRODUCTS.filter(p => p.cat === 'wax');
+  return `
+<div class="wrap pagehead"><h1>Wax melts</h1><p class="lead">Il profumo che scegli tu, quando vuoi, nella stanza che vuoi.</p></div>
+
+<section class="sec" style="padding-top:0"><div class="wrap split">
+  ${media({src:'./images/wax.jpeg', art:'melts', tone:2, ratio:'4/5', alt:'Wax melts', loading:'eager'})}
+  <div class="stack">
+    <h2>Cosa sono</h2>
+    <p> Cubetti di cera profumata da sciogliere nel bruciatore. 
+Il calore dolce scioglie la cera e libera lentamente la fragranza nell’ambiente.
+
+Niente stoppino da accendere, niente sprechi: quando vuoi cambiare atmosfera, basta cambiare profumo.</p>
+    <p>Vuoi provarle? Nel <a href="#/prodotto/melts-discovery">Discovery Box</a> trovi quattro profumi per cominciare.</p>
+  </div>
+</div></section>
+
+<section class="sec alt"><div class="wrap">
+  <h2>Come si usano</h2>
+  ${steps([
+    ['Scegli il profumo', 'Uno o due cubetti bastano per una stanza.'],
+    ['Riempi lo scaldacera', 'Metti i cubetti nella vaschetta, sopra la fonte di calore.'],
+    ['Accendi', 'Con scaldacera elettrico o a tealight. Non lasciarlo mai incustodito.'],
+    ['Cambia quando vuoi', 'Quando il profumo si affievolisce, sostituisci la cera e scegli una nuova fragranza.']
+  ])}
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <h2>Perché sono diverse dalle candele</h2>
+  <div class="vs">
+    <div><h3>Candela</h3><ul><li>Si accende con la fiamma</li><li>Profumo e luce insieme</li><li>Si consuma con lo stoppino</li></ul></div>
+    <div><h3>Wax melts</h3><ul><li>Si scaldano dolcemente, senza stoppino</li><li>Cambi fragranza quando vuoi, un cubetto alla volta</li><li>Decidi tu quanto profumo, in base al numero di cubetti</li></ul></div>
+  </div>
+</div></section>
+
+<section class="sec alt"><div class="wrap">
+  <h2>Come scegliere la fragranza</h2>
+  <p class="lead" style="margin:14px 0 26px">Parti da come vuoi sentirti, poi scegli il profumo.</p>
+  <div class="chips" id="fams" role="group" aria-label="Famiglie olfattive">${FAMILIES.map((f,i) => `<button class="chip ${i===0?'on':''}" data-fam="${f.id}">${f.name}</button>`).join('')}</div>
+  <div id="famout"></div>
+</div></section>
+
+<section class="sec"><div class="wrap narrow">
+  <h2 style="margin-bottom:26px">Domande frequenti</h2>
+  <details><summary>Quanto durano?</summary><p>Un cubetto profuma una stanza per diverse ore. La durata dipende da ambiente, quantità di cera e tipo di scaldacera. Quando il profumo si affievolisce, puoi sostituire la cera sciolta con dei cubetti nuovi.</p></details>
+  <details><summary>Quanti cubetti devo usare?</summary><p>Comincia con uno o due cubetti: in una stanza piccola basta meno, in un ambiente ampio puoi aumentare.</p></details>
+  <details><summary>Come le conservo?</summary><p>In un luogo fresco e asciutto, lontano dalla luce diretta e da fonti di calore, nella loro confezione chiusa.</p></details>
+  <details><summary>Come cambio fragranza?</summary><p>Quando il profumo si affievolisce, lascia raffreddare e solidificare la cera, poi rimuovila dallo scaldacera e inserisci una nuova fragranza.</p></details>
+  <details><summary>Serve uno scaldacera?</summary><p>Sì, le wax melts si usano con uno scaldacera, elettrico o a tealight. Scrivici se vuoi un consiglio su quale scegliere.</p></details>
+</div></section>
+
+<section class="sec alt"><div class="wrap narrow center stack">
+  <h2>Da dove nasce l’idea</h2>
+  <p class="lead">Amavo il profumo di una candela, ma non volevo dipendere da una fiamma. Ho cominciato a provare cere e fragranze, un cubetto alla volta, finché il profumo riempiva la stanza nel modo giusto: presente, ma mai invadente.</p>
+  <p class="muted">Le wax melts di Essenza sono nate così, dal desiderio di scegliere il proprio profumo con più libertà.</p>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <h2>Le nostre wax melts</h2>
+  <div class="pgrid-list" style="margin-top:34px">${melts.map(card).join('')}</div>
+  <div class="actions"><a class="btn" href="#/shop/wax">Vedi tutte</a></div>
+</div></section>`;
+}
+
+function Bomb() {
+  const bom = PRODUCTS.filter(p => p.cat === 'bomboniere');
+  return `
+<div class="wrap pagehead"><h1>Bomboniere</h1><p class="lead">Un ricordo che profuma, pensato insieme a te e realizzato a mano.</p>
+  <div class="actions"><a class="btn solid" href="#quote" data-scroll="quote">Richiedi un preventivo</a></div></div>
+
+<section class="sec" style="padding-top:0"><div class="wrap">
+  <h2>Come lavoriamo</h2>
+  ${steps([
+    ["Ispirazione", "Ci racconti l’occasione, lo stile che immagini, i colori e l'atmosfera che vuoi creare."],
+    ['Prodotto', 'Ti mostriamo le possibilità e scegliamo il prodotto piu adatto al tuo tempo tra candele, wax melts e altro.'],
+    ["Profumazione", "Scegliamo la fragranze che più ti rappresenta, lasciandoci guidare dall'atmosfera che vuoi creare."],
+    ['Personalizzazione', 'Nome, data, nastri, biglietti e confezione su misura.'],
+    ['Realizzazione', 'Prepariamo ogni pezzo a mano e concordiamo tempi e consegne.']
+  ])}
+</div></section>
+
+<section class="sec alt"><div class="wrap">
+  <h2>Lavori realizzati</h2>
+  <div class="pgrid-list" style="margin-top:34px">
+    ${['images/bomboniere.jpeg','images/candele.jpeg','images/wax.jpeg','images/gift.jpeg','images/lavoro1.jpeg','images/lavoro2.jpeg','images/lavoro3.jpeg'].map((src, i) => media({src, tone:(i%5)+1, ratio:'4/5', label:'Foto realizzata', alt:'Realizzazione Essenza'})).join('')}
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <h2>Parti da qui</h2>
+  <div class="pgrid-list" style="margin-top:34px">${bom.map(card).join('')}</div>
+  <p class="muted" style="margin-top:28px">Per matrimoni, battesimi, comunioni, cresime, lauree e anniversari. I prezzi dipendono da quantità, modello e personalizzazione: per questo li definiamo insieme, con un preventivo.</p>
+</div></section>
+
+<section class="sec alt" id="quote"><div class="wrap contact-grid">
+  <div class="stack"><h2>Richiedi un preventivo</h2><p>Compila il modulo: ti si apre WhatsApp con il messaggio già pronto. Più dettagli ci dai, più il preventivo sarà preciso.</p></div>
+  <form class="form" data-form="quote">
+    <label>Il tuo nome<input name="name" required autocomplete="name"></label>
+    <div class="two">
+      <label>Occasione<select name="occ"><option>Matrimonio</option><option>Battesimo</option><option>Comunione o Cresima</option><option>Laurea</option><option>Anniversario</option><option>Altro</option></select></label>
+      <label>Data della festa<input name="date" type="date"></label>
+    </div>
+    <label>Quantità indicativa<input name="qty" inputmode="numeric" placeholder="Es. 80"></label>
+    <label>Note, idee, colori<textarea name="note"></textarea></label>
+    <button class="btn solid block" type="submit">Invia su WhatsApp</button>
+    <div class="fout" aria-live="polite"></div>
+  </form>
+</div></section>`;
+}
+
+function About() {
+  return `
+<div class="wrap pagehead"><h1>Essenza</h1><p class="lead">Non prodotti industriali, ma qualcosa che viene progettato e realizzato con cura.</p></div>
+<section class="sec" style="padding-top:0"><div class="wrap split">
+  ${media({src:'images/essenza.jpeg', tone:3, ratio:'4/5', alt:'Il laboratorio Essenza'})}
+  <div class="stack">
+    <h2>Perché è nata Essenza</h2>
+    <p>Essenza nasce da un pensiero semplice: rendere speciali i momenti di ogni giorno.</p>
+    <p>Una candela accesa cambia la luce, il profumo di una stanza e, a volte, il modo in cui ci sentiamo.</p>
+    <p>Ho iniziato a creare perchè volevo dare forma a queste sensazioni: oggetti semplici, belli da vedere, e piacevoli da vivere, realizzati lentamente e con cura.</p>
+    <p>E senza un piccolo laboratorio artigianale dove ogni creazione viene pensata, provata e curata prima di arrivare a te.</p>
+  </div>
+</div></section>
+
+<section class="sec alt"><div class="wrap center stack"><p class="quote">Un profumo non si sceglie con la testa. Si riconosce, come una casa.</p></div></section>
+
+<section class="sec"><div class="wrap">
+  <h2>Cosa ci sta a cuore</h2>
+  ${steps([
+    ['Fatto con cura', 'Ogni pezzo è pensato e realizzato con attenzione ai dettagli.'],
+    ['Profumi che si sentono', 'Fragranze equilibrate, per stanze vissute ogni giorno.'],
+    ['Su misura', 'Per regali e bomboniere partiamo da te e da ciò che immagini.']
+  ])}
+  <div class="actions"><a class="btn solid" href="#/shop">Scopri le collezioni</a><a class="btn" href="#/contatti">Scrivici</a></div>
+</div></section>`;
+}
+
+function Contact() {
+  return `
+<div class="wrap pagehead"><h1>Contatti</h1><p class="lead">Scrivici per ordinare, chiedere informazioni o organizzare una bomboniera.</p></div>
+<section class="sec" style="padding-top:0"><div class="wrap contact-grid">
+  <div>
+    <h2>Il modo più veloce</h2>
+    <div class="actions">${externalWA('Ciao! Vorrei qualche informazione.', 'Scrivici su WhatsApp', 'btn solid')}</div>
+    <div class="contact-lines">
+      <a href="${igUrl}" target="_blank" rel="noopener"><span>Instagram</span><span class="muted">@${CFG.instagram}</span></a>
+      ${CFG.email ? `<a href="mailto:${CFG.email}"><span>Email</span><span class="muted">${CFG.email}</span></a>` : ''}
+    </div>
+    <h3 style="margin-top:44px">Come ordinare</h3>
+    ${steps(ORDER_STEPS).replace('class="steps"', 'class="steps" style="grid-template-columns:1fr;margin-top:22px"')}
+  </div>
+  <div>
+    <h2>Oppure scrivici da qui</h2>
+    <form class="form" data-form="contact" style="margin-top:26px">
+      <label>Il tuo nome<input name="name" required autocomplete="name"></label>
+      <label>Di cosa hai bisogno?<select name="topic"><option>Ordinare un prodotto</option><option>Informazioni su un prodotto</option><option>Bomboniere</option><option>Un regalo</option><option>Altro</option></select></label>
+      <label>Messaggio<textarea name="note" required></textarea></label>
+      <button class="btn solid block" type="submit">Invia su WhatsApp</button>
+      <div class="fout" aria-live="polite"></div>
+    </form>
+  </div>
+</div></section>`;
+}
+
+/* =====================================================================
+   NAVIGAZIONE, ROUTER E CONTROLLI UI
+   ===================================================================== */
+const NAV = [
+  ['home', 'Home', '#/'],
+  ['shop', 'Shop', '#/shop'],
+  ['wax', 'Wax melts', '#/wax-melts'],
+  ['bomb', 'Bomboniere', '#/bomboniere'],
+  ['about', 'Essenza', '#/essenza'],
+  ['contatti', 'Contatti', '#/contatti']
+];
+
+function buildChrome() {
+  const links = NAV.map(n => `<a data-nav="${n[0]}" href="${n[2]}">${n[1]}</a>`).join('');
+  $('#nav').innerHTML = links;
+  $('#mnav').innerHTML = links;
+
+  $('#foot').innerHTML = `<div class="wrap"><div class="cols">
+    <div>
+      <a class="logo" href="#/" style="color:var(--ink)">${CFG.brand}</a>
+      <p class="muted" style="margin-top:14px">${CFG.tagline}</p>
+    </div>
+    <ul>${NAV.map(n => `<li><a href="${n[2]}">${n[1]}</a></li>`).join('')}</ul>
+    <ul>
+      <li><a href="${wa('Ciao! Vorrei qualche informazione.')}" target="_blank" rel="noopener">WhatsApp</a></li>
+      <li><a href="${igUrl}" target="_blank" rel="noopener">Instagram</a></li>
+      ${CFG.email ? `<li><a href="mailto:${CFG.email}">${CFG.email}</a></li>` : ''}
+    </ul>
+  </div><small>© ${new Date().getFullYear()} Essenza. Tutti i diritti riservati.</small></div>`;
+
+  $('#wa').href = wa('Ciao! Vorrei qualche informazione.');
+}
+
+const TITLES = {
+  home: 'Essenza — Candele, wax melts e bomboniere',
+  shop: 'Collezioni — Essenza',
+  wax: 'Wax melts — Essenza',
+  bomb: 'Bomboniere — Essenza',
+  about: 'La storia di Essenza',
+  contatti: 'Contatti — Essenza'
+};
+
+function router() {
+  const [a, b] = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+  let html, key = 'home';
+
+  switch (a) {
+    case 'shop':
+      html = Shop(b);
+      key = 'shop';
+      break;
+    case 'prodotto':
+      html = Product(b);
+      key = 'shop';
+      break;
+    case 'wax-melts':
+      html = Wax();
+      key = 'wax';
+      break;
+    case 'bomboniere':
+      html = Bomb();
+      key = 'bomb';
+      break;
+    case 'essenza':
+      html = About();
+      key = 'about';
+      break;
+    case 'contatti':
+      html = Contact();
+      key = 'contatti';
+      break;
+    default:
+      html = Home();
+  }
+
+  $('#app').innerHTML = html;
+  document.title = a === 'prodotto' && P[b] ? `${P[b].name} — Essenza` : TITLES[key];
+
+  document.querySelectorAll('[data-nav]').forEach(el => {
+    const on = el.dataset.nav === key;
+    el.classList.toggle('on', on);
+    on ? el.setAttribute('aria-current', 'page') : el.removeAttribute('aria-current');
+  });
+
+  setMenu(false);
+  if ($('#famout')) famShow('mattina');
+  window.scrollTo(0, 0);
+}
+
+function setMenu(open) {
+  document.body.classList.toggle('menu-open', open);
+  $('#burger').setAttribute('aria-expanded', open);
+  $('#burger').setAttribute('aria-label', open ? 'Chiudi il menu' : 'Apri il menu');
+}
+
+function famShow(id) {
+  const f = FAMILIES.find(x => x.id === id);
+  if (!f || !$('#famout')) return;
+
+  $('#famout').innerHTML = `
+    <p class="mood">${f.mood}</p>
+    <div class="frlist">${FRAGRANCES.filter(x => x.family === id).map(x => `
+      <div class="fr">
+        <h3>${x.name}</h3>
+        <p>${x.desc}</p>
+        <div class="notes"><i>Note:</i><br>${x.notes.join('<br>')}</div>
+      </div>
+    `).join('')}</div>`;
+}
+
+function updateCountdowns() {
+  document.querySelectorAll('[data-countdown]').forEach(countdown => {
+    const target = new Date(countdown.dataset.countdown).getTime();
+    const remaining = target - Date.now();
+    const output = countdown.querySelector('span');
+    if (remaining <= 0) {
+      countdown.querySelector('b').textContent = 'Disponibile ora';
+      output.textContent = '';
+      countdown.closest('.product-photo')?.querySelector('.christmas-photo')?.classList.remove('christmas-photo');
+      return;
+    }
+
+    const days = Math.floor(remaining / 86400000);
+    const hours = Math.floor((remaining % 86400000) / 3600000);
+    const minutes = Math.floor((remaining % 3600000) / 60000);
+    const seconds = Math.floor((remaining % 60000) / 1000);
+    output.textContent = `${days}g ${hours}h ${minutes}m ${seconds}s`;
+  });
+}
+
+/* =====================================================================
+   TEMA E INTERAZIONI
+   ===================================================================== */
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  const b = $('#theme');
+  b.setAttribute('aria-pressed', t === 'dark');
+  b.setAttribute('aria-label', t === 'dark' ? 'Passa al tema chiaro' : 'Passa al tema scuro');
+}
+
+function toggleTheme() {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  try {
+    localStorage.setItem('essenza-theme', next);
+  } catch (_) {}
+}
+
+document.addEventListener('click', e => {
+  if (e.target.closest('#theme')) return toggleTheme();
+
+  const menuBtn = e.target.closest('#burger');
+  if (menuBtn) return setMenu(!document.body.classList.contains('menu-open'));
+
+  const action = e.target.closest('[data-filter],[data-var],[data-fr],[data-mix],[data-fam],[data-scroll]');
+  if (!action) return;
+
+  if (action.dataset.filter) {
+    const c = action.dataset.filter;
+    $('#grid').innerHTML = (c === 'tutti' ? PRODUCTS : PRODUCTS.filter(p => p.cat === c)).map(card).join('');
+    document.querySelectorAll('#filters .chip').forEach(x => x.classList.toggle('on', x === action));
+    try {
+      history.replaceState(null, '', '#/shop/' + c);
+    } catch (_) {}
+  } else if (action.dataset.var !== undefined || action.dataset.fr || action.dataset.mix) {
+    const p = P[location.hash.split('/')[2]];
+    if (action.dataset.var !== undefined) sel.v = +action.dataset.var;
+    else if (action.dataset.mix) {
+      sel.mix = +action.dataset.mix;
+      sel.f = null;
+      sel.frags = [];
+    } else if (sel.mix) {
+      const fragranceId = action.dataset.fr;
+      const selectedIndex = sel.frags.indexOf(fragranceId);
+      if (selectedIndex >= 0) {
+        sel.frags.splice(selectedIndex, 1);
+      } else if (sel.frags.length < sel.mix) {
+        sel.frags.push(fragranceId);
+      }
+    } else {
+      sel.f = action.dataset.fr;
+      sel.frags = [];
+      sel.mix = null;
+    }
+    $('#buy').innerHTML = Buy(p);
+  } else if (action.dataset.fam) {
+    document.querySelectorAll('#fams .chip').forEach(x => x.classList.toggle('on', x === action));
+    famShow(action.dataset.fam);
+  } else if (action.dataset.scroll) {
+    e.preventDefault();
+    const el = document.getElementById(action.dataset.scroll);
+    if (el) {
+      const smooth = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+      el.scrollIntoView({ behavior: smooth });
+    }
+  }
+});
+
+document.addEventListener('click', e => {
+  if (e.target.closest('#mnav a')) setMenu(false);
+});
+
+/* =====================================================================
+   MODULO CONTATTI E INVIO WHATSAPP
+   ===================================================================== */
+document.addEventListener('submit', e => {
+  const f = e.target.closest('form[data-form]');
+  if (!f) return;
+
+  e.preventDefault();
+
+  const d = Object.fromEntries(new FormData(f));
+  const text = f.dataset.form === 'quote'
+    ? `Ciao! Vorrei un preventivo per delle bomboniere.\nNome: ${d.name}\nOccasione: ${d.occ}\nData: ${d.date || 'da definire'}\nQuantità: ${d.qty || 'da definire'}\nNote: ${d.note || '-'}`
+    : `Ciao! Sono ${d.name}.\nMi serve aiuto per: ${d.topic}\n${d.note}`;
+
+  window.open(wa(text), '_blank');
+  f.querySelector('.fout').innerHTML = `Grazie! Se WhatsApp non si è aperto, <a href="${wa(text)}" target="_blank" rel="noopener">tocca qui per inviare il messaggio</a>.`;
+});
+
+window.addEventListener('hashchange', router);
+buildChrome();
+applyTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
+router();
+updateCountdowns();
+setInterval(updateCountdowns, 1000);
+</script>
+</body>
+</html>
