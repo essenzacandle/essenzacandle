@@ -727,6 +727,13 @@
     font-size: 15px;
   }
 
+  .pcard .sub {
+    margin-top: 8px;
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
   .pcard:hover h3 {
     text-decoration: underline;
     text-underline-offset: 5px;
@@ -1249,20 +1256,20 @@
 
 <script>
 /* =====================================================================
-   CONFIGURAZIONE — modifica qui i dati principali del sito
+   CONFIGURAZIONE
    ===================================================================== */
 const CFG = {
   brand: '',
   tagline: 'Diamo forma alle tue emozioni',
-  whatsapp: '3270346632',      // numero locale, senza prefisso
-  whatsappCountryCode: '+39',  // prefisso internazionale predefinito
-  instagram: 'essenzacandle_',          // nome profilo Instagram, senza @
-  email: 'toniolo.alessandra01@libero.it',                     // lascia vuoto per nasconderla
-  heroImg: './images/banner.png',                   // URL della foto principale (se vuoto, mostra l'illustrazione)
-  labels: true                   // mostra la scritta "Foto" sui segnaposto; metti false quando hai le foto vere
+  whatsapp: '3270346632',      
+  whatsappCountryCode: '+39',  
+  instagram: 'essenzacandle_',          
+  email: 'infoessenza2026@gmail.com',                     
+  heroImg: './images/banner.jpeg',                   
+  labels: true                   
 };
 
-/* Fragranze: aggiungi/modifica liberamente. */
+
 const FAMILIES = [
   {id:'mattina', name:'☀️ Mattina', mood:'Una tazza fumante tra le mani, la luce del mattino e il profumo dolce del miele nell’aria. Latte e Miele sa di casa, di lentezza e di quei piccoli momenti che vorresti durassero un po’ di più.'},
   {id:'pomeriggio', name:'🍋 Pomeriggio', mood:'Il pranzo è finito, la cucina è in ordine e le finestre sono aperte. Limone sa di fresco e di quella piccola soddisfazione che si prova quando tutto è finalmente al suo posto.'},
@@ -1280,9 +1287,12 @@ const FRAGRANCES = [
     desc:'Quel momento dopo la doccia in cui la pelle profuma e tutto sembra più lento. Mandorla è una coccola dolce, morbida e avvolgente.', notes:['Testa: albicocca · mandorla dolce · limone di Sicilia','Cuore: lavanda · gelsomino','Fondo: vaniglia · fava tonka']} 
 ];
 
-/* Prodotti — ogni prodotto ha già varianti, profumazioni e prezzo: la struttura è pronta per un e-commerce.
-   price: null = "su richiesta". imgs: elenco di URL foto (se vuoto, segnaposto). I prezzi sono ESEMPI. */
-const CATS = {tutti:'Tutto', candele:'Candele decorative', wax:'Wax melts', bomboniere:'Bomboniere', gift:'Gift'};
+
+const CATS = {tutti:'Tutto', candele:'Candele decorative', wax:'Wax melts', bomboniere:'Bomboniere', gift:'Idee regalo'};
+const getDarkCandleSrc = src => {
+  if (!src || !/\.(jpe?g|png|webp|avif|gif)$/i.test(src)) return src;
+  return src.replace(/(\.[a-z0-9]+)$/i, '-dark$1');
+};
 const PRODUCTS = [
   {
     id: 'bubble',
@@ -1429,6 +1439,7 @@ const PRODUCTS = [
     tone: 5,
     imgs: ['images/bomboniera-candela.jpeg'],
     name: 'Bomboniera con candela',
+    subtitle: 'richiedi il tuo preventivo →',
     fragrances: 'all',
     custom: 'Nome, data, nastro, tag e dettagli su misura. Il prezzo dipende da quantità, modello e personalizzazione.',
     quote: true,
@@ -1443,6 +1454,7 @@ const PRODUCTS = [
     tone: 2,
     imgs: ['images/bomboniera-wax.jpeg'],
     name: 'Bomboniera con wax melts',
+    subtitle: 'richiedi il tuo preventivo →',
     fragrances: 'all',
     custom: 'Confezione, biglietto e nastro personalizzabili. Il prezzo dipende da quantità e modello.',
     quote: true,
@@ -1494,9 +1506,7 @@ const PRODUCTS = [
   },
 ];
 
-/* =====================================================================
-   Illustrazioni segnaposto (sostituiscile con le tue foto: imgs / heroImg)
-   ===================================================================== */
+
 const ART = {
   candle:`<svg viewBox="0 0 200 250" fill="none" aria-hidden="true"><ellipse cx="100" cy="224" rx="64" ry="9" fill="var(--shadow)"/><rect x="58" y="112" width="84" height="108" rx="12" fill="var(--shape)" stroke="var(--shape2)" stroke-width="1.5"/><rect x="67" y="124" width="9" height="84" rx="4.5" fill="#fff" opacity=".35"/><ellipse cx="100" cy="112" rx="42" ry="7" fill="var(--shape2)" opacity=".75"/><rect x="99" y="90" width="2" height="22" fill="var(--ink)" opacity=".5"/><circle class="glow" cx="100" cy="76" r="50" fill="url(#glow)"/><path class="flame" d="M100 56c-9 12-8 25 0 32 8-7 9-20 0-32z" fill="var(--flame)"/></svg>`,
   melts:`<svg viewBox="0 0 200 250" fill="none" aria-hidden="true"><ellipse cx="100" cy="214" rx="72" ry="9" fill="var(--shadow)"/><rect x="74" y="112" width="52" height="52" rx="15" fill="var(--shape)" stroke="var(--shape2)" stroke-width="1.5"/><g transform="rotate(-9 70 180)"><rect x="42" y="152" width="56" height="56" rx="15" fill="var(--shape)" stroke="var(--shape2)" stroke-width="1.5"/></g><g transform="rotate(7 132 182)"><rect x="106" y="158" width="52" height="52" rx="15" fill="var(--shape)" stroke="var(--shape2)" stroke-width="1.5"/></g></svg>`,
@@ -1504,9 +1514,7 @@ const ART = {
   gift:`<svg viewBox="0 0 200 250" fill="none" aria-hidden="true"><ellipse cx="100" cy="214" rx="66" ry="8" fill="var(--shadow)"/><rect x="48" y="138" width="104" height="74" rx="4" fill="var(--shape)" stroke="var(--shape2)" stroke-width="1.5"/><rect x="42" y="116" width="116" height="26" rx="4" fill="var(--shape)" stroke="var(--shape2)" stroke-width="1.5"/><rect x="94" y="116" width="12" height="96" fill="var(--shape2)" opacity=".55"/><path d="M100 116c-20-26-42-12-28 3 7 7 20 5 28-3zM100 116c20-26 42-12 28 3-7 7-20 5-28-3z" fill="var(--shape)" stroke="var(--shape2)" stroke-width="2"/></svg>`
 };
 
-/* =====================================================================
-   Utilità
-   ===================================================================== */
+
 const $ = s => document.querySelector(s);
 const eur = n => '€ ' + n.toFixed(2).replace('.', ',').replace(',00', '');
 const waNumber = () => {
@@ -1522,7 +1530,12 @@ const P = Object.fromEntries(PRODUCTS.map(p => [p.id, p]));
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 function media({src, art='candle', tone=1, ratio='4/5', label='Foto', alt='', cls='', loading='lazy'}) {
-  const inner = src ? `<img src="${esc(src)}" alt="${esc(alt)}" loading="${loading}">`
+  const isCandleThemeImage = art === 'candle' && !!src;
+  const darkSrc = isCandleThemeImage ? getDarkCandleSrc(src) : '';
+  const candleAttrs = isCandleThemeImage
+    ? ` data-candle-theme="true" data-light-src="${esc(src)}" data-dark-src="${esc(darkSrc)}"`
+    : '';
+  const inner = src ? `<img src="${esc(src)}" alt="${esc(alt)}" loading="${loading}"${candleAttrs}>`
                     : ART[art] + (CFG.labels ? `<span class="ph">${label}</span>` : '');
   return `<div class="media tone${tone} ${cls}" style="${cls.includes('arch') ? '' : 'aspect-ratio:' + ratio}" ${src ? '' : 'role="img" aria-label="' + esc(alt || 'Segnaposto fotografia') + '"'}>${inner}</div>`;
 }
@@ -1532,14 +1545,14 @@ const priceOf = p => {
   return (new Set(ps).size > 1 ? 'da ' : '') + eur(Math.min(...ps));
 };
 const countdownMarkup = p => p.countdown ? `<div class="photo-countdown" data-countdown="${p.countdown}"><b>Disponibile tra poco</b><span>Calcolo in corso...</span></div>` : '';
-const card = p => `<a class="pcard" href="#/prodotto/${p.id}"><div class="product-photo">${media({src:p.imgs[0], art:p.art, tone:p.tone, alt:p.name, cls:p.countdown ? 'christmas-photo' : ''})}${countdownMarkup(p)}</div><h3>${p.name}</h3><div class="pr">${priceOf(p)}</div></a>`;
+const card = p => `<a class="pcard" href="#/prodotto/${p.id}"><div class="product-photo">${media({src:p.imgs[0], art:p.art, tone:p.tone, alt:p.name, cls:p.countdown ? 'christmas-photo' : ''})}${countdownMarkup(p)}</div><h3>${p.name}</h3><div class="pr">${priceOf(p)}</div>${p.subtitle ? `<div class="sub">${p.subtitle}</div>` : ''}</a>`;
 const steps = list => `<div class="steps" style="--n:${list.length}">${list.map((s,i) => `<div class="step"><b>${i+1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>`;
 const externalWA = (t, label, cls='btn') => `<a class="${cls}" href="${wa(t)}" target="_blank" rel="noopener">${label}</a>`;
 
 const ORDER_STEPS = [
-  ['Scegli', 'Sfoglia le collezioni e scegli prodotto e fragranza.'],
-  ['Scrivici', 'Ordina su WhatsApp con un tocco, oppure compila il modulo.'],
-  ['Conferma', 'Ti rispondiamo, ci accordiamo su dettagli e consegna.']
+  ['Scegli', 'Sfoglia le collezioni e scegli il prodotto che ti somiglia di più.'],
+  ['Scrivici', 'Ordina su WhatsApp con un tocco, oppure compila il modulo nella sezione “Contatti”.'],
+  ['Conferma', 'Definiamo insieme i dettagli e prepariamo il tuo ordine con cura.']
 ];
 
 document.addEventListener('input', e => {
@@ -1594,7 +1607,7 @@ function Home() {
     ['Candele decorative',   'Pezzi di design bianchi & senza profumazione', '#/shop/candele', 'candle', 1, 'images/candele.jpeg'],
     ['Wax melts', 'Il profumo, senza stoppino', '#/wax-melts',   'melts',  2, 'images/wax.jpeg'],
     ['Bomboniere','Su misura per i tuoi eventi', '#/bomboniere','box', 5, 'images/bomboniere.jpeg'],
-    ['Gift',      'Idee pronte da regalare',   '#/shop/gift',    'gift',   4, 'images/gift.jpeg']
+    ['Idee regalo',      'Idee pronte da regalare',   '#/shop/gift',    'gift',   4, 'images/gift.jpeg']
   ];
   return `
 <section class="hero" style="--hero-image:${CFG.heroImg ? `url('${esc(CFG.heroImg)}')` : 'none'}"><div class="wrap in">
@@ -1609,8 +1622,8 @@ function Home() {
 </div></section>
 
 <section class="sec"><div class="wrap narrow center stack">
-  <h2>Non solo candele. <br> Un piccolo mondo di profumi, atmosfera e oggetti creati con cura.</h2>
-  <p class="lead">Essenza crea candele, wax melts e bomboniere profumate. Ogni dettaglio, dalla fragranza alla confezione, è pensato per trasformare un momento qualunque in un momento tuo.</p>
+  <h2>Un piccolo mondo da vivere con i sensi.</h2>
+  <p class="lead">Profumi, atmosfera e creazioni artigianali.</p>
 </div>
 <div class="wrap"><div class="tiles">
   ${tiles.map(t => `<a class="tile" href="${t[2]}">${media({src:t[5], art:t[3], tone:t[4], cls:'arch', label:'Foto', alt:t[0]})}<h3>${t[0]}</h3><p>${t[1]}</p></a>`).join('')}
@@ -1642,7 +1655,7 @@ function Insta() {
   ];
   return `<section class="sec"><div class="wrap center">
   <h2>Dal nostro Instagram</h2>
-  <p class="lead" style="margin-top:14px">Novità, dietro le quinte e nuove fragranze.</p>
+  <p class="lead" style="margin-top:14px">Scopri cosa prende forma nel nostro laboratorio.</p>
   <div class="igrid">${posts.map((src, i) => `<a href="${igUrl}" target="_blank" rel="noopener" aria-label="Apri Instagram">${media({src, tone:tones[i], ratio:'1/1', label:'', alt:`Lavoro realizzato ${i + 1}`})}</a>`).join('')}</div>
   <div class="actions"><a class="btn" href="${igUrl}" target="_blank" rel="noopener">Seguici su Instagram</a></div>
 </div></section>`;
@@ -1656,12 +1669,7 @@ function Shop(cat) {
 <div class="wrap">
   <div class="chips" id="filters" role="group" aria-label="Filtra per categoria">${Object.entries(CATS).map(([k,v]) => `<button class="chip ${k===cat?'on':''}" data-filter="${k}">${v}</button>`).join('')}</div>
   <div class="pgrid-list" id="grid" style="margin-top:34px">${list.map(card).join('')}</div>
-</div>
-<section class="sec"><div class="wrap">
-  <h2>Le fragranze</h2>
-  <p class="lead" style="margin-top:14px">Quattro profumi, pensati per dare un carattere a ogni momento.</p>
-  <div class="frlist">${FRAGRANCES.map(f => `<div class="fr"><h3>${f.name}<small>${FAMILIES.find(x=>x.id===f.family).name}</small></h3><p>${f.desc}</p><div class="notes"><i>Note:</i><br>${f.notes.join('<br>')}</div></div>`).join('')}</div>
-</div></section>`;
+</div>`;
 }
 
 function Product(id) {
@@ -1771,11 +1779,9 @@ function Wax() {
 <section class="sec" style="padding-top:0"><div class="wrap split">
   ${media({src:'./images/wax.jpeg', art:'melts', tone:2, ratio:'4/5', alt:'Wax melts', loading:'eager'})}
   <div class="stack">
-    <h2>Cosa sono</h2>
-    <p> Cubetti di cera profumata da sciogliere nel bruciatore. 
-Il calore dolce scioglie la cera e libera lentamente la fragranza nell’ambiente.
-
-Niente stoppino da accendere, niente sprechi: quando vuoi cambiare atmosfera, basta cambiare profumo.</p>
+    <p class="lead">un piccolo gesto, un nuovo profumo, un'atmosfera diversa.</p>
+    <p>Scegli la fragranza che più ti rappresenta, inseriscila nel tuo scaldacera e lascia che il profumo faccia il resto.</p>
+    <p>Le wax melts sono il modo più semplice per cambiare atmosfera ogni volta che ne hai voglia.</p>
     <p>Vuoi provarle? Nel <a href="#/prodotto/melts-discovery">Discovery Box</a> trovi quattro profumi per cominciare.</p>
   </div>
 </div></section>
@@ -1784,17 +1790,17 @@ Niente stoppino da accendere, niente sprechi: quando vuoi cambiare atmosfera, ba
   <h2>Come si usano</h2>
   ${steps([
     ['Scegli il profumo', 'Uno o due cubetti bastano per una stanza.'],
-    ['Riempi lo scaldacera', 'Metti i cubetti nella vaschetta, sopra la fonte di calore.'],
+    ['Inserisci la wax melt', 'Metti i cubetti nella vaschetta, sopra la fonte di calore.'],
     ['Accendi', 'Con scaldacera elettrico o a tealight. Non lasciarlo mai incustodito.'],
     ['Cambia quando vuoi', 'Quando il profumo si affievolisce, sostituisci la cera e scegli una nuova fragranza.']
   ])}
 </div></section>
 
 <section class="sec"><div class="wrap">
-  <h2>Perché sono diverse dalle candele</h2>
+  <h2>ogni profumo ha il suo modo di vivere</h2>
   <div class="vs">
-    <div><h3>Candela</h3><ul><li>Si accende con la fiamma</li><li>Profumo e luce insieme</li><li>Si consuma con lo stoppino</li></ul></div>
-    <div><h3>Wax melts</h3><ul><li>Si scaldano dolcemente, senza stoppino</li><li>Cambi fragranza quando vuoi, un cubetto alla volta</li><li>Decidi tu quanto profumo, in base al numero di cubetti</li></ul></div>
+    <div><h3>Candela</h3><p>una fiamma, una luce calda, un profumo che accompagna i tuoi momenti.</p><p class="muted">per te se cerchi: atmosfera · decorazione · ritualità</p></div>
+    <div><h3>Wax melts</h3><p>una fragranza da cambiare ogni volta che vuoi, senza stoppino e senza fiamma.</p><p class="muted">per te se cerchi: varietà · profumo · libertà di cambiare</p></div>
   </div>
 </div></section>
 
@@ -1803,6 +1809,8 @@ Niente stoppino da accendere, niente sprechi: quando vuoi cambiare atmosfera, ba
   <p class="lead" style="margin:14px 0 26px">Parti da come vuoi sentirti, poi scegli il profumo.</p>
   <div class="chips" id="fams" role="group" aria-label="Famiglie olfattive">${FAMILIES.map((f,i) => `<button class="chip ${i===0?'on':''}" data-fam="${f.id}">${f.name}</button>`).join('')}</div>
   <div id="famout"></div>
+  <p class="muted" style="margin-top:26px">La selezione delle fragranze può cambiare durante l'anno, seguendo le stagioni e le nuove collezioni.</p>
+  <div class="actions"><a class="btn solid" href="#/contatti">scrivici per scoprire le fragranze disponibili →</a></div>
 </div></section>
 
 <section class="sec"><div class="wrap narrow">
@@ -1837,7 +1845,7 @@ function Bomb() {
   <h2>Come lavoriamo</h2>
   ${steps([
     ["Ispirazione", "Ci racconti l’occasione, lo stile che immagini, i colori e l'atmosfera che vuoi creare."],
-    ['Prodotto', 'Ti mostriamo le possibilità e scegliamo il prodotto piu adatto al tuo tempo tra candele, wax melts e altro.'],
+    ['Proposta', 'Ti mostriamo le possibilità e scegliamo insieme la proposta più adatta al tuo evento.'],
     ["Profumazione", "Scegliamo la fragranze che più ti rappresenta, lasciandoci guidare dall'atmosfera che vuoi creare."],
     ['Personalizzazione', 'Nome, data, nastri, biglietti e confezione su misura.'],
     ['Realizzazione', 'Prepariamo ogni pezzo a mano e concordiamo tempi e consegne.']
@@ -1846,6 +1854,7 @@ function Bomb() {
 
 <section class="sec alt"><div class="wrap">
   <h2>Lavori realizzati</h2>
+  <p class="muted" style="margin-top:12px">Alcune delle bomboniere realizzate da Essenza.</p>
   <div class="pgrid-list" style="margin-top:34px">
     ${['images/bomboniere.jpeg','images/candele.jpeg','images/wax.jpeg','images/gift.jpeg','images/lavoro1.jpeg','images/lavoro2.jpeg','images/lavoro3.jpeg'].map((src, i) => media({src, tone:(i%5)+1, ratio:'4/5', label:'Foto realizzata', alt:'Realizzazione Essenza'})).join('')}
   </div>
@@ -1853,12 +1862,13 @@ function Bomb() {
 
 <section class="sec"><div class="wrap">
   <h2>Parti da qui</h2>
+  <p class="muted" style="margin-top:12px">Due idee da cui iniziare. Ogni proposta può essere personalizzata in base al tuo evento.</p>
   <div class="pgrid-list" style="margin-top:34px">${bom.map(card).join('')}</div>
-  <p class="muted" style="margin-top:28px">Per matrimoni, battesimi, comunioni, cresime, lauree e anniversari. I prezzi dipendono da quantità, modello e personalizzazione: per questo li definiamo insieme, con un preventivo.</p>
+  <p class="muted" style="margin-top:28px">Per matrimoni, battesimi, comunioni, cresime, lauree e anniversari. Ogni bomboniera viene pensata insieme a te, dalla scelta del prodotto alla profumazione, fino alla confezione. Per questo, ogni proposta viene realizzata su richiesta.</p>
 </div></section>
 
 <section class="sec alt" id="quote"><div class="wrap contact-grid">
-  <div class="stack"><h2>Richiedi un preventivo</h2><p>Compila il modulo: ti si apre WhatsApp con il messaggio già pronto. Più dettagli ci dai, più il preventivo sarà preciso.</p></div>
+  <div class="stack"><h2>Raccontaci come immagini le tue bomboniere.</h2><p>Compila il modulo con le informazioni che hai già a disposizione: ti ricontatteremo per definire insieme la proposta e preparare un preventivo su misura.</p></div>
   <form class="form" data-form="quote">
     <label>Il tuo nome<input name="name" required autocomplete="name"></label>
     <div class="two">
@@ -2062,6 +2072,21 @@ function updateCountdowns() {
    ===================================================================== */
 function applyTheme(t) {
   document.documentElement.dataset.theme = t;
+  document.querySelectorAll('img[data-candle-theme="true"]').forEach(img => {
+    const isDark = t === 'dark';
+    const lightSrc = img.dataset.lightSrc || img.src;
+    const darkSrc = img.dataset.darkSrc || getDarkCandleSrc(lightSrc);
+    const nextSrc = isDark ? darkSrc : lightSrc;
+
+    img.onerror = () => {
+      if (img.dataset.lightSrc && img.src !== img.dataset.lightSrc) {
+        img.src = img.dataset.lightSrc;
+      }
+      img.onerror = null;
+    };
+
+    if (nextSrc) img.src = nextSrc;
+  });
   const b = $('#theme');
   b.setAttribute('aria-pressed', t === 'dark');
   b.setAttribute('aria-label', t === 'dark' ? 'Passa al tema chiaro' : 'Passa al tema scuro');
