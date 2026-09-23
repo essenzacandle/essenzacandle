@@ -1540,12 +1540,13 @@ function media({src, art='candle', tone=1, ratio='4/5', label='Foto', alt='', cl
   return `<div class="media tone${tone} ${cls}" style="${cls.includes('arch') ? '' : 'aspect-ratio:' + ratio}" ${src ? '' : 'role="img" aria-label="' + esc(alt || 'Segnaposto fotografia') + '"'}>${inner}</div>`;
 }
 const priceOf = p => {
+  if (p.quote) return '';
   const ps = p.variants.map(v => v.price).filter(v => v != null);
   if (!ps.length) return 'Prossimamente';
   return (new Set(ps).size > 1 ? 'da ' : '') + eur(Math.min(...ps));
 };
 const countdownMarkup = p => p.countdown ? `<div class="photo-countdown" data-countdown="${p.countdown}"><b>Disponibile tra poco</b><span>Calcolo in corso...</span></div>` : '';
-const card = p => `<a class="pcard" href="#/prodotto/${p.id}"><div class="product-photo">${media({src:p.imgs[0], art:p.art, tone:p.tone, alt:p.name, cls:p.countdown ? 'christmas-photo' : ''})}${countdownMarkup(p)}</div><h3>${p.name}</h3><div class="pr">${priceOf(p)}</div>${p.subtitle ? `<div class="sub">${p.subtitle}</div>` : ''}</a>`;
+const card = p => `<a class="pcard" href="#/prodotto/${p.id}"><div class="product-photo">${media({src:p.imgs[0], art:p.art, tone:p.tone, alt:p.name, cls:p.countdown ? 'christmas-photo' : ''})}${countdownMarkup(p)}</div><h3>${p.name}</h3>${priceOf(p) ? `<div class="pr">${priceOf(p)}</div>` : ''}${p.subtitle ? `<div class="sub">${p.subtitle}</div>` : ''}</a>`;
 const steps = list => `<div class="steps" style="--n:${list.length}">${list.map((s,i) => `<div class="step"><b>${i+1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>`;
 const externalWA = (t, label, cls='btn') => `<a class="${cls}" href="${wa(t)}" target="_blank" rel="noopener">${label}</a>`;
 
@@ -1780,7 +1781,7 @@ ${frs.length ? `<div class="opt"><b>${mix ? `Scegli ${mix} fragranze` : 'Fragran
 function Wax() {
   const melts = PRODUCTS.filter(p => p.cat === 'wax');
   return `
-<div class="wrap pagehead"><h1>Wax melts</h1><p class="lead">Il profumo che scegli tu, quando vuoi, nella stanza che vuoi.</p></div>
+<div class="wrap pagehead"><h1>Wax melts</h1></div>
 
 <section class="sec" style="padding-top:0"><div class="wrap split">
   ${media({src:'./images/wax.jpeg', art:'melts', tone:2, ratio:'4/5', alt:'Wax melts', loading:'eager'})}
@@ -1790,6 +1791,12 @@ function Wax() {
     <p>Le wax melts sono il modo più semplice per cambiare atmosfera ogni volta che ne hai voglia.</p>
     <p>Vuoi provarle? Nel <a href="#/prodotto/melts-discovery">Discovery Box</a> trovi quattro profumi per cominciare.</p>
   </div>
+</div></section>
+
+<section class="sec alt"><div class="wrap narrow center stack">
+  <h2>Da dove nasce l’idea</h2>
+  <p class="lead">Amavo il profumo di una candela, ma non volevo dipendere da una fiamma. Ho cominciato a provare cere e fragranze, un cubetto alla volta, finché il profumo riempiva la stanza nel modo giusto: presente, ma mai invadente.</p>
+  <p class="muted">Le wax melts di Essenza sono nate così, dal desiderio di scegliere il proprio profumo con più libertà.</p>
 </div></section>
 
 <section class="sec alt"><div class="wrap">
@@ -1811,8 +1818,6 @@ function Wax() {
 </div></section>
 
 <section class="sec alt"><div class="wrap">
-  <h2>Come scegliere la fragranza</h2>
-  <p class="lead" style="margin:14px 0 26px">Parti da come vuoi sentirti, poi scegli il profumo.</p>
   <div class="chips" id="fams" role="group" aria-label="Famiglie olfattive">${FAMILIES.map((f,i) => `<button class="chip ${i===0?'on':''}" data-fam="${f.id}">${f.name}</button>`).join('')}</div>
   <div id="famout"></div>
   <p class="muted" style="margin-top:26px">La selezione delle fragranze può cambiare durante l'anno, seguendo le stagioni e le nuove collezioni.</p>
@@ -1828,11 +1833,6 @@ function Wax() {
   <details><summary>Serve uno scaldacera?</summary><p>Sì, le wax melts si usano con uno scaldacera, elettrico o a tealight. Scrivici se vuoi un consiglio su quale scegliere.</p></details>
 </div></section>
 
-<section class="sec alt"><div class="wrap narrow center stack">
-  <h2>Da dove nasce l’idea</h2>
-  <p class="lead">Amavo il profumo di una candela, ma non volevo dipendere da una fiamma. Ho cominciato a provare cere e fragranze, un cubetto alla volta, finché il profumo riempiva la stanza nel modo giusto: presente, ma mai invadente.</p>
-  <p class="muted">Le wax melts di Essenza sono nate così, dal desiderio di scegliere il proprio profumo con più libertà.</p>
-</div></section>
 
 <section class="sec"><div class="wrap">
   <h2>Le nostre wax melts</h2>
@@ -2043,14 +2043,7 @@ function famShow(id) {
   if (!f || !$('#famout')) return;
 
   $('#famout').innerHTML = `
-    <p class="mood">${f.mood}</p>
-    <div class="frlist">${FRAGRANCES.filter(x => x.family === id).map(x => `
-      <div class="fr">
-        <h3>${x.name}</h3>
-        <p>${x.desc}</p>
-        <div class="notes"><i>Note:</i><br>${x.notes.join('<br>')}</div>
-      </div>
-    `).join('')}</div>`;
+    <p class="mood">${f.mood}</p>`;
 }
 
 function updateCountdowns() {
