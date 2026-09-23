@@ -1560,12 +1560,12 @@ document.addEventListener('input', e => {
   if (!input) return;
 
   const p = P[location.hash.split('/')[2]];
-  if (!p?.quantity) return;
+  if (!quantityConfig(p)) return;
 
   if (input.value === '') return;
   sel.q = Number(input.value);
   const quantity = selectedQuantity(p);
-  const total = p.quantity.unitPrice * quantity;
+  const total = (p.quantity?.unitPrice || p.variants[sel.v].price) * quantity;
   if (sel.mix && sel.mix > quantity) {
     sel.mix = null;
     sel.frags = [];
@@ -1593,7 +1593,7 @@ document.addEventListener('change', e => {
   if (!input) return;
 
   const p = P[location.hash.split('/')[2]];
-  if (!p?.quantity) return;
+  if (!quantityConfig(p)) return;
 
   sel.q = selectedQuantity(p);
   input.value = sel.q;
@@ -1692,13 +1692,18 @@ function Product(id) {
 }
 
 let sel = {v:0, f:null, frags:[], mix:null, q:1};
+function quantityConfig(p) {
+  if (p?.quantity) return p.quantity;
+  return p?.cat === 'candele' ? {min: 1, max: 5} : null;
+}
 function fragList(p) {
   if (p.cat !== 'wax') return [];
   return p.fragrances === 'all' ? FRAGRANCES : FRAGRANCES.filter(f => (p.fragrances || []).includes(f.id));
 }
 function selectedQuantity(p) {
-  if (!p.quantity) return null;
-  return Math.max(p.quantity.min, Math.min(p.quantity.max, Number(sel.q) || p.quantity.min));
+  const config = quantityConfig(p);
+  if (!config) return null;
+  return Math.max(config.min, Math.min(config.max, Number(sel.q) || config.min));
 }
 function mixDistributionItems(p, quantity, mix, selectedFragrances) {
   if (!p.quantity || !mix) return '';
@@ -1728,7 +1733,7 @@ function orderMessage(p) {
   const quantity = selectedQuantity(p);
   const mix = p.mixOptions?.includes(sel.mix) && (!quantity || sel.mix <= quantity) ? sel.mix : null;
   const selectedFragrances = frs.filter(f => sel.frags.includes(f.id));
-  const selection = quantity ? `${quantity} pezzi` : (p.variants.length > 1 ? v.label : '');
+  const selection = quantity ? `${quantity} ${quantity === 1 ? 'pezzo' : 'pezzi'}` : (p.variants.length > 1 ? v.label : '');
   const fragrance = mix
     ? `, mix di ${mix} fragranze${selectedFragrances.length ? `: ${selectedFragrances.map(f => f.name).join(', ')}` : ''}`
     : (fr ? `, fragranza ${fr.name}` : '');
@@ -1739,6 +1744,7 @@ function orderMessage(p) {
 }
 function Buy(p) {
   const v = p.variants[sel.v];
+  const quantityConfigForProduct = quantityConfig(p);
   const frs = fragList(p);
   const fr = frs.find(f => f.id === sel.f) || null;
   const quantity = selectedQuantity(p);
@@ -1746,7 +1752,7 @@ function Buy(p) {
   const selectedFragrances = frs.filter(f => sel.frags.includes(f.id));
   const distribution = mixDistribution(p, quantity, mix, selectedFragrances);
   const distributionHtml = mixDistributionHtml(p, quantity, mix, selectedFragrances);
-  const currentPrice = quantity ? p.quantity.unitPrice * quantity : v.price;
+  const currentPrice = quantity ? (p.quantity?.unitPrice || v.price) * quantity : v.price;
   const msg = orderMessage(p);
   const quote = !!p.quote;
   const info = `Ciao! Vorrei qualche informazione su: ${p.name}.`;
@@ -1755,7 +1761,7 @@ function Buy(p) {
 <h1>${p.name}</h1>
 <div class="price">${currentPrice != null ? eur(currentPrice) : 'Preventivo su richiesta'}</div>
 ${p.variants.length > 1 ? `<div class="opt"><b>Formato</b><div class="chips">${p.variants.map((x,i) => `<button class="chip ${i===sel.v?'on':''}" data-var="${i}">${x.label}</button>`).join('')}</div></div>` : ''}
-${p.quantity ? `<div class="opt"><b>Quantità</b><input type="number" min="${p.quantity.min}" max="${p.quantity.max}" step="1" value="${quantity}" data-qty aria-label="Quantità di pezzi"><small class="qty-price" data-qty-price>Prezzo: ${eur(currentPrice)}</small></div>` : ''}
+${quantityConfigForProduct ? `<div class="opt"><b>Quantità</b><input type="number" min="${quantityConfigForProduct.min}" max="${quantityConfigForProduct.max}" step="1" value="${quantity}" data-qty aria-label="Quantità di pezzi"><small class="qty-price" data-qty-price>Prezzo: ${eur(currentPrice)}</small></div>` : ''}
 ${p.mixOptions?.length ? `<div class="opt"><b>Mix di fragranze</b><div class="chips">${p.mixOptions.map(n => `<button class="chip ${n===mix?'on':''}" data-mix="${n}" ${quantity && n > quantity ? 'disabled' : ''}>Mix di ${n}</button>`).join('')}</div></div>` : ''}
 ${frs.length ? `<div class="opt"><b>${mix ? `Scegli ${mix} fragranze` : 'Fragranza'}</b><div class="chips">${frs.map(f => `<button class="chip ${(mix ? selectedFragrances.some(selected => selected.id === f.id) : f.id===sel.f)?'on':''}" data-fr="${f.id}">${f.name}</button>`).join('')}</div>
   ${fr ? `<p class="frdesc">${fr.desc}<small>Note:<br>${fr.notes.join('<br>')}</small></p>` : ''}</div>` : ''}
