@@ -390,6 +390,14 @@
     color: #fff;
   }
 
+  .btn.solid:disabled {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
   .btn.block {
     width: 100%;
   }
@@ -453,35 +461,6 @@
     height: 100%;
     object-fit: cover;
     display: block;
-  }
-
-  .christmas-photo img {
-    filter: blur(18px);
-    transform: scale(1.08);
-  }
-
-  .product-photo {
-    position: relative;
-  }
-
-  .photo-countdown {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-content: center;
-    gap: 8px;
-    padding: 18px;
-    text-align: center;
-    background: rgba(58, 47, 40, 0.2);
-    color: #fff;
-  }
-
-  .photo-countdown b {
-    font: 400 24px/1.1 var(--serif);
-  }
-
-  .photo-countdown span {
-    font-size: 14px;
   }
 
   .media svg {
@@ -955,40 +934,104 @@
     }
   }
 
+  /* Galleria a scorrimento: frecce e pallini compaiono solo con più foto. */
   .gal {
+    position: relative;
+  }
+
+  .gal-track {
     display: flex;
-    gap: 10px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
     scrollbar-width: none;
   }
 
-  .gal::-webkit-scrollbar {
+  .gal-track::-webkit-scrollbar {
     display: none;
   }
 
-  .gal .media {
-    flex: 0 0 88%;
+  .gal-track .media {
+    flex: 0 0 100%;
     scroll-snap-align: center;
     aspect-ratio: 4 / 5;
   }
 
-  @media (min-width: 900px) {
-    .gal {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      overflow: visible;
-    }
+  .gal-btn {
+    position: absolute;
+    top: 50%;
+    width: 44px;
+    height: 44px;
+    margin-top: -22px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    color: var(--ink);
+    box-shadow: 0 4px 14px var(--shadow);
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
 
-    .gal .media {
-      flex: none;
-    }
+  .gal-btn.prev {
+    left: 12px;
+  }
 
-    .gal .media:first-child {
-      grid-column: 1 / -1;
-      aspect-ratio: 1;
-    }
+  .gal-btn.next {
+    right: 12px;
+  }
+
+  .gal-btn:disabled {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .gal-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .gal-dots {
+    position: absolute;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
+    display: flex;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+  }
+
+  .gal-dots button {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+
+  .gal-dots button::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ink);
+    opacity: 0.3;
+    transition: opacity 0.2s;
+  }
+
+  .gal-dots button[aria-current='true']::before {
+    opacity: 1;
   }
 
   .pinfo h1 {
@@ -1005,6 +1048,17 @@
   .pinfo .price {
     font: 400 24px var(--serif);
     margin-bottom: 18px;
+  }
+
+  .pinfo .stock {
+    margin: -8px 0 18px;
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .stock b {
+    font-weight: 500;
+    color: var(--ink);
   }
 
   .opt {
@@ -1054,7 +1108,8 @@
     margin-top: 28px;
   }
 
-  .mix-list {
+  .mix-list,
+  .spec-list {
     margin: 0;
     padding-left: 1.1em;
   }
@@ -1463,45 +1518,52 @@ const PRODUCTS = [
     ]
   },
   {
-    id: 'christmas-scent',
-    cat: 'wax',
+    id: 'gnomi-natalizi',
+    cat: 'candele',
+    natale: true,
     art: 'gift',
     tone: 2,
-    imgs: ['images/gift.jpeg'],
-    name: 'Christmas Scent',
-    fragrances: [],
-    custom: 'Fragranze a sorpresa.',
-    countdown: '2026-10-15T00:00:00+02:00',
+    imgs: ['images/gnomi.jpeg'],
+    name: 'Set gnomi natalizi',
+    desc: 'Candele decorative senza profumazione.',
+    custom: '',
     variants: [
-      { label: 'In arrivo', price: null, dimensions: 'Da definire' }
+      { label: 'Un formato', price: 15, weight: '210 g' }
     ]
   },
   {
-    id: 'mystery-christmas-box-mini',
-    cat: 'gift',
+    id: 'pallina-natalizia',
+    cat: 'candele',
+    natale: true,
     art: 'gift',
     tone: 3,
-    imgs: ['images/gift.jpeg'],
-    name: 'Mystery Christmas Box Mini',
-    fragrances: [],
-    custom: 'Fragranze a sorpresa.',
-    countdown: '2026-10-15T00:00:00+02:00',
+    imgs: ['images/pallina-natalizia.jpeg'],
+    name: 'Pallina natalizia',
+    desc: 'Candela decorativa senza profumazione.',
+    custom: '',
     variants: [
-      { label: 'In arrivo', price: null, dimensions: 'Da definire' }
+      { label: 'Un formato', price: 9, weight: '185 g' }
     ]
   },
   {
-    id: 'mystery-christmas-box',
+    id: 'mystery-box-natalizia',
     cat: 'gift',
+    natale: true,
     art: 'gift',
     tone: 4,
-    imgs: ['images/gift.jpeg'],
-    name: 'Mystery Christmas Box',
-    fragrances: [],
-    custom: 'Fragranze a sorpresa.',
-    countdown: '2026-10-15T00:00:00+02:00',
+    imgs: ['images/mystery-box.jpeg', 'images/mystery2.jpeg', 'images/mystery3.jpeg'],
+    name: 'Mystery box natalizia',
+    contents: [
+      '3 gnomi natalizi decorativi in cera',
+      '3 tubicini in vetro con 6 wax melts natalizie profumate (2 per tubicino)',
+      '1 wax tablet profumata da appendere'
+    ],
+    // Pezzi ancora disponibili: abbassa "left" di 1 a ogni ordine confermato su WhatsApp.
+    stock: { total: 10, left: 10 },
+    onePerPerson: true,
+    custom: '',
     variants: [
-      { label: 'In arrivo', price: null, dimensions: 'Da definire' }
+      { label: 'Un formato', price: 25 }
     ]
   },
 ];
@@ -1545,8 +1607,9 @@ const priceOf = p => {
   if (!ps.length) return 'Prossimamente';
   return (new Set(ps).size > 1 ? 'da ' : '') + eur(Math.min(...ps));
 };
-const countdownMarkup = p => p.countdown ? `<div class="photo-countdown" data-countdown="${p.countdown}"><b>Disponibile tra poco</b><span>Calcolo in corso...</span></div>` : '';
-const card = p => `<a class="pcard" href="#/prodotto/${p.id}"><div class="product-photo">${media({src:p.imgs[0], art:p.art, tone:p.tone, alt:p.name, cls:p.countdown ? 'christmas-photo' : ''})}${countdownMarkup(p)}</div><h3>${p.name}</h3>${priceOf(p) ? `<div class="pr">${priceOf(p)}</div>` : ''}${p.subtitle ? `<div class="sub">${p.subtitle}</div>` : ''}</a>`;
+const soldOut = p => !!p.stock && p.stock.left <= 0;
+const stockLabel = p => soldOut(p) ? 'Esaurita' : `Ne ${p.stock.left === 1 ? 'resta' : 'restano'} <b>${p.stock.left}</b> su ${p.stock.total}`;
+const card = p => `<a class="pcard" href="#/prodotto/${p.id}">${media({src:p.imgs[0], art:p.art, tone:p.tone, alt:p.name})}<h3>${p.name}</h3>${priceOf(p) ? `<div class="pr">${priceOf(p)}</div>` : ''}${p.subtitle ? `<div class="sub">${p.subtitle}</div>` : ''}${p.stock ? `<div class="sub stock">${stockLabel(p)}</div>` : ''}</a>`;
 const steps = list => `<div class="steps" style="--n:${list.length}">${list.map((s,i) => `<div class="step"><b>${i+1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>`;
 const externalWA = (t, label, cls='btn') => `<a class="${cls}" href="${wa(t)}" target="_blank" rel="noopener">${label}</a>`;
 
@@ -1678,18 +1741,28 @@ function Product(id) {
   if (!p) return Shop('tutti');
   const availableFragrances = fragList(p);
   sel = {v:0, f: availableFragrances[0]?.id || null, frags:[], mix:null, q:1};
-  const rel = PRODUCTS.filter(x => x.id !== p.id && (x.cat === p.cat || x.cat === 'gift')).slice(0, 3);
-  const galleryImgs = [p.imgs[0]];
-  const gal = galleryImgs.map((src, i) => `<div class="product-photo">${media({src, art:p.art, tone:((p.tone + i - 1) % 5) + 1, alt:`${p.name}, foto ${i+1}`, label:'Foto principale', cls:p.countdown ? 'christmas-photo' : ''})}${countdownMarkup(p)}</div>`).join('');
+  // Prima gli altri prodotti natalizi (se lo è anche questo), poi stessa categoria e idee regalo, poi il resto.
+  const rank = x => p.natale && x.natale ? 0 : (x.cat === p.cat || x.cat === 'gift') ? 1 : 2;
+  const rel = PRODUCTS.filter(x => x.id !== p.id).sort((a, b) => rank(a) - rank(b)).slice(0, 3);
   return `
 <div class="wrap"><a class="crumb" href="#/shop/${p.cat}">‹ ${CATS[p.cat]}</a>
   <div class="pdp">
-    <div class="gal" aria-label="Fotografie del prodotto">${gal}</div>
+    ${Gallery(p)}
     <div class="pinfo" id="buy">${Buy(p)}</div>
   </div>
 </div>
 <section class="sec alt"><div class="wrap narrow center stack"><h2>Come ordinare</h2>${steps(ORDER_STEPS)}</div></section>
 <section class="sec"><div class="wrap"><h2>Potrebbe piacerti</h2><div class="pgrid-list" style="margin-top:34px">${rel.map(card).join('')}</div></div></section>`;
+}
+
+function Gallery(p) {
+  const n = p.imgs.length;
+  const slides = p.imgs.map((src, i) => media({src, art:p.art, tone:((p.tone + i - 1) % 5) + 1, alt:`${p.name}, foto ${i+1}`, label:'Foto principale'})).join('');
+  const controls = n < 2 ? '' : `
+    <button class="gal-btn prev" type="button" data-gal-step="-1" aria-label="Foto precedente" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="gal-btn next" type="button" data-gal-step="1" aria-label="Foto successiva"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+    <div class="gal-dots">${p.imgs.map((_, i) => `<button type="button" data-gal-to="${i}" aria-label="Foto ${i+1} di ${n}"${i ? '' : ' aria-current="true"'}></button>`).join('')}</div>`;
+  return `<div class="gal" role="region" aria-label="Fotografie del prodotto"><div class="gal-track">${slides}</div>${controls}</div>`;
 }
 
 let sel = {v:0, f:null, frags:[], mix:null, q:1};
@@ -1761,6 +1834,8 @@ function Buy(p) {
 <span class="cat">${CATS[p.cat]}</span>
 <h1>${p.name}</h1>
 <div class="price">${currentPrice != null ? eur(currentPrice) : 'Preventivo su richiesta'}</div>
+${p.stock ? `<p class="stock">${stockLabel(p)}${p.onePerPerson && !soldOut(p) ? ' · massimo una per persona' : ''}</p>` : ''}
+${p.desc ? `<p>${p.desc}</p>` : ''}
 ${p.variants.length > 1 ? `<div class="opt"><b>Formato</b><div class="chips">${p.variants.map((x,i) => `<button class="chip ${i===sel.v?'on':''}" data-var="${i}">${x.label}</button>`).join('')}</div></div>` : ''}
 ${quantityConfigForProduct ? `<div class="opt"><b>Quantità</b><input type="number" min="${quantityConfigForProduct.min}" max="${quantityConfigForProduct.max}" step="1" value="${quantity}" data-qty aria-label="Quantità di pezzi"><small class="qty-price" data-qty-price>Prezzo: ${eur(currentPrice)}</small></div>` : ''}
 ${p.mixOptions?.length ? `<div class="opt"><b>Mix di fragranze</b><div class="chips">${p.mixOptions.map(n => `<button class="chip ${n===mix?'on':''}" data-mix="${n}" ${quantity && n > quantity ? 'disabled' : ''}>Mix di ${n}</button>`).join('')}</div></div>` : ''}
@@ -1768,12 +1843,14 @@ ${frs.length ? `<div class="opt"><b>${mix ? `Scegli ${mix} fragranze` : 'Fragran
   ${fr ? `<p class="frdesc">${fr.desc}<small>Note:<br>${fr.notes.join('<br>')}</small></p>` : ''}</div>` : ''}
 <dl class="spec">
   ${p.variants.length > 1 ? `<dt>Formato</dt><dd>${v.label}</dd>` : ''}
-  <dt>Dimensioni</dt><dd>${v.dimensions || 'Da definire'}</dd>
+  ${v.dimensions ? `<dt>Dimensioni</dt><dd>${v.dimensions}</dd>` : ''}
+  ${v.weight ? `<dt>Peso netto</dt><dd>${v.weight}</dd>` : ''}
+  ${p.contents ? `<dt>Contiene</dt><dd><ul class="spec-list">${p.contents.map(c => `<li>${c}</li>`).join('')}</ul></dd>` : ''}
   ${mix && distributionHtml ? `<dt>Distribuzione</dt><dd data-mix-distribution>${distributionHtml}</dd>` : ''}
   ${p.custom ? `<dt>Personalizzazione</dt><dd>${p.custom}</dd>` : ''}
 </dl>
 <div class="buyrow">
-  ${externalWA(msg, quote ? 'Richiedi un preventivo' : 'Ordina su WhatsApp', 'btn solid block js-order-wa')}
+  ${soldOut(p) ? '<button class="btn solid block" type="button" disabled>Esaurita</button>' : externalWA(msg, quote ? 'Richiedi un preventivo' : 'Ordina su WhatsApp', 'btn solid block js-order-wa')}
   <a class="btn block" href="#/contatti">Chiedi informazioni</a>
 </div>`;
 }
@@ -2046,25 +2123,30 @@ function famShow(id) {
     <p class="mood">${f.mood}</p>`;
 }
 
-function updateCountdowns() {
-  document.querySelectorAll('[data-countdown]').forEach(countdown => {
-    const target = new Date(countdown.dataset.countdown).getTime();
-    const remaining = target - Date.now();
-    const output = countdown.querySelector('span');
-    if (remaining <= 0) {
-      countdown.querySelector('b').textContent = 'Disponibile ora';
-      output.textContent = '';
-      countdown.closest('.product-photo')?.querySelector('.christmas-photo')?.classList.remove('christmas-photo');
-      return;
-    }
+/* Galleria: le frecce e i pallini spostano lo scorrimento, lo scorrimento aggiorna frecce e pallini. */
+const galIndex = track => Math.round(track.scrollLeft / track.clientWidth);
 
-    const days = Math.floor(remaining / 86400000);
-    const hours = Math.floor((remaining % 86400000) / 3600000);
-    const minutes = Math.floor((remaining % 3600000) / 60000);
-    const seconds = Math.floor((remaining % 60000) / 1000);
-    output.textContent = `${days}g ${hours}h ${minutes}m ${seconds}s`;
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-gal-step],[data-gal-to]');
+  if (!btn) return;
+  const track = btn.closest('.gal').querySelector('.gal-track');
+  const index = btn.dataset.galTo !== undefined ? +btn.dataset.galTo : galIndex(track) + +btn.dataset.galStep;
+  const smooth = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+  track.scrollTo({ left: index * track.clientWidth, behavior: smooth });
+});
+
+// Lo scroll non risale il DOM: lo intercetto in fase di cattura.
+document.addEventListener('scroll', e => {
+  const track = e.target.classList?.contains('gal-track') ? e.target : null;
+  const gal = track?.closest('.gal');
+  if (!gal?.querySelector('.gal-dots')) return;
+  const index = galIndex(track);
+  gal.querySelector('.prev').disabled = index === 0;
+  gal.querySelector('.next').disabled = index === track.children.length - 1;
+  gal.querySelectorAll('[data-gal-to]').forEach((dot, i) => {
+    i === index ? dot.setAttribute('aria-current', 'true') : dot.removeAttribute('aria-current');
   });
-}
+}, true);
 
 /* =====================================================================
    TEMA E INTERAZIONI
@@ -2175,8 +2257,6 @@ window.addEventListener('hashchange', router);
 buildChrome();
 applyTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
 router();
-updateCountdowns();
-setInterval(updateCountdowns, 1000);
 </script>
 </body>
 </html>
