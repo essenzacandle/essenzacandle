@@ -564,6 +564,52 @@
     }
   }
 
+  /* Banner della collezione natalizia, sopra il logo */
+  .promo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 18px 9px 14px;
+    margin-bottom: 26px;
+    font: 400 14px/1.3 var(--sans);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    text-decoration: none;
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+    border-radius: 999px;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .promo em {
+    font: italic 400 16px/1 var(--serif);
+    letter-spacing: 0;
+  }
+
+  .promo svg {
+    flex: none;
+    width: 13px;
+    height: 13px;
+    fill: var(--flame);
+    animation: twinkle 3.2s ease-in-out infinite;
+  }
+
+  .promo .arr {
+    transition: transform 0.2s;
+  }
+
+  .promo:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+
+  .promo:hover .arr {
+    transform: translateX(3px);
+  }
+
   /* Animazioni leggere dell'hero */
   @keyframes rise {
     from {
@@ -587,12 +633,18 @@
     50% { opacity: 1; }
   }
 
+  @keyframes twinkle {
+    0%, 100% { transform: scale(1) rotate(0); opacity: 1; }
+    50% { transform: scale(0.72) rotate(45deg); opacity: 0.6; }
+  }
+
   .hero-text > * {
     animation: rise 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   }
 
   .hero-text > *:nth-child(2) { animation-delay: 0.25s; }
   .hero-text > *:nth-child(3) { animation-delay: 0.5s; }
+  .hero-text > *:nth-child(4) { animation-delay: 0.75s; }
 
   .hero .flame {
     transform-box: fill-box;
@@ -607,7 +659,8 @@
   @media (prefers-reduced-motion: reduce) {
     .hero-text > *,
     .hero .flame,
-    .hero .glow {
+    .hero .glow,
+    .promo svg {
       animation: none;
     }
   }
@@ -1343,7 +1396,9 @@ const FRAGRANCES = [
 ];
 
 
-const CATS = {tutti:'Tutto', candele:'Candele decorative', wax:'Wax melts', bomboniere:'Bomboniere', gift:'Idee regalo'};
+const CATS = {tutti:'Tutto', natale:'Natale', candele:'Candele decorative', wax:'Wax melts', bomboniere:'Bomboniere', gift:'Idee regalo'};
+// "natale" non è una categoria vera: raccoglie i prodotti con natale: true.
+const inCat = (p, c) => c === 'tutti' || p.cat === c || (c === 'natale' && !!p.natale);
 const getDarkCandleSrc = src => {
   if (!src || !/\.(jpe?g|png|webp|avif|gif)$/i.test(src)) return src;
   return src.replace(/(\.[a-z0-9]+)$/i, '-dark$1');
@@ -1673,9 +1728,12 @@ function Home() {
     ['Bomboniere','Su misura per i tuoi eventi', '#/bomboniere','box', 5, 'images/bomboniere.jpeg'],
     ['Idee regalo',      'Idee pronte da regalare',   '#/shop/gift',    'gift',   4, 'images/gift.jpeg']
   ];
+  // Il banner compare finché in PRODUCTS c'è almeno un prodotto con natale: true.
+  const xmas = PRODUCTS.some(p => p.natale);
   return `
 <section class="hero" style="--hero-image:${CFG.heroImg ? `url('${esc(CFG.heroImg)}')` : 'none'}"><div class="wrap in">
   <div class="hero-text">
+    ${xmas ? `<a class="promo" href="#/shop/natale"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C8.6 4.6 11.4 7.4 16 8 11.4 8.6 8.6 11.4 8 16 7.4 11.4 4.6 8.6 0 8 4.6 7.4 7.4 4.6 8 0z"/></svg><span><em>Collezione natalizia</em> disponibile ora</span><span class="arr" aria-hidden="true">→</span></a>` : ''}
     <h1 class="logo-xl">${CFG.brand}</h1>
     <p class="tagline">${CFG.tagline}</p>
     <div class="actions">
@@ -1727,7 +1785,7 @@ function Insta() {
 
 function Shop(cat) {
   cat = CATS[cat] ? cat : 'tutti';
-  const list = cat === 'tutti' ? PRODUCTS : PRODUCTS.filter(p => p.cat === cat);
+  const list = PRODUCTS.filter(p => inCat(p, cat));
   return `
 <div class="wrap pagehead"><h1>Collezioni</h1><p class="lead">Candele, wax melts, bomboniere e idee regalo.</p></div>
 <div class="wrap">
@@ -2192,7 +2250,7 @@ document.addEventListener('click', e => {
 
   if (action.dataset.filter) {
     const c = action.dataset.filter;
-    $('#grid').innerHTML = (c === 'tutti' ? PRODUCTS : PRODUCTS.filter(p => p.cat === c)).map(card).join('');
+    $('#grid').innerHTML = PRODUCTS.filter(p => inCat(p, c)).map(card).join('');
     document.querySelectorAll('#filters .chip').forEach(x => x.classList.toggle('on', x === action));
     try {
       history.replaceState(null, '', '#/shop/' + c);
