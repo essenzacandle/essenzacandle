@@ -1581,6 +1581,9 @@ const PRODUCTS = [
     imgs: ['images/gnomi.jpeg'],
     name: 'Set gnomi natalizi',
     desc: 'Candele decorative senza profumazione.',
+    stock: { total: 24, left: 24 },
+    onePerPerson: true,
+    masc: true,
     custom: '',
     variants: [
       { label: 'Un formato', price: 15, weight: '210 g' }
@@ -1595,6 +1598,8 @@ const PRODUCTS = [
     imgs: ['images/pallina-natalizia.jpeg'],
     name: 'Pallina natalizia',
     desc: 'Candela decorativa senza profumazione.',
+    stock: { total: 20, left: 20 },
+    onePerPerson: true,
     custom: '',
     variants: [
       { label: 'Un formato', price: 9, weight: '185 g' }
@@ -1613,7 +1618,6 @@ const PRODUCTS = [
       '3 tubicini in vetro con 6 wax melts natalizie profumate (2 per tubicino)',
       '1 wax tablet profumata da appendere'
     ],
-    // Pezzi ancora disponibili: abbassa "left" di 1 a ogni ordine confermato su WhatsApp.
     stock: { total: 24, left: 24 },
     onePerPerson: true,
     custom: '',
@@ -1662,8 +1666,10 @@ const priceOf = p => {
   if (!ps.length) return 'Prossimamente';
   return (new Set(ps).size > 1 ? 'da ' : '') + eur(Math.min(...ps));
 };
+// Prodotti con "stock": abbassa "left" di 1 a ogni ordine confermato su WhatsApp. "masc" accorda le etichette al maschile.
 const soldOut = p => !!p.stock && p.stock.left <= 0;
-const stockLabel = p => soldOut(p) ? 'Esaurita' : `Ne ${p.stock.left === 1 ? 'resta' : 'restano'} <b>${p.stock.left}</b> su ${p.stock.total}`;
+const soldOutText = p => p.masc ? 'Esaurito' : 'Esaurita';
+const stockLabel = p => soldOut(p) ? soldOutText(p) : `Ne ${p.stock.left === 1 ? 'resta' : 'restano'} <b>${p.stock.left}</b> su ${p.stock.total}`;
 const card = p => `<a class="pcard" href="#/prodotto/${p.id}">${media({src:p.imgs[0], art:p.art, tone:p.tone, alt:p.name})}<h3>${p.name}</h3>${priceOf(p) ? `<div class="pr">${priceOf(p)}</div>` : ''}${p.subtitle ? `<div class="sub">${p.subtitle}</div>` : ''}${p.stock ? `<div class="sub stock">${stockLabel(p)}</div>` : ''}</a>`;
 const steps = list => `<div class="steps" style="--n:${list.length}">${list.map((s,i) => `<div class="step"><b>${i+1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>`;
 const externalWA = (t, label, cls='btn') => `<a class="${cls}" href="${wa(t)}" target="_blank" rel="noopener">${label}</a>`;
@@ -1825,6 +1831,7 @@ function Gallery(p) {
 
 let sel = {v:0, f:null, frags:[], mix:null, q:1};
 function quantityConfig(p) {
+  if (p?.onePerPerson) return null;
   if (p?.quantity) return p.quantity;
   return p?.cat === 'candele' ? {min: 1, max: 5} : null;
 }
@@ -1892,7 +1899,7 @@ function Buy(p) {
 <span class="cat">${CATS[p.cat]}</span>
 <h1>${p.name}</h1>
 <div class="price">${currentPrice != null ? eur(currentPrice) : 'Preventivo su richiesta'}</div>
-${p.stock ? `<p class="stock">${stockLabel(p)}${p.onePerPerson && !soldOut(p) ? ' · massimo una per persona' : ''}</p>` : ''}
+${p.stock ? `<p class="stock">${stockLabel(p)}${p.onePerPerson && !soldOut(p) ? ` · massimo ${p.masc ? 'uno' : 'una'} per persona` : ''}</p>` : ''}
 ${p.desc ? `<p>${p.desc}</p>` : ''}
 ${p.variants.length > 1 ? `<div class="opt"><b>Formato</b><div class="chips">${p.variants.map((x,i) => `<button class="chip ${i===sel.v?'on':''}" data-var="${i}">${x.label}</button>`).join('')}</div></div>` : ''}
 ${quantityConfigForProduct ? `<div class="opt"><b>Quantità</b><input type="number" min="${quantityConfigForProduct.min}" max="${quantityConfigForProduct.max}" step="1" value="${quantity}" data-qty aria-label="Quantità di pezzi"><small class="qty-price" data-qty-price>Prezzo: ${eur(currentPrice)}</small></div>` : ''}
@@ -1908,7 +1915,7 @@ ${frs.length ? `<div class="opt"><b>${mix ? `Scegli ${mix} fragranze` : 'Fragran
   ${p.custom ? `<dt>Personalizzazione</dt><dd>${p.custom}</dd>` : ''}
 </dl>
 <div class="buyrow">
-  ${soldOut(p) ? '<button class="btn solid block" type="button" disabled>Esaurita</button>' : externalWA(msg, quote ? 'Richiedi un preventivo' : 'Ordina su WhatsApp', 'btn solid block js-order-wa')}
+  ${soldOut(p) ? `<button class="btn solid block" type="button" disabled>${soldOutText(p)}</button>` : externalWA(msg, quote ? 'Richiedi un preventivo' : 'Ordina su WhatsApp', 'btn solid block js-order-wa')}
   <a class="btn block" href="#/contatti">Chiedi informazioni</a>
 </div>`;
 }
