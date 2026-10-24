@@ -7,7 +7,7 @@
 <meta name="description" content="Essenza:  candele decorative, wax melts e bomboniere profumate create con cura. Scopri le collezioni e scrivici per ordinare.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Instrument+Sans:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
 <script>try{if(localStorage.getItem('essenza-theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}</script>
 <style>
   /* ==========================================================
@@ -39,6 +39,7 @@
     --t5b: #cdbfa5;
 
     --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+    --caps: 'Cinzel', 'Trajan Pro', Georgia, serif;
     --sans: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
     color-scheme: light;
@@ -510,7 +511,7 @@
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: linear-gradient(90deg, color-mix(in srgb, var(--bg) 86%, transparent), color-mix(in srgb, var(--bg) 34%, transparent) 58%, transparent);
+    background: color-mix(in srgb, var(--bg) 74%, transparent);
   }
 
   .hero .in {
@@ -526,8 +527,10 @@
   }
 
   .tagline {
-    font: italic 300 clamp(21px, 3vw, 30px) / 1.35 var(--serif);
-    margin: 18px 0 0;
+    font: 500 clamp(16px, 2.2vw, 22px) / 1.5 var(--caps);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin: 20px 0 0;
     max-width: 20em;
   }
 
@@ -559,6 +562,10 @@
       margin-left: 0;
     }
 
+    .hero::before {
+      background: linear-gradient(90deg, color-mix(in srgb, var(--bg) 90%, transparent), color-mix(in srgb, var(--bg) 55%, transparent) 60%, transparent);
+    }
+
     .hero .actions {
       justify-content: flex-start;
     }
@@ -575,8 +582,8 @@
     letter-spacing: 0.02em;
     color: var(--ink);
     text-decoration: none;
-    background: color-mix(in srgb, var(--bg) 72%, transparent);
-    border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
     border-radius: 999px;
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
@@ -584,8 +591,10 @@
   }
 
   .promo em {
-    font: italic 400 16px/1 var(--serif);
-    letter-spacing: 0;
+    font: 600 14px/1 var(--caps);
+    font-style: normal;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
   }
 
   .promo svg {
@@ -1598,7 +1607,7 @@ const PRODUCTS = [
     imgs: ['images/pallina-natalizia.jpeg'],
     name: 'Pallina natalizia',
     desc: 'Candela decorativa senza profumazione.',
-    stock: { total: 20, left: 20 },
+    stock: { total: 20, left: 18 },
     onePerPerson: true,
     custom: '',
     variants: [
@@ -1739,7 +1748,7 @@ function Home() {
   return `
 <section class="hero" style="--hero-image:${CFG.heroImg ? `url('${esc(CFG.heroImg)}')` : 'none'}"><div class="wrap in">
   <div class="hero-text">
-    ${xmas ? `<a class="promo" href="#/shop/natale"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C8.6 4.6 11.4 7.4 16 8 11.4 8.6 8.6 11.4 8 16 7.4 11.4 4.6 8.6 0 8 4.6 7.4 7.4 4.6 8 0z"/></svg><span><em>Collezione natalizia</em> disponibile ora</span><span class="arr" aria-hidden="true">→</span></a>` : ''}
+    ${xmas ? `<a class="promo" href="#/shop/natale"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C8.6 4.6 11.4 7.4 16 8 11.4 8.6 8.6 11.4 8 16 7.4 11.4 4.6 8.6 0 8 4.6 7.4 7.4 4.6 8 0z"/></svg><span><em>COLLEZIONE NATALIZIA</em> disponibile ora</span><span class="arr" aria-hidden="true">→</span></a>` : ''}
     <h1 class="logo-xl">${CFG.brand}</h1>
     <p class="tagline">${CFG.tagline}</p>
     <div class="actions">
