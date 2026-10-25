@@ -166,6 +166,11 @@
     padding: clamp(56px, 9vw, 112px) 0;
   }
 
+  /* Spazio tra l'ultima griglia di Shop e Collezioni stagionali e il footer */
+  .pagebody {
+    padding-bottom: clamp(56px, 9vw, 112px);
+  }
+
   .alt {
     background: var(--bg2);
   }
@@ -418,6 +423,12 @@
     border: 1px solid var(--line);
     border-radius: 999px;
     cursor: pointer;
+  }
+
+  a.chip {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
   }
 
   .chip:hover {
@@ -1383,7 +1394,9 @@ const CFG = {
   instagram: 'essenzacandle_',          
   email: 'infoessenza2026@gmail.com',                     
   heroImg: './images/banner.jpeg',                   
-  labels: true                   
+  labels: true,
+  // URL della web app Google Apps Script delle scorte (vedi scorte-google-sheet.gs). Vuoto = usa i numeri scritti in PRODUCTS.
+  stockApi: ''
 };
 
 
@@ -1405,9 +1418,14 @@ const FRAGRANCES = [
 ];
 
 
-const CATS = {tutti:'Tutto', natale:'Natale', candele:'Candele decorative', wax:'Wax melts', bomboniere:'Bomboniere', gift:'Idee regalo'};
-// "natale" non è una categoria vera: raccoglie i prodotti con natale: true.
-const inCat = (p, c) => c === 'tutti' || p.cat === c || (c === 'natale' && !!p.natale);
+const CATS = {tutti:'Tutto', candele:'Candele decorative', wax:'Wax melts', bomboniere:'Bomboniere', gift:'Idee regalo'};
+// I prodotti con "stagione" stanno in "Collezioni stagionali", non nella griglia della loro categoria.
+const inCat = (p, c) => c === 'tutti' || (p.cat === c && !p.stagione);
+// Collezioni stagionali: una stagione compare finché ha almeno un prodotto. Foto da Wikimedia Commons (CC0).
+const SEASONS = {
+  autunno: { name: 'Autunno', img: 'images/collezione-autunno.jpeg', desc: 'Colori caldi e profumi avvolgenti' },
+  natale: { name: 'Natale', img: 'images/collezione-natale.jpeg', desc: 'Idee in cera per le feste' }
+};
 const getDarkCandleSrc = src => {
   if (!src || !/\.(jpe?g|png|webp|avif|gif)$/i.test(src)) return src;
   return src.replace(/(\.[a-z0-9]+)$/i, '-dark$1');
@@ -1552,6 +1570,22 @@ const PRODUCTS = [
     ]
   },
   {
+    id: 'zucchette-autunno',
+    cat: 'wax',
+    stagione: 'autunno',
+    art: 'melts',
+    tone: 3,
+    imgs: ['images/zucchette.jpeg'],
+    name: 'Zucchette d’autunno',
+    subtitle: 'Edizione limitata',
+    desc: 'Quattro zucchette in cera profumata, in tonalità autunnali assortite. Ogni scatolina è unica e i colori sono selezionati da Essenza.<br><br>Edizione limitata.',
+    fragrances: [],
+    custom: '',
+    variants: [
+      { label: 'Un formato', price: 6 }
+    ]
+  },
+  {
     id: 'bomboniera-candela',
     cat: 'bomboniere',
     art: 'box',
@@ -1584,13 +1618,13 @@ const PRODUCTS = [
   {
     id: 'gnomi-natalizi',
     cat: 'candele',
-    natale: true,
+    stagione: 'natale',
     art: 'gift',
     tone: 2,
     imgs: ['images/gnomi.jpeg'],
     name: 'Set gnomi natalizi',
     desc: 'Candele decorative senza profumazione.',
-    stock: { total: 24, left: 24 },
+    stock: { total: 24, left: 23 },
     onePerPerson: true,
     masc: true,
     custom: '',
@@ -1601,7 +1635,7 @@ const PRODUCTS = [
   {
     id: 'pallina-natalizia',
     cat: 'candele',
-    natale: true,
+    stagione: 'natale',
     art: 'gift',
     tone: 3,
     imgs: ['images/pallina-natalizia.jpeg'],
@@ -1617,7 +1651,7 @@ const PRODUCTS = [
   {
     id: 'mystery-box-natalizia',
     cat: 'gift',
-    natale: true,
+    stagione: 'natale',
     art: 'gift',
     tone: 4,
     imgs: ['images/mystery-box.jpeg', 'images/mystery2.jpeg', 'images/mystery3.jpeg'],
@@ -1627,7 +1661,7 @@ const PRODUCTS = [
       '3 tubicini in vetro con 6 wax melts natalizie profumate (2 per tubicino)',
       '1 wax tablet profumata da appendere'
     ],
-    stock: { total: 24, left: 24 },
+    stock: { total: 24, left: 22 },
     onePerPerson: true,
     custom: '',
     variants: [
@@ -1675,11 +1709,14 @@ const priceOf = p => {
   if (!ps.length) return 'Prossimamente';
   return (new Set(ps).size > 1 ? 'da ' : '') + eur(Math.min(...ps));
 };
-// Prodotti con "stock": abbassa "left" di 1 a ogni ordine confermato su WhatsApp. "masc" accorda le etichette al maschile.
+// Prodotti con "stock": i numeri qui sono solo il ripiego se il foglio Google (CFG.stockApi) non risponde. "masc" accorda le etichette al maschile.
 const soldOut = p => !!p.stock && p.stock.left <= 0;
 const soldOutText = p => p.masc ? 'Esaurito' : 'Esaurita';
 const stockLabel = p => soldOut(p) ? soldOutText(p) : `Ne ${p.stock.left === 1 ? 'resta' : 'restano'} <b>${p.stock.left}</b> su ${p.stock.total}`;
-const card = p => `<a class="pcard" href="#/prodotto/${p.id}">${media({src:p.imgs[0], art:p.art, tone:p.tone, alt:p.name})}<h3>${p.name}</h3>${priceOf(p) ? `<div class="pr">${priceOf(p)}</div>` : ''}${p.subtitle ? `<div class="sub">${p.subtitle}</div>` : ''}${p.stock ? `<div class="sub stock">${stockLabel(p)}</div>` : ''}</a>`;
+const card = p => `<a class="pcard" href="#/prodotto/${p.id}">${media({src:p.imgs[0], art:p.art, tone:p.tone, alt:p.name})}<h3>${p.name}</h3>${priceOf(p) ? `<div class="pr">${priceOf(p)}</div>` : ''}${p.subtitle ? `<div class="sub">${p.subtitle}</div>` : ''}${p.stock ? `<div class="sub stock" data-stock="${p.id}">${stockLabel(p)}</div>` : ''}</a>`;
+const catGrid = c => PRODUCTS.filter(p => inCat(p, c)).map(card).join('');
+// Filtri dello shop; dopo "Wax melts" il pulsante "Collezioni stagionali", finché c'è almeno un prodotto con "stagione".
+const shopChips = cat => `<div class="chips" id="filters" role="group" aria-label="Filtra per categoria">${Object.entries(CATS).map(([k,v]) => `<button class="chip ${k===cat?'on':''}" data-filter="${k}">${v}</button>` + (k === 'wax' && PRODUCTS.some(p => p.stagione) ? `<a class="chip ${cat==='stagionali'?'on':''}" href="#/stagionali">Collezioni stagionali</a>` : '')).join('')}</div>`;
 const steps = list => `<div class="steps" style="--n:${list.length}">${list.map((s,i) => `<div class="step"><b>${i+1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>`;
 const externalWA = (t, label, cls='btn') => `<a class="${cls}" href="${wa(t)}" target="_blank" rel="noopener">${label}</a>`;
 
@@ -1743,12 +1780,12 @@ function Home() {
     ['Bomboniere','Su misura per i tuoi eventi', '#/bomboniere','box', 5, 'images/bomboniere.jpeg'],
     ['Idee regalo',      'Idee pronte da regalare',   '#/shop/gift',    'gift',   4, 'images/gift.jpeg']
   ];
-  // Il banner compare finché in PRODUCTS c'è almeno un prodotto con natale: true.
-  const xmas = PRODUCTS.some(p => p.natale);
+  // Il banner compare finché in PRODUCTS c'è almeno un prodotto con stagione: 'natale'.
+  const xmas = PRODUCTS.some(p => p.stagione === 'natale');
   return `
 <section class="hero" style="--hero-image:${CFG.heroImg ? `url('${esc(CFG.heroImg)}')` : 'none'}"><div class="wrap in">
   <div class="hero-text">
-    ${xmas ? `<a class="promo" href="#/shop/natale"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C8.6 4.6 11.4 7.4 16 8 11.4 8.6 8.6 11.4 8 16 7.4 11.4 4.6 8.6 0 8 4.6 7.4 7.4 4.6 8 0z"/></svg><span><em>COLLEZIONE NATALIZIA</em> disponibile ora</span><span class="arr" aria-hidden="true">→</span></a>` : ''}
+    ${xmas ? `<a class="promo" href="#/stagionali/natale"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C8.6 4.6 11.4 7.4 16 8 11.4 8.6 8.6 11.4 8 16 7.4 11.4 4.6 8.6 0 8 4.6 7.4 7.4 4.6 8 0z"/></svg><span><em>COLLEZIONE NATALIZIA</em> disponibile ora</span><span class="arr" aria-hidden="true">→</span></a>` : ''}
     <h1 class="logo-xl">${CFG.brand}</h1>
     <p class="tagline">${CFG.tagline}</p>
     <div class="actions">
@@ -1800,12 +1837,24 @@ function Insta() {
 
 function Shop(cat) {
   cat = CATS[cat] ? cat : 'tutti';
-  const list = PRODUCTS.filter(p => inCat(p, cat));
   return `
 <div class="wrap pagehead"><h1>Collezioni</h1><p class="lead">Candele, wax melts, bomboniere e idee regalo.</p></div>
-<div class="wrap">
-  <div class="chips" id="filters" role="group" aria-label="Filtra per categoria">${Object.entries(CATS).map(([k,v]) => `<button class="chip ${k===cat?'on':''}" data-filter="${k}">${v}</button>`).join('')}</div>
-  <div class="pgrid-list" id="grid" style="margin-top:34px">${list.map(card).join('')}</div>
+<div class="wrap pagebody">
+  ${shopChips(cat)}
+  <div class="pgrid-list" id="grid" style="margin-top:34px">${catGrid(cat)}</div>
+</div>`;
+}
+
+function Seasons(s) {
+  s = SEASONS[s] ? s : null;
+  return `
+<div class="wrap pagehead"><h1>Collezioni stagionali</h1><p class="lead">Edizioni limitate che cambiano con le stagioni.</p></div>
+<div class="wrap pagebody">
+  ${shopChips('stagionali')}
+  ${s ? `<a class="crumb" href="#/stagionali" style="margin-top:34px">‹ Tutte le collezioni stagionali</a>
+  <h2 style="margin-top:18px">${SEASONS[s].name}</h2>
+  <div class="pgrid-list" style="margin-top:34px">${PRODUCTS.filter(p => p.stagione === s).map(card).join('')}</div>`
+  : `<div class="tiles">${Object.entries(SEASONS).filter(([k]) => PRODUCTS.some(p => p.stagione === k)).map(([k,v]) => `<a class="tile" href="#/stagionali/${k}">${media({src:v.img, cls:'arch', alt:v.name})}<h3>${v.name}</h3><p>${v.desc}</p></a>`).join('')}</div>`}
 </div>`;
 }
 
@@ -1814,11 +1863,11 @@ function Product(id) {
   if (!p) return Shop('tutti');
   const availableFragrances = fragList(p);
   sel = {v:0, f: availableFragrances[0]?.id || null, frags:[], mix:null, q:1};
-  // Prima gli altri prodotti natalizi (se lo è anche questo), poi stessa categoria e idee regalo, poi il resto.
-  const rank = x => p.natale && x.natale ? 0 : (x.cat === p.cat || x.cat === 'gift') ? 1 : 2;
+  // Prima gli altri prodotti della stessa collezione stagionale (se lo è anche questo), poi stessa categoria e idee regalo, poi il resto.
+  const rank = x => p.stagione && x.stagione === p.stagione ? 0 : (x.cat === p.cat || x.cat === 'gift') ? 1 : 2;
   const rel = PRODUCTS.filter(x => x.id !== p.id).sort((a, b) => rank(a) - rank(b)).slice(0, 3);
   return `
-<div class="wrap"><a class="crumb" href="#/shop/${p.cat}">‹ ${CATS[p.cat]}</a>
+<div class="wrap">${p.stagione ? `<a class="crumb" href="#/stagionali/${p.stagione}">‹ ${SEASONS[p.stagione].name}</a>` : `<a class="crumb" href="#/shop/${p.cat}">‹ ${CATS[p.cat]}</a>`}
   <div class="pdp">
     ${Gallery(p)}
     <div class="pinfo" id="buy">${Buy(p)}</div>
@@ -1930,7 +1979,6 @@ ${frs.length ? `<div class="opt"><b>${mix ? `Scegli ${mix} fragranze` : 'Fragran
 }
 
 function Wax() {
-  const melts = PRODUCTS.filter(p => p.cat === 'wax');
   return `
 <div class="wrap pagehead"><h1>Wax melts</h1></div>
 
@@ -1987,8 +2035,8 @@ function Wax() {
 
 <section class="sec"><div class="wrap">
   <h2>Le nostre wax melts</h2>
-  <div class="pgrid-list" style="margin-top:34px">${melts.map(card).join('')}</div>
-  <div class="actions"><a class="btn" href="#/shop/wax">Vedi tutte</a></div>
+  <div class="pgrid-list" style="margin-top:34px">${catGrid('wax')}</div>
+  <div class="actions"><a class="btn" href="#/shop/wax">Vedi tutte</a>${PRODUCTS.some(p => p.stagione) ? `<a class="btn" href="#/stagionali">Collezioni stagionali</a>` : ''}</div>
 </div></section>`;
 }
 
@@ -2142,7 +2190,12 @@ function router() {
 
   switch (a) {
     case 'shop':
-      html = Shop(b);
+      // I vecchi link a #/shop/natale portano alla collezione stagionale.
+      html = b === 'natale' ? Seasons('natale') : Shop(b);
+      key = 'shop';
+      break;
+    case 'stagionali':
+      html = Seasons(b);
       key = 'shop';
       break;
     case 'prodotto':
@@ -2266,7 +2319,8 @@ document.addEventListener('click', e => {
 
   if (action.dataset.filter) {
     const c = action.dataset.filter;
-    $('#grid').innerHTML = PRODUCTS.filter(p => inCat(p, c)).map(card).join('');
+    if (!$('#grid')) return location.hash = '#/shop/' + c;
+    $('#grid').innerHTML = catGrid(c);
     document.querySelectorAll('#filters .chip').forEach(x => x.classList.toggle('on', x === action));
     try {
       history.replaceState(null, '', '#/shop/' + c);
@@ -2327,10 +2381,46 @@ document.addEventListener('submit', e => {
   f.querySelector('.fout').innerHTML = `Grazie! Se WhatsApp non si è aperto, <a href="${wa(text)}" target="_blank" rel="noopener">tocca qui per inviare il messaggio</a>.`;
 });
 
+/* =====================================================================
+   SCORTE DAL FOGLIO GOOGLE
+   ===================================================================== */
+function refreshStock() {
+  document.querySelectorAll('[data-stock]').forEach(el => el.innerHTML = stockLabel(P[el.dataset.stock]));
+  const p = P[location.hash.split('/')[2]];
+  if (p?.stock && $('#buy')) $('#buy').innerHTML = Buy(p);
+}
+
+function loadStock() {
+  if (!CFG.stockApi) return;
+  fetch(CFG.stockApi)
+    .then(r => r.json())
+    .then(data => {
+      Object.entries(data).forEach(([id, st]) => {
+        if (P[id]?.stock) P[id].stock = { total: st.total, left: st.left };
+      });
+      refreshStock();
+    })
+    .catch(() => {});
+}
+
+// Al tocco su "Ordina su WhatsApp" scala un pezzo, una sola volta per prodotto da questo browser.
+document.addEventListener('click', e => {
+  if (!e.target.closest('#buy .js-order-wa')) return;
+  const p = P[location.hash.split('/')[2]];
+  if (!p?.stock || !CFG.stockApi || soldOut(p)) return;
+  const key = 'essenza-ordered-' + p.id;
+  try { if (localStorage.getItem(key)) return; localStorage.setItem(key, '1'); } catch (err) {}
+  navigator.sendBeacon(CFG.stockApi, p.id);
+  p.stock.left--;
+  setTimeout(refreshStock);
+});
+
 window.addEventListener('hashchange', router);
+window.addEventListener('pageshow', e => e.persisted && loadStock());
 buildChrome();
 applyTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
 router();
+loadStock();
 </script>
 </body>
 </html>
