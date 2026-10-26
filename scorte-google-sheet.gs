@@ -45,7 +45,8 @@ function readStock() {
   const out = {};
   rows.slice(1).forEach(r => {
     const id = String(r[0]).trim();
-    if (id) out[id] = { total: Number(r[1]), left: Math.max(0, Number(r[2])) };
+    // Righe con totale o rimasti vuoti = prodotto senza limite di pezzi: il sito le ignora.
+    if (id && r[1] !== '' && r[2] !== '') out[id] = { total: Number(r[1]), left: Math.max(0, Number(r[2])) };
   });
   return out;
 }

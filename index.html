@@ -756,10 +756,24 @@
     margin: 0;
   }
 
-  .tile:hover h3 {
-    text-decoration: underline;
-    text-underline-offset: 5px;
-    text-decoration-thickness: 1px;
+  /* Hover delle categorie: alone luminoso invece della sottolineatura. */
+  .tile .media {
+    transition: box-shadow 0.5s ease;
+  }
+
+  .tile h3 {
+    transition: text-shadow 0.5s ease;
+  }
+
+  .tile:hover .media,
+  .tile:focus-visible .media {
+    box-shadow: 0 0 0 2px var(--accent), 0 0 22px 6px var(--accent), 0 0 60px 14px color-mix(in srgb, var(--accent) 60%, transparent);
+  }
+
+  .tile:hover h3,
+  .tile:focus-visible h3 {
+    color: var(--accent);
+    text-shadow: 0 0 10px var(--accent), 0 0 22px color-mix(in srgb, var(--accent) 70%, transparent);
   }
 
   .pgrid-list {
@@ -834,6 +848,20 @@
       grid-template-columns: repeat(var(--n, 3), 1fr);
       gap: 36px;
     }
+  }
+
+  /* Variante sfogliabile: i passaggi scorrono in orizzontale. */
+  .steps.scroll {
+    display: flex;
+    gap: 22px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 14px;
+  }
+
+  .steps.scroll .step {
+    flex: 0 0 min(78%, 300px);
+    scroll-snap-align: start;
   }
 
   .step {
@@ -1493,7 +1521,9 @@ const CFG = {
   heroImg: './images/hero.jpeg',                   
   labels: true,
   // URL della web app Google Apps Script delle scorte (vedi scorte-google-sheet.gs). Vuoto = usa i numeri scritti in PRODUCTS.
-  stockApi: ''
+  stockApi: 'https://script.google.com/macros/s/AKfycbxJpWVKmKTjWGelT25XS8FurFCRBodMPb0Urjq7evqtrjOGT1BJHOkK9sHIupOXmLgssQ/exec',
+  // Link al video tutorial sulla pulizia dello scaldacera (pagina Wax melts). Vuoto = il link non compare.
+  waxVideo: ''
 };
 
 // Screenshot delle recensioni per "Le vostre parole" in home (es. 'images/recensione1.jpeg'). Vuoto = la sezione non compare.
@@ -1652,7 +1682,7 @@ const PRODUCTS = [
     cat: 'wax',
     art: 'melts',
     tone: 2,
-    imgs: ['images/wax.jpeg'],
+    imgs: ['images/rituali.jpeg'],
     name: 'I rituali di Essenza',
     fragrances: 'all',
     mixOptions: [1, 2, 3, 4],
@@ -1667,7 +1697,7 @@ const PRODUCTS = [
     cat: 'wax',
     art: 'melts',
     tone: 4,
-    imgs: ['images/wax.jpeg'],
+    imgs: ['images/discovery-box.jpeg'],
     name: 'Discovery Box',
     fragrances: [],
     custom: 'Profumazioni scelte a sorpresa. Ogni profumazione contiene 4 tartine.',
@@ -1685,7 +1715,7 @@ const PRODUCTS = [
     imgs: ['images/zucchette.jpeg'],
     name: 'Zucchette d’autunno',
     subtitle: 'Edizione limitata',
-    desc: 'Quattro zucchette in cera profumata, in tonalità autunnali assortite. Ogni scatolina è unica e i colori sono selezionati da Essenza.<br><br>Edizione limitata.',
+    desc: 'Tre zucchette in cera profumata, in tonalità autunnali assortite. Ogni scatolina è unica e i colori sono selezionati da Essenza.<br><br>Edizione limitata.',
     fragrances: [],
     custom: '',
     variants: [
@@ -1824,7 +1854,7 @@ const card = p => `<a class="pcard" href="#/prodotto/${p.id}">${media({src:p.img
 const catGrid = c => PRODUCTS.filter(p => inCat(p, c)).map(card).join('');
 // Filtri dello shop; dopo "Wax melts" il pulsante "Collezioni stagionali", finché c'è almeno un prodotto con "stagione".
 const shopChips = cat => `<div class="chips" id="filters" role="group" aria-label="Filtra per categoria">${Object.entries(CATS).map(([k,v]) => `<button class="chip ${k===cat?'on':''}" data-filter="${k}">${v}</button>` + (k === 'wax' && PRODUCTS.some(p => p.stagione) ? `<a class="chip ${cat==='stagionali'?'on':''}" href="#/stagionali">Collezioni stagionali</a>` : '')).join('')}</div>`;
-const steps = list => `<div class="steps" style="--n:${list.length}">${list.map((s,i) => `<div class="step"><b>${i+1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>`;
+const steps = (list, cls = '') => `<div class="steps ${cls}" style="--n:${list.length}">${list.map((s,i) => `<div class="step"><b>${i+1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>`;
 const externalWA = (t, label, cls='btn') => `<a class="${cls}" href="${wa(t)}" target="_blank" rel="noopener">${label}</a>`;
 
 const ORDER_STEPS = [
@@ -2084,44 +2114,36 @@ function Wax() {
 <div class="wrap pagehead"><h1>Wax melts</h1></div>
 
 <section class="sec" style="padding-top:0"><div class="wrap split">
-  ${media({src:'./images/wax.jpeg', art:'melts', tone:2, ratio:'4/5', alt:'Wax melts', loading:'eager'})}
+  ${media({src:'./images/wax-melts-categoria.jpeg', art:'melts', tone:2, ratio:'4/5', alt:'Wax melts', loading:'eager'})}
   <div class="stack">
-    <p class="lead">un piccolo gesto, un nuovo profumo, un'atmosfera diversa.</p>
+    <p class="lead">Un momento per te.</p>
     <p>Scegli la fragranza che più ti rappresenta, inseriscila nel tuo scaldacera e lascia che il profumo faccia il resto.</p>
     <p>Le wax melts sono il modo più semplice per cambiare atmosfera ogni volta che ne hai voglia.</p>
-    <p>Vuoi provarle? Nel <a href="#/prodotto/melts-discovery">Discovery Box</a> trovi quattro profumi per cominciare.</p>
+    <p>Vuoi provarle? <a href="#/prodotto/melts-discovery">Scopri la Discovery Box Essenza</a> per cominciare.</p>
   </div>
 </div></section>
 
 <section class="sec alt"><div class="wrap narrow center stack">
-  <h2>Da dove nasce l’idea</h2>
-  <p class="lead">Amavo il profumo di una candela, ma non volevo dipendere da una fiamma. Ho cominciato a provare cere e fragranze, un cubetto alla volta, finché il profumo riempiva la stanza nel modo giusto: presente, ma mai invadente.</p>
-  <p class="muted">Le wax melts di Essenza sono nate così, dal desiderio di scegliere il proprio profumo con più libertà.</p>
-</div></section>
-
-<section class="sec alt"><div class="wrap">
-  <h2>Come si usano</h2>
-  ${steps([
-    ['Scegli il profumo', 'Uno o due cubetti bastano per una stanza.'],
-    ['Inserisci la wax melt', 'Metti i cubetti nella vaschetta, sopra la fonte di calore.'],
-    ['Accendi', 'Con scaldacera elettrico o a tealight. Non lasciarlo mai incustodito.'],
-    ['Cambia quando vuoi', 'Quando il profumo si affievolisce, sostituisci la cera e scegli una nuova fragranza.']
-  ])}
+  <h2>Come nasce l’idea?</h2>
+  <p class="lead">Amavo il profumo delle candele, quella sensazione di calore e familiarità che sanno regalare. Desideravo, però, un modo diverso di vivere quell’esperienza, con la libertà di cambiare fragranza ogni volta che ne avessi voglia.</p>
+  <p>Ho iniziato a sperimentare con cere e fragranze, dando vita alle wax melts: piccole cialde di cera profumata senza stoppino, pensate per diffondere nell’ambiente le fragranze che ami.</p>
+  <p class="muted">Un modo diverso di vivere il piacere di una candela profumata, con la libertà di cambiare fragranza ogni volta che vuoi e creare l’atmosfera perfetta per ogni tuo momento.</p>
 </div></section>
 
 <section class="sec"><div class="wrap">
-  <h2>ogni profumo ha il suo modo di vivere</h2>
-  <div class="vs">
-    <div><h3>Candela</h3><p>una fiamma, una luce calda, un profumo che accompagna i tuoi momenti.</p><p class="muted">per te se cerchi: atmosfera · decorazione · ritualità</p></div>
-    <div><h3>Wax melts</h3><p>una fragranza da cambiare ogni volta che vuoi, senza stoppino e senza fiamma.</p><p class="muted">per te se cerchi: varietà · profumo · libertà di cambiare</p></div>
-  </div>
+  <h2>Come si usano?</h2>
+  ${steps([
+    ['Scegli la fragranza', 'Scegli il profumo che preferisci.'],
+    ['Inserisci la wax melt', 'Posizionala nella vaschetta del tuo scaldacera.'],
+    ['Lascia diffondere il profumo', 'Il calore scioglie la cera e diffonde la fragranza nell’ambiente.'],
+    ['Cambia fragranza', 'Quando il profumo si esaurisce, lascia raffreddare la cera e rimuovila seguendo le istruzioni dello scaldacera.']
+  ], 'scroll')}
 </div></section>
 
 <section class="sec alt"><div class="wrap">
-  <div class="chips" id="fams" role="group" aria-label="Famiglie olfattive">${FAMILIES.map((f,i) => `<button class="chip ${i===0?'on':''}" data-fam="${f.id}">${f.name}</button>`).join('')}</div>
-  <div id="famout"></div>
-  <p class="muted" style="margin-top:26px">La selezione delle fragranze può cambiare durante l'anno, seguendo le stagioni e le nuove collezioni.</p>
-  <div class="actions"><a class="btn solid" href="#/contatti">scrivici per scoprire le fragranze disponibili →</a></div>
+  <h2>Le nostre wax melts</h2>
+  <div class="pgrid-list" style="margin-top:34px">${catGrid('wax')}</div>
+  <div class="actions">${PRODUCTS.some(p => p.stagione) ? `<a class="btn solid" href="#/stagionali">SCOPRI LE COLLEZIONI STAGIONALI</a>` : ''}<a class="btn" href="#/shop/wax">Vedi tutte</a></div>
 </div></section>
 
 <section class="sec"><div class="wrap narrow">
@@ -2131,13 +2153,14 @@ function Wax() {
   <details><summary>Come le conservo?</summary><p>In un luogo fresco e asciutto, lontano dalla luce diretta e da fonti di calore, nella loro confezione chiusa.</p></details>
   <details><summary>Come cambio fragranza?</summary><p>Quando il profumo si affievolisce, lascia raffreddare e solidificare la cera, poi rimuovila dallo scaldacera e inserisci una nuova fragranza.</p></details>
   <details><summary>Serve uno scaldacera?</summary><p>Sì, le wax melts si usano con uno scaldacera, elettrico o a tealight. Scrivici se vuoi un consiglio su quale scegliere.</p></details>
+  ${CFG.waxVideo ? `<p style="margin-top:26px"><a href="${esc(CFG.waxVideo)}" target="_blank" rel="noopener">Prenditi cura del tuo brucia essenza →</a></p>` : ''}
 </div></section>
 
-
-<section class="sec"><div class="wrap">
-  <h2>Le nostre wax melts</h2>
-  <div class="pgrid-list" style="margin-top:34px">${catGrid('wax')}</div>
-  <div class="actions"><a class="btn" href="#/shop/wax">Vedi tutte</a>${PRODUCTS.some(p => p.stagione) ? `<a class="btn" href="#/stagionali">Collezioni stagionali</a>` : ''}</div>
+<section class="sec alt"><div class="wrap">
+  <div class="chips" id="fams" role="group" aria-label="Famiglie olfattive">${FAMILIES.map((f,i) => `<button class="chip ${i===0?'on':''}" data-fam="${f.id}">${f.name}</button>`).join('')}</div>
+  <div id="famout"></div>
+  <p class="muted" style="margin-top:26px">La selezione delle fragranze può cambiare durante l'anno, seguendo le stagioni e le nuove collezioni.</p>
+  <div class="actions"><a class="btn solid" href="#/contatti">scrivici per scoprire le fragranze disponibili →</a></div>
 </div></section>`;
 }
 
@@ -2519,10 +2542,17 @@ function loadStock() {
   fetch(CFG.stockApi)
     .then(r => r.json())
     .then(data => {
+      // Ogni prodotto con i numeri nel foglio diventa a pezzi limitati, anche se in PRODUCTS non ha "stock".
+      let added = false;
       Object.entries(data).forEach(([id, st]) => {
-        if (P[id]?.stock) P[id].stock = { total: st.total, left: st.left };
+        if (!P[id]) return;
+        added = added || !P[id].stock;
+        P[id].stock = { total: st.total, left: st.left };
       });
-      refreshStock();
+      if (!added) return refreshStock();
+      const y = scrollY;
+      router();
+      scrollTo(0, y);
     })
     .catch(() => {});
 }
