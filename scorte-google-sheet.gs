@@ -12,6 +12,12 @@
 const SHEET = 'Scorte';
 const LOG = 'Ordini';
 
+// La scheda "Scorte" senza badare a maiuscole e spazi; se non c'è, la prima scheda del file.
+function stockSheet(book) {
+  const sheets = book.getSheets();
+  return sheets.find(s => s.getName().trim().toLowerCase() === SHEET.toLowerCase()) || sheets[0];
+}
+
 function doGet() {
   return json(readStock());
 }
@@ -22,7 +28,7 @@ function doPost(e) {
   lock.waitLock(10000);
   try {
     const book = SpreadsheetApp.getActive();
-    const sheet = book.getSheetByName(SHEET);
+    const sheet = stockSheet(book);
     const rows = sheet.getDataRange().getValues();
     for (let i = 1; i < rows.length; i++) {
       if (String(rows[i][0]).trim() !== id) continue;
@@ -41,7 +47,7 @@ function doPost(e) {
 }
 
 function readStock() {
-  const rows = SpreadsheetApp.getActive().getSheetByName(SHEET).getDataRange().getValues();
+  const rows = stockSheet(SpreadsheetApp.getActive()).getDataRange().getValues();
   const out = {};
   rows.slice(1).forEach(r => {
     const id = String(r[0]).trim();
