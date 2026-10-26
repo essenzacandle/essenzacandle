@@ -7,7 +7,7 @@
 <meta name="description" content="Essenza:  candele decorative, wax melts e bomboniere profumate create con cura. Scopri le collezioni e scrivici per ordinare.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Instrument+Sans:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Questrial&display=swap" rel="stylesheet">
 <script>try{if(localStorage.getItem('essenza-theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}</script>
 <style>
   /* ==========================================================
@@ -38,9 +38,10 @@
     --t5a: #eee7da;
     --t5b: #cdbfa5;
 
-    --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
-    --caps: 'Cinzel', 'Trajan Pro', Georgia, serif;
-    --sans: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    /* Titoli: Cormorant Garamond (sempre dritto). Testo: Century Gothic, con Questrial dove non è installato (telefoni). */
+    --serif: 'Cormorant Garamond', Garamond, Georgia, serif;
+    --caps: var(--serif);
+    --sans: 'Century Gothic', CenturyGothic, 'URW Gothic', 'Questrial', 'Avenir Next', system-ui, sans-serif;
 
     color-scheme: light;
     box-sizing: border-box;
@@ -92,7 +93,7 @@
     margin: 0;
     background: var(--bg);
     color: var(--ink);
-    font: 400 17px/1.65 var(--sans);
+    font: 400 16px/1.7 var(--sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -111,9 +112,10 @@
 
   h1, h2, h3 {
     font-family: var(--serif);
-    font-weight: 300;
+    font-weight: 500;
+    font-style: normal;
     margin: 0;
-    letter-spacing: -0.005em;
+    letter-spacing: 0.005em;
   }
 
   h2 {
@@ -124,7 +126,7 @@
   h3 {
     font-size: 22px;
     line-height: 1.25;
-    font-weight: 400;
+    font-weight: 600;
   }
 
   p {
@@ -133,7 +135,7 @@
   }
 
   .lead {
-    font: italic 300 clamp(20px, 2.4vw, 26px) / 1.45 var(--serif);
+    font: 400 clamp(17px, 2vw, 20px) / 1.6 var(--sans);
     color: var(--ink);
     max-width: 36em;
   }
@@ -210,7 +212,7 @@
   }
 
   .logo {
-    font: 300 28px/1 var(--serif);
+    font: 500 28px/1 var(--serif);
     letter-spacing: 0.14em;
     text-decoration: none;
     color: var(--ink);
@@ -339,12 +341,14 @@
   }
 
   .mnav a {
-    font: 300 36px/1.2 var(--serif);
+    font: 500 36px/1.2 var(--serif);
     padding: 4px 12px;
   }
 
   .mnav a.on {
-    font-style: italic;
+    text-decoration: underline;
+    text-underline-offset: 8px;
+    text-decoration-thickness: 1px;
   }
 
   @media (min-width: 900px) {
@@ -377,12 +381,14 @@
     border: 1px solid var(--ink);
     border-radius: 999px;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, translate 0.3s, box-shadow 0.3s;
   }
 
   .btn:hover {
     background: var(--ink);
     color: var(--bg);
+    translate: 0 -2px;
+    box-shadow: 0 8px 20px var(--shadow);
   }
 
   .btn.solid {
@@ -510,11 +516,15 @@
   /* ==========================================================
      HERO
      ========================================================== */
+  /* La foto resta protagonista: niente velo sull'immagine, solo una sfumatura in basso dietro ai pulsanti. */
   .hero {
     position: relative;
     overflow: hidden;
     isolation: isolate;
-    background: var(--hero-image, linear-gradient(180deg, var(--t2a), var(--t1b))) center / cover no-repeat;
+    display: flex;
+    align-items: flex-end;
+    min-height: min(118vw, 80svh);
+    background: var(--hero-image, linear-gradient(180deg, var(--t2a), var(--t1b))) 58% center / cover no-repeat;
   }
 
   .hero::before {
@@ -522,64 +532,56 @@
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: color-mix(in srgb, var(--bg) 74%, transparent);
+    background: linear-gradient(180deg, transparent 50%, color-mix(in srgb, var(--bg) 72%, transparent));
   }
 
   .hero .in {
-    display: grid;
-    gap: 30px;
-    padding: 34px 22px 60px;
-    align-items: center;
-  }
-
-  .logo-xl {
-    font: 300 clamp(64px, 15vw, 132px) / 0.95 var(--serif);
-    letter-spacing: 0.05em;
-  }
-
-  .tagline {
-    font: 500 clamp(16px, 2.2vw, 22px) / 1.5 var(--caps);
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    margin: 20px 0 0;
-    max-width: 20em;
+    width: 100%;
+    padding: 0 22px 36px;
   }
 
   .hero-text {
     text-align: center;
   }
 
-  .hero-text .tagline {
-    margin-left: auto;
-    margin-right: auto;
+  .hero .promo {
+    margin-bottom: 0;
   }
 
   .hero .actions {
     justify-content: center;
+    margin-top: 16px;
+  }
+
+  .hero .btn:not(.solid) {
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  .hero .btn:not(.solid):hover {
+    background: var(--ink);
   }
 
   @media (min-width: 900px) {
+    /* A tutta larghezza la foto quadrata viene tagliata sopra e sotto: la faccio alta quanto lo schermo e la inquadro in alto, per tenere le fiamme. */
+    .hero {
+      min-height: calc(100svh - 62px);
+      background-position: center 40%;
+    }
+
     .hero .in {
-      grid-template-columns: 1.1fr 0.9fr;
-      padding: 64px 22px 84px;
-      min-height: min(80svh, 760px);
+      padding-bottom: 48px;
     }
+  }
 
-    .hero-text {
-      text-align: left;
-    }
-
-    .hero-text .tagline {
-      margin-left: 0;
-    }
-
-    .hero::before {
-      background: linear-gradient(90deg, color-mix(in srgb, var(--bg) 90%, transparent), color-mix(in srgb, var(--bg) 55%, transparent) 60%, transparent);
-    }
-
-    .hero .actions {
-      justify-content: flex-start;
-    }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 
   /* Banner della collezione natalizia, sopra il logo */
@@ -729,6 +731,21 @@
     width: 60%;
   }
 
+  /* Categorie della home: rettangoli verticali tutti uguali, la foto intera è il link. */
+  .tile .rect {
+    border-radius: 2px;
+  }
+
+  .tile .media img,
+  .peek .media img {
+    transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .tile:hover .media img,
+  .peek:hover .media img {
+    transform: scale(1.04);
+  }
+
   .tile h3 {
     margin: 14px 0 2px;
   }
@@ -826,7 +843,7 @@
 
   .step b {
     display: block;
-    font: italic 300 30px/1 var(--serif);
+    font: 500 32px/1 var(--serif);
     margin-bottom: 10px;
   }
 
@@ -875,7 +892,7 @@
   }
 
   .quote {
-    font: italic 300 clamp(28px, 4.4vw, 46px) / 1.28 var(--serif);
+    font: 500 clamp(28px, 4.4vw, 46px) / 1.28 var(--serif);
     max-width: 20em;
     margin: 0 auto;
   }
@@ -895,7 +912,7 @@
     justify-content: space-between;
     gap: 20px;
     padding: 20px 0;
-    font: 400 22px/1.3 var(--serif);
+    font: 400 18px/1.4 var(--sans);
   }
 
   summary::-webkit-details-marker {
@@ -969,7 +986,7 @@
   }
 
   #famout .mood {
-    font: italic 300 22px/1.4 var(--serif);
+    font: 400 18px/1.6 var(--sans);
     margin-bottom: 6px;
   }
 
@@ -1119,7 +1136,7 @@
   }
 
   .pinfo .price {
-    font: 400 24px var(--serif);
+    font: 400 22px var(--sans);
     margin-bottom: 18px;
   }
 
@@ -1146,7 +1163,7 @@
 
   .frdesc {
     margin: 14px 0 0;
-    font: italic 300 19px/1.45 var(--serif);
+    font: 400 16px/1.6 var(--sans);
   }
 
   .frdesc small {
@@ -1264,24 +1281,104 @@
   }
 
   /* ==========================================================
-     INSTAGRAM, FOOTER E WHATSAPP
+     ESPLORA IL BRAND, RECENSIONI, FOOTER E WHATSAPP
      ========================================================== */
-  .igrid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-    margin-top: 34px;
+  .eyebrow {
+    font: 600 clamp(22px, 3vw, 30px) / 1.2 var(--serif);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
   }
 
-  @media (min-width: 900px) {
-    .igrid {
-      grid-template-columns: repeat(6, 1fr);
-      gap: 10px;
+  .peeks {
+    display: grid;
+    gap: 14px;
+    margin-top: 36px;
+    text-align: left;
+  }
+
+  .peek {
+    display: grid;
+    grid-template-columns: 104px 1fr;
+    gap: 16px;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  .peek h3 {
+    font-size: 20px;
+  }
+
+  .peek p {
+    margin: 2px 0 0;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .peek:hover h3 {
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    text-decoration-thickness: 1px;
+  }
+
+  @media (min-width: 760px) {
+    .peeks {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 26px;
+    }
+
+    .peek {
+      grid-template-columns: 1fr;
+      align-items: start;
+      gap: 14px;
     }
   }
 
-  .igrid .media svg {
-    width: 50%;
+  .reviews {
+    columns: 1;
+    column-gap: 18px;
+    margin-top: 36px;
+  }
+
+  @media (min-width: 600px) {
+    .reviews { columns: 2; }
+  }
+
+  @media (min-width: 900px) {
+    .reviews { columns: 3; }
+  }
+
+  .reviews img {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 18px;
+    break-inside: avoid;
+    border-radius: 14px;
+    background: var(--card);
+    box-shadow: 0 6px 22px var(--shadow);
+  }
+
+  /* Comparsa delicata allo scorrimento: la classe .reveal la mette lo script, così senza JS tutto resta visibile. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), background 0.2s, color 0.2s, border-color 0.2s, translate 0.3s, box-shadow 0.3s;
+  }
+
+  .reveal.in {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+
+    .btn:hover {
+      translate: none;
+    }
   }
 
   .foot {
@@ -1393,11 +1490,21 @@ const CFG = {
   whatsappCountryCode: '+39',  
   instagram: 'essenzacandle_',          
   email: 'infoessenza2026@gmail.com',                     
-  heroImg: './images/banner.jpeg',                   
+  heroImg: './images/hero.jpeg',                   
   labels: true,
   // URL della web app Google Apps Script delle scorte (vedi scorte-google-sheet.gs). Vuoto = usa i numeri scritti in PRODUCTS.
   stockApi: ''
 };
+
+// Screenshot delle recensioni per "Le vostre parole" in home (es. 'images/recensione1.jpeg'). Vuoto = la sezione non compare.
+const REVIEWS = [];
+
+// Anteprime di "Esplora il brand" in home: id del prodotto e frase breve. Nome, prezzo e foto arrivano da PRODUCTS.
+const PEEKS = [
+  ['zucchette-autunno', 'Set di 3 zucchette assortite, profumate al cioccolato.'],
+  ['nodo', 'Candela decorativa senza profumazione.'],
+  ['melts-discovery', '16 wax melts profumate assortite.']
+];
 
 
 const FAMILIES = [
@@ -1775,19 +1882,19 @@ document.addEventListener('change', e => {
    ===================================================================== */
 function Home() {
   const tiles = [
-    ['Candele decorative',   'Pezzi di design bianchi & senza profumazione', '#/shop/candele', 'candle', 1, 'images/candele.jpeg'],
-    ['Wax melts', 'Il profumo, senza stoppino', '#/wax-melts',   'melts',  2, 'images/wax.jpeg'],
-    ['Bomboniere','Su misura per i tuoi eventi', '#/bomboniere','box', 5, 'images/bomboniere.jpeg'],
-    ['Idee regalo',      'Idee pronte da regalare',   '#/shop/gift',    'gift',   4, 'images/gift.jpeg']
+    ['Candele decorative', 'Forme che arredano con carattere.', '#/shop/candele', 'images/candele-decorative-categoria.jpeg'],
+    ['Wax melts', 'Fragranze che rendono casa, casa.', '#/wax-melts', 'images/wax-melts-categoria.jpeg'],
+    ['Bomboniere', 'Ricordi da custodire', '#/bomboniere', 'images/bomboniere-categoria.jpeg'],
+    ['Idee regalo', 'Pensieri speciali, scelti col cuore.', '#/shop/gift', 'images/idee-regalo-sezione.jpeg']
   ];
   // Il banner compare finché in PRODUCTS c'è almeno un prodotto con stagione: 'natale'.
   const xmas = PRODUCTS.some(p => p.stagione === 'natale');
+  const peeks = PEEKS.filter(([id]) => P[id]);
   return `
 <section class="hero" style="--hero-image:${CFG.heroImg ? `url('${esc(CFG.heroImg)}')` : 'none'}"><div class="wrap in">
+  <h1 class="sr-only">Essenza</h1>
   <div class="hero-text">
     ${xmas ? `<a class="promo" href="#/stagionali/natale"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C8.6 4.6 11.4 7.4 16 8 11.4 8.6 8.6 11.4 8 16 7.4 11.4 4.6 8.6 0 8 4.6 7.4 7.4 4.6 8 0z"/></svg><span><em>COLLEZIONE NATALIZIA</em> disponibile ora</span><span class="arr" aria-hidden="true">→</span></a>` : ''}
-    <h1 class="logo-xl">${CFG.brand}</h1>
-    <p class="tagline">${CFG.tagline}</p>
     <div class="actions">
       <a class="btn solid" href="#/shop">Scopri le collezioni</a>
       ${externalWA('Ciao! Vorrei informazioni sui prodotti Essenza.', 'Scrivici su WhatsApp')}
@@ -1797,41 +1904,35 @@ function Home() {
 
 <section class="sec"><div class="wrap narrow center stack">
   <h2>Un piccolo mondo da vivere con i sensi.</h2>
-  <p class="lead">Profumi, atmosfera e creazioni artigianali.</p>
+  <p class="lead">Candele artigianali, wax melts e decorazioni in cera.</p>
 </div>
 <div class="wrap"><div class="tiles">
-  ${tiles.map(t => `<a class="tile" href="${t[2]}">${media({src:t[5], art:t[3], tone:t[4], cls:'arch', label:'Foto', alt:t[0]})}<h3>${t[0]}</h3><p>${t[1]}</p></a>`).join('')}
+  ${tiles.map(t => `<a class="tile" href="${t[2]}">${media({src:t[3], art:'gift', ratio:'3/4', cls:'rect', alt:t[0]})}<h3>${t[0]}</h3><p>${t[1]}</p></a>`).join('')}
 </div></div></section>
+
+${peeks.length ? `<section class="sec alt"><div class="wrap center">
+  <h2 class="eyebrow">Esplora il brand</h2>
+  <div class="peeks">${peeks.map(([id, text]) => {
+    const p = P[id];
+    return `<a class="peek" href="#/prodotto/${id}">${media({src:p.imgs[0], art:p.art, tone:p.tone, ratio:'1/1', alt:p.name})}<div><h3>${p.name} · ${eur(p.variants[0].price)}</h3><p>${text}</p></div></a>`;
+  }).join('')}</div>
+  <div class="actions"><a class="btn" href="#/shop">Vedi tutti i prodotti</a></div>
+</div></section>` : ''}
 
 <section class="sec"><div class="wrap narrow center stack">
   <h2>Ordinare è semplice</h2>
   ${steps(ORDER_STEPS)}
 </div></section>
 
-${Insta()}
+${REVIEWS.length ? `<section class="sec alt"><div class="wrap center">
+  <h2>Le vostre parole</h2>
+  <div class="reviews">${REVIEWS.map((src, i) => `<img src="${esc(src)}" alt="Recensione di un cliente ${i + 1}" loading="lazy">`).join('')}</div>
+</div></section>` : ''}
 
-<section class="sec alt"><div class="wrap narrow center stack">
+<section class="sec ${REVIEWS.length ? '' : 'alt'}"><div class="wrap narrow center stack">
   <h2>Parliamone.</h2>
   <p class="lead">Ogni idea può diventare qualcosa di speciale, raccontaci la tua.</p>
   <div class="actions">${externalWA('Ciao! Vorrei qualche informazione.', 'Scrivici su WhatsApp', 'btn solid')}<a class="btn" href="#/contatti">Tutti i contatti</a></div>
-</div></section>`;
-}
-
-function Insta() {
-  const tones = [1,3,2,5,4,1];
-  const posts = [
-    'images/lavoro1.jpeg',
-    'images/lavoro2.jpeg',
-    'images/lavoro3.jpeg',
-    'images/bomboniere.jpeg',
-    'images/candele.jpeg',
-    'images/wax.jpeg'
-  ];
-  return `<section class="sec"><div class="wrap center">
-  <h2>Dal nostro Instagram</h2>
-  <p class="lead" style="margin-top:14px">Scopri cosa prende forma nel nostro laboratorio.</p>
-  <div class="igrid">${posts.map((src, i) => `<a href="${igUrl}" target="_blank" rel="noopener" aria-label="Apri Instagram">${media({src, tone:tones[i], ratio:'1/1', label:'', alt:`Lavoro realizzato ${i + 1}`})}</a>`).join('')}</div>
-  <div class="actions"><a class="btn" href="${igUrl}" target="_blank" rel="noopener">Seguici su Instagram</a></div>
 </div></section>`;
 }
 
@@ -2234,6 +2335,29 @@ function router() {
   setMenu(false);
   if ($('#famout')) famShow('mattina');
   window.scrollTo(0, 0);
+  observeReveal();
+}
+
+/* Comparsa allo scorrimento: titoli, testi, pulsanti e card entrano in dissolvenza, a cascata tra fratelli vicini. */
+const revealIO = 'IntersectionObserver' in window && new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (!en.isIntersecting) return;
+    en.target.classList.add('in');
+    revealIO.unobserve(en.target);
+    // Tolto il ritardo a cascata, così l'hover dei pulsanti resta immediato.
+    setTimeout(() => en.target.style.transitionDelay = '', 1200);
+  });
+}, { rootMargin: '0px 0px -8% 0px' });
+
+function observeReveal() {
+  if (!revealIO || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('#app :is(h2, .lead, .btn, .tile, .peek, .pcard, .step, .reviews img)').forEach(el => {
+    if (el.closest('.hero, #buy')) return;
+    const sibs = [...el.parentElement.children];
+    el.style.transitionDelay = `${(sibs.indexOf(el) % 4) * 90}ms`;
+    el.classList.add('reveal');
+    revealIO.observe(el);
+  });
 }
 
 function setMenu(open) {
