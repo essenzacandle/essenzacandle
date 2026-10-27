@@ -1012,9 +1012,44 @@
   }
 
   .quote {
-    font: 500 clamp(28px, 4.4vw, 46px) / 1.28 var(--serif);
+    font: 500 clamp(26px, 4.4vw, 46px) / 1.28 var(--serif);
     max-width: 20em;
     margin: 0 auto;
+    text-wrap: balance;
+  }
+
+  /* Chi siamo: foto e racconto affiancati, la frase finale chiude il testo. */
+  .about .stack {
+    max-width: 34em;
+  }
+
+  .about h2 {
+    font-size: clamp(28px, 3.4vw, 40px);
+    line-height: 1.2;
+  }
+
+  .about .about-close {
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font: 500 clamp(21px, 2.3vw, 25px) / 1.4 var(--serif);
+  }
+
+  @media (min-width: 900px) {
+    .about {
+      align-items: start;
+    }
+
+    .about > .media {
+      position: sticky;
+      top: 96px;
+    }
+  }
+
+  /* La citazione chiude la pagina: un filo la separa dal footer, che ha lo stesso sfondo. */
+  .about-quote {
+    padding: clamp(56px, 8vw, 96px) 0;
+    border-bottom: 1px solid var(--line);
   }
 
   details {
@@ -2321,29 +2356,21 @@ function Bomb() {
 
 function About() {
   return `
-<div class="wrap pagehead"><h1>Essenza</h1><p class="lead">Non prodotti industriali, ma qualcosa che viene progettato e realizzato con cura.</p></div>
-<section class="sec" style="padding-top:0"><div class="wrap split">
-  ${media({src:'images/essenza.jpeg', tone:3, ratio:'4/5', alt:'Il laboratorio Essenza'})}
+<div class="wrap pagehead"><h1>Chi siamo</h1></div>
+<section class="sec" style="padding-top:0"><div class="wrap split about">
+  ${media({src:'images/essenza.jpeg', art:'photo', tone:3, ratio:'1170/1350', alt:'La fondatrice di Essenza al lavoro sulle sue creazioni'})}
   <div class="stack">
-    <h2>Perché è nata Essenza</h2>
-    <p>Essenza nasce da un pensiero semplice: rendere speciali i momenti di ogni giorno.</p>
-    <p>Una candela accesa cambia la luce, il profumo di una stanza e, a volte, il modo in cui ci sentiamo.</p>
-    <p>Ho iniziato a creare perchè volevo dare forma a queste sensazioni: oggetti semplici, belli da vedere, e piacevoli da vivere, realizzati lentamente e con cura.</p>
-    <p>Essenza un piccolo laboratorio artigianale dove ogni creazione viene pensata, provata e curata prima di arrivare a te.</p>
+    <h2>Essenza nasce nel gennaio 2025, quasi per gioco.</h2>
+    <p>Tutto è cominciato con un kit per realizzare candele ricevuto in regalo. Quello che inizialmente sembrava un semplice passatempo si è trasformato, poco alla volta, in una passione da cui non sono più riuscita a separarmi.</p>
+    <p>Mi sono innamorata di questo mondo, delle infinite possibilità che offre e della libertà di sperimentare, creare e dare forma alle idee. Un mondo in cui posso sentirmi me stessa e ritrovare qualcosa che desideravo da tempo: uno spazio tutto mio, in cui esprimere liberamente la mia creatività.</p>
+    <p>Il percorso non è sempre stato lineare. Ci sono stati momenti in cui mi sono allontanata da questo progetto, ma qualcosa mi ha sempre riportata qui. Finché, nel gennaio 2025, ho deciso di dare un nome a questa passione e trasformarla in Essenza.</p>
+    <p>Oggi, attraverso le mie creazioni, desidero condividere ciò che questo mondo rappresenta per me: la bellezza delle cose semplici, la cura dei piccoli dettagli e il piacere di rallentare, anche solo per qualche minuto.</p>
+    <p>Perché credo che, a volte, basti davvero poco per ritrovare il proprio equilibrio: una fragranza familiare, una candela accesa, un momento tutto per sé.</p>
+    <p class="about-close">Essenza è un invito a rallentare, riscoprire la semplicità e ritagliarsi un momento tutto per sé.</p>
   </div>
 </div></section>
 
-<section class="sec alt"><div class="wrap center stack"><p class="quote">Un profumo non si sceglie con la testa. Si riconosce, come una casa.</p></div></section>
-
-<section class="sec"><div class="wrap">
-  <h2>Cosa ci sta a cuore</h2>
-  ${steps([
-    ['Fatto con cura', 'Ogni pezzo è pensato e realizzato con attenzione ai dettagli.'],
-    ['Profumi che si sentono', 'Fragranze equilibrate, per stanze vissute ogni giorno.'],
-    ['Su misura', 'Per regali e bomboniere partiamo da te e da ciò che immagini.']
-  ])}
-  <div class="actions"><a class="btn solid" href="#/shop">Scopri le collezioni</a><a class="btn" href="#/contatti">Scrivici</a></div>
-</div></section>`;
+<section class="sec alt about-quote"><div class="wrap center"><p class="quote">Un profumo non si sceglie con la testa.<br>Si riconosce, come una casa.</p></div></section>`;
 }
 
 function Contact() {
@@ -2411,7 +2438,7 @@ const TITLES = {
   shop: 'Collezioni — Essenza',
   wax: 'Wax melts — Essenza',
   bomb: 'Bomboniere — Essenza',
-  about: 'La storia di Essenza',
+  about: 'Chi siamo — Essenza',
   contatti: 'Contatti — Essenza'
 };
 
