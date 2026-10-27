@@ -168,7 +168,7 @@
     padding: clamp(56px, 9vw, 112px) 0;
   }
 
-  /* Spazio tra l'ultima griglia di Shop e Collezioni stagionali e il footer */
+  /* Spazio tra il contenuto dello Shop e il footer */
   .pagebody {
     padding-bottom: clamp(56px, 9vw, 112px);
   }
@@ -717,9 +717,55 @@
 
   @media (min-width: 900px) {
     .tiles {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(var(--n, 4), 1fr);
       gap: 26px 22px;
     }
+  }
+
+  /* Shop: introduzione della categoria e sezioni interne (Le forme Essenza, Edizioni speciali...). */
+  .shop-intro {
+    max-width: 36em;
+    margin: 34px 0 0;
+    color: var(--muted);
+  }
+
+  .shop-h {
+    margin-top: 14px;
+  }
+
+  .shop-h + .shop-intro {
+    margin-top: 14px;
+  }
+
+  .groups {
+    display: grid;
+    gap: 40px;
+    margin-top: 34px;
+  }
+
+  @media (min-width: 600px) {
+    .groups {
+      grid-template-columns: 1fr 1fr;
+      gap: 44px 22px;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .groups {
+      grid-template-columns: repeat(var(--n), 1fr);
+    }
+  }
+
+  .group .more {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 15px;
+    color: var(--ink);
+    border-bottom: 1px solid currentColor;
+  }
+
+  .shop-bomb {
+    margin-top: 34px;
   }
 
   .tile {
@@ -1687,14 +1733,41 @@ const FRAGRANCES = [
 ];
 
 
-const CATS = {tutti:'Tutto', candele:'Candele decorative', wax:'Wax melts', bomboniere:'Bomboniere', gift:'Idee regalo'};
-// I prodotti con "stagione" stanno in "Collezioni stagionali", non nella griglia della loro categoria.
-const inCat = (p, c) => c === 'tutti' || (p.cat === c && !p.stagione);
-// Collezioni stagionali: una stagione compare finché ha almeno un prodotto. Foto da Wikimedia Commons (CC0).
-const SEASONS = {
-  autunno: { name: 'Autunno', img: 'images/collezione-autunno.jpeg', desc: 'Colori caldi e profumi avvolgenti' },
-  natale: { name: 'Natale', img: 'images/collezione-natale.jpeg', desc: 'Idee in cera per le feste' }
+// Categorie dello shop. "hidden: true" toglie la categoria da filtri e shop senza cancellarne i prodotti.
+// "groups" sono le sezioni interne: un gruppo compare solo se ha almeno un prodotto, e con un solo prodotto porta dritto alla sua pagina.
+// In quale gruppo sta un prodotto: con "stagione" va in "speciali", altrimenti nel suo "group" o, se manca, nel primo gruppo.
+// "img" del gruppo è facoltativa: senza, si usa la foto del primo prodotto del gruppo.
+const CATS = {
+  tutti: { name: 'Tutto' },
+  candele: {
+    name: 'Candele decorative',
+    intro: 'Sculture in cera bianca, senza profumazione, pensate per decorare i tuoi spazi con semplicità ed eleganza.',
+    groups: [
+      { id: 'forme', name: 'Le forme Essenza', desc: 'Le forme che raccontano lo stile Essenza: candele scultoree in cera bianca, essenziali e senza profumazione, pensate per accompagnare i tuoi spazi con discreta eleganza.' },
+      { id: 'speciali', name: 'Edizioni speciali', desc: 'Creazioni in edizione speciale, nate per celebrare le occasioni più belle dell’anno attraverso forme, dettagli e piccoli gesti da custodire.' }
+    ]
+  },
+  wax: {
+    name: 'Wax melts',
+    intro: 'Piccole chicche di cera profumata da sciogliere nel tuo bruciaessenze, per avvolgere ogni ambiente con la fragranza che ami.',
+    groups: [
+      { id: 'rituali', name: 'I Rituali Essenza', desc: 'Quattro fragranze, quattro momenti della giornata, un piccolo rituale da dedicare a te. Lasciati accompagnare dalle profumazioni Essenza e trasforma ogni momento in una pausa tutta tua.' },
+      { id: 'discovery', name: 'Discovery Box', desc: 'Il modo più semplice per entrare nel mondo Essenza. Scopri le quattro fragranze dei nostri Rituali e trova quella che accompagna meglio i tuoi momenti.' },
+      { id: 'chicche', name: 'Le nostre chicche', desc: 'Piccole chicche di cera profumata, dalle forme originali e irresistibili. Creazioni da sciogliere nel tuo bruciaessenze, per regalare ai tuoi spazi una fragranza speciale.' },
+      { id: 'speciali', name: 'Edizioni speciali', desc: 'Collezioni in edizione speciale, ispirate alle stagioni e alle occasioni da celebrare. Piccole creazioni profumate pensate per portare nell’ambiente tutta l’atmosfera dei momenti più belli dell’anno.' }
+    ]
+  },
+  bomboniere: {
+    name: 'Bomboniere',
+    intro: 'Piccole creazioni artigianali pensate per rendere speciali i tuoi momenti più importanti. Raccontaci la tua idea e realizziamo insieme qualcosa che parli di te.'
+  },
+  // Da riattivare quando ci sarà una selezione pensata per il regalo.
+  gift: { name: 'Idee regalo', hidden: true }
 };
+const groupOf = p => p.stagione ? 'speciali' : p.group || CATS[p.cat].groups?.[0].id;
+const inCat = (p, c) => c === 'tutti' ? !CATS[p.cat].hidden : p.cat === c;
+const groupItems = (c, g) => PRODUCTS.filter(p => p.cat === c && groupOf(p) === g);
+const groupsOf = c => (CATS[c].groups || []).filter(g => groupItems(c, g.id).length);
 const getDarkCandleSrc = src => {
   if (!src || !/\.(jpe?g|png|webp|avif|gif)$/i.test(src)) return src;
   return src.replace(/(\.[a-z0-9]+)$/i, '-dark$1');
@@ -1812,6 +1885,7 @@ const PRODUCTS = [
   {
     id: 'melts-classiche',
     cat: 'wax',
+    group: 'rituali',
     art: 'melts',
     tone: 2,
     imgs: ['images/rituali.jpeg'],
@@ -1827,6 +1901,7 @@ const PRODUCTS = [
   {
     id: 'melts-discovery',
     cat: 'wax',
+    group: 'discovery',
     art: 'melts',
     tone: 4,
     imgs: ['images/discovery-box.jpeg'],
@@ -1852,36 +1927,6 @@ const PRODUCTS = [
     custom: '',
     variants: [
       { label: 'Un formato', price: 6 }
-    ]
-  },
-  {
-    id: 'bomboniera-candela',
-    cat: 'bomboniere',
-    art: 'box',
-    tone: 5,
-    imgs: ['images/bomboniera-candela.jpeg'],
-    name: 'Bomboniera con candela',
-    subtitle: 'richiedi il tuo preventivo →',
-    fragrances: 'all',
-    custom: 'Nome, data, nastro, tag e dettagli su misura. Il prezzo dipende da quantità, modello e personalizzazione.',
-    quote: true,
-    variants: [
-      { label: 'Su misura', price: null, dimensions: 'In base al modello' }
-    ]
-  },
-  {
-    id: 'bomboniera-melts',
-    cat: 'bomboniere',
-    art: 'box',
-    tone: 2,
-    imgs: ['images/bomboniera-wax.jpeg'],
-    name: 'Bomboniera con wax melts',
-    subtitle: 'richiedi il tuo preventivo →',
-    fragrances: 'all',
-    custom: 'Confezione, biglietto e nastro personalizzabili. Il prezzo dipende da quantità e modello.',
-    quote: true,
-    variants: [
-      { label: 'Su misura', price: null, dimensions: 'In base al modello' }
     ]
   },
   {
@@ -1919,7 +1964,7 @@ const PRODUCTS = [
   },
   {
     id: 'mystery-box-natalizia',
-    cat: 'gift',
+    cat: 'candele',
     stagione: 'natale',
     art: 'gift',
     tone: 4,
@@ -1983,9 +2028,15 @@ const soldOut = p => !!p.stock && p.stock.left <= 0;
 const soldOutText = p => p.masc ? 'Esaurito' : 'Esaurita';
 const stockLabel = p => soldOut(p) ? soldOutText(p) : `Ne ${p.stock.left === 1 ? 'resta' : 'restano'} <b>${p.stock.left}</b> su ${p.stock.total}`;
 const card = p => `<a class="pcard" href="#/prodotto/${p.id}">${media({src:p.imgs[0], art:p.art, tone:p.tone, alt:p.name})}<h3>${p.name}</h3>${priceOf(p) ? `<div class="pr">${priceOf(p)}</div>` : ''}${p.subtitle ? `<div class="sub">${p.subtitle}</div>` : ''}${p.stock ? `<div class="sub stock" data-stock="${p.id}">${stockLabel(p)}</div>` : ''}</a>`;
-const catGrid = c => PRODUCTS.filter(p => inCat(p, c)).map(card).join('');
-// Filtri dello shop; dopo "Wax melts" il pulsante "Collezioni stagionali", finché c'è almeno un prodotto con "stagione".
-const shopChips = cat => `<div class="chips" id="filters" role="group" aria-label="Filtra per categoria">${Object.entries(CATS).map(([k,v]) => `<button class="chip ${k===cat?'on':''}" data-filter="${k}">${v}</button>` + (k === 'wax' && PRODUCTS.some(p => p.stagione) ? `<a class="chip ${cat==='stagionali'?'on':''}" href="#/stagionali">Collezioni stagionali</a>` : '')).join('')}</div>`;
+// "Tutto" segue l'ordine di CATS e, dentro ogni categoria, quello dei suoi gruppi.
+const shopRank = p => Object.keys(CATS).indexOf(p.cat) * 100 + (CATS[p.cat].groups || []).findIndex(g => g.id === groupOf(p));
+const catGrid = c => PRODUCTS.filter(p => inCat(p, c)).sort((a, b) => shopRank(a) - shopRank(b)).map(card).join('');
+const shopChips = cat => `<div class="chips" id="filters" role="group" aria-label="Filtra per categoria">${Object.entries(CATS).filter(([, v]) => !v.hidden).map(([k, v]) => `<button class="chip ${k===cat?'on':''}" data-filter="${k}">${v.name}</button>`).join('')}</div>`;
+// Le vecchie collezioni stagionali sono ora le edizioni speciali della categoria dei loro prodotti.
+const seasonHref = s => {
+  const p = PRODUCTS.find(x => x.stagione === s && !CATS[x.cat].hidden);
+  return p ? `#/shop/${p.cat}/speciali` : '#/shop';
+};
 const steps = (list, cls = '') => `<div class="steps ${cls}" style="--n:${list.length}">${list.map((s,i) => `<div class="step"><b>${i+1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>`;
 const externalWA = (t, label, cls='btn') => `<a class="${cls}" href="${wa(t)}" target="_blank" rel="noopener">${label}</a>`;
 
@@ -2048,7 +2099,7 @@ function Home() {
     ['Wax melts', 'Fragranze che rendono casa, casa.', '#/wax-melts', 'images/wax-melts-categoria.jpeg'],
     ['Bomboniere', 'Ricordi da custodire', '#/bomboniere', 'images/bomboniere-categoria.jpeg'],
     ['Idee regalo', 'Pensieri speciali, scelti col cuore.', '#/shop/gift', 'images/idee-regalo-sezione.jpeg']
-  ];
+  ].filter(t => !(t[2] === '#/shop/gift' && CATS.gift.hidden));
   // Il banner compare finché in PRODUCTS c'è almeno un prodotto con stagione: 'natale'.
   const xmas = PRODUCTS.some(p => p.stagione === 'natale');
   const peeks = PEEKS.filter(([id]) => P[id]);
@@ -2056,7 +2107,7 @@ function Home() {
 <section class="hero" style="--hero-image:${CFG.heroImg ? `url('${esc(CFG.heroImg)}')` : 'none'}"><div class="wrap in">
   <h1 class="sr-only">Essenza</h1>
   <div class="hero-text">
-    ${xmas ? `<a class="promo" href="#/stagionali/natale"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C8.6 4.6 11.4 7.4 16 8 11.4 8.6 8.6 11.4 8 16 7.4 11.4 4.6 8.6 0 8 4.6 7.4 7.4 4.6 8 0z"/></svg><span><em>COLLEZIONE NATALIZIA</em> disponibile ora</span><span class="arr" aria-hidden="true">→</span></a>` : ''}
+    ${xmas ? `<a class="promo" href="${seasonHref('natale')}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C8.6 4.6 11.4 7.4 16 8 11.4 8.6 8.6 11.4 8 16 7.4 11.4 4.6 8.6 0 8 4.6 7.4 7.4 4.6 8 0z"/></svg><span><em>COLLEZIONE NATALIZIA</em> disponibile ora</span><span class="arr" aria-hidden="true">→</span></a>` : ''}
     <div class="actions">
       <a class="btn solid" href="#/shop">Scopri le collezioni</a>
       ${externalWA('Ciao! Vorrei informazioni sui prodotti Essenza.', 'Scrivici su WhatsApp')}
@@ -2068,7 +2119,7 @@ function Home() {
   <h2>Un piccolo mondo da vivere con i sensi.</h2>
   <p class="lead">Candele artigianali, wax melts e decorazioni in cera.</p>
 </div>
-<div class="wrap"><div class="tiles">
+<div class="wrap"><div class="tiles" style="--n:${tiles.length}">
   ${tiles.map(t => `<a class="tile" href="${t[2]}">${media({src:t[3], art:'gift', ratio:'3/4', cls:'rect', alt:t[0]})}<h3>${t[0]}</h3><p>${t[1]}</p></a>`).join('')}
 </div></div></section>
 
@@ -2098,27 +2149,42 @@ ${REVIEWS.length ? `<section class="sec alt"><div class="wrap center">
 </div></section>`;
 }
 
-function Shop(cat) {
-  cat = CATS[cat] ? cat : 'tutti';
+function Shop(cat, g) {
+  cat = CATS[cat] && !CATS[cat].hidden ? cat : 'tutti';
   return `
-<div class="wrap pagehead"><h1>Collezioni</h1><p class="lead">Candele, wax melts, bomboniere e idee regalo.</p></div>
+<div class="wrap pagehead"><h1>Collezioni</h1><p class="lead">Candele decorative, wax melts e bomboniere.</p></div>
 <div class="wrap pagebody">
   ${shopChips(cat)}
-  <div class="pgrid-list" id="grid" style="margin-top:34px">${catGrid(cat)}</div>
+  <div id="shopbody">${shopBody(cat, g)}</div>
 </div>`;
 }
 
-function Seasons(s) {
-  s = SEASONS[s] ? s : null;
+// Contenuto sotto i filtri: un gruppo aperto, la presentazione dei gruppi della categoria, o la griglia di "Tutto".
+function shopBody(cat, g) {
+  const c = CATS[cat];
+  const groups = groupsOf(cat);
+  const open = groups.find(x => x.id === g);
+  if (open) return `
+  <a class="crumb" href="#/shop/${cat}" style="margin-top:34px">‹ ${c.name}</a>
+  <h2 class="shop-h">${open.name}</h2>
+  <p class="shop-intro">${open.desc}</p>
+  <div class="pgrid-list" style="margin-top:34px">${groupItems(cat, g).map(card).join('')}</div>`;
+  if (cat === 'bomboniere') return `
+  <div class="split shop-bomb">
+    ${media({src:'images/lavoro1.jpeg', art:'photo', ratio:'4/3', alt:'Bomboniere realizzate da Essenza'})}
+    <div class="stack">
+      <p class="lead">${c.intro}</p>
+      <div class="actions"><a class="btn solid" href="#/bomboniere/richiesta">Crea le tue bomboniere</a></div>
+    </div>
+  </div>`;
+  if (!groups.length) return `<div class="pgrid-list" style="margin-top:34px">${catGrid(cat)}</div>`;
   return `
-<div class="wrap pagehead"><h1>Collezioni stagionali</h1><p class="lead">Edizioni limitate che cambiano con le stagioni.</p></div>
-<div class="wrap pagebody">
-  ${shopChips('stagionali')}
-  ${s ? `<a class="crumb" href="#/stagionali" style="margin-top:34px">‹ Tutte le collezioni stagionali</a>
-  <h2 style="margin-top:18px">${SEASONS[s].name}</h2>
-  <div class="pgrid-list" style="margin-top:34px">${PRODUCTS.filter(p => p.stagione === s).map(card).join('')}</div>`
-  : `<div class="tiles">${Object.entries(SEASONS).filter(([k]) => PRODUCTS.some(p => p.stagione === k)).map(([k,v]) => `<a class="tile" href="#/stagionali/${k}">${media({src:v.img, cls:'arch', alt:v.name})}<h3>${v.name}</h3><p>${v.desc}</p></a>`).join('')}</div>`}
-</div>`;
+  <p class="shop-intro">${c.intro}</p>
+  <div class="groups" style="--n:${groups.length}">${groups.map(gr => {
+    const items = groupItems(cat, gr.id);
+    const href = items.length === 1 ? `#/prodotto/${items[0].id}` : `#/shop/${cat}/${gr.id}`;
+    return `<a class="tile group" href="${href}">${media({src:gr.img || items[0].imgs[0], art:'photo', ratio:'4/3', cls:'rect', alt:gr.name})}<h3>${gr.name}</h3><p>${gr.desc}</p><span class="more">${items.length === 1 ? 'Scopri' : 'Vedi i prodotti'} →</span></a>`;
+  }).join('')}</div>`;
 }
 
 function Product(id) {
@@ -2126,11 +2192,12 @@ function Product(id) {
   if (!p) return Shop('tutti');
   const availableFragrances = fragList(p);
   sel = {v:0, f: availableFragrances[0]?.id || null, frags:[], mix:null, q:1};
-  // Prima gli altri prodotti della stessa collezione stagionale (se lo è anche questo), poi stessa categoria e idee regalo, poi il resto.
-  const rank = x => p.stagione && x.stagione === p.stagione ? 0 : (x.cat === p.cat || x.cat === 'gift') ? 1 : 2;
-  const rel = PRODUCTS.filter(x => x.id !== p.id).sort((a, b) => rank(a) - rank(b)).slice(0, 3);
+  // Prima gli altri prodotti dello stesso gruppo, poi della stessa categoria, poi il resto; mai quelli delle categorie nascoste.
+  const rank = x => x.cat !== p.cat ? 2 : groupOf(x) === groupOf(p) ? 0 : 1;
+  const rel = PRODUCTS.filter(x => x.id !== p.id && !CATS[x.cat].hidden).sort((a, b) => rank(a) - rank(b)).slice(0, 3);
+  const grp = CATS[p.cat].groups?.find(g => g.id === groupOf(p));
   return `
-<div class="wrap">${p.stagione ? `<a class="crumb" href="#/stagionali/${p.stagione}">‹ ${SEASONS[p.stagione].name}</a>` : `<a class="crumb" href="#/shop/${p.cat}">‹ ${CATS[p.cat]}</a>`}
+<div class="wrap"><a class="crumb" href="#/shop/${p.cat}${grp ? '/' + grp.id : ''}">‹ ${grp ? grp.name : CATS[p.cat].name}</a>
   <div class="pdp">
     ${Gallery(p)}
     <div class="pinfo" id="buy">${Buy(p)}</div>
@@ -2217,7 +2284,7 @@ function Buy(p) {
   const quote = !!p.quote;
   const info = `Ciao! Vorrei qualche informazione su: ${p.name}.`;
   return `
-<span class="cat">${CATS[p.cat]}</span>
+<span class="cat">${CATS[p.cat].name}</span>
 <h1>${p.name}</h1>
 <div class="price">${currentPrice != null ? eur(currentPrice) : 'Preventivo su richiesta'}</div>
 ${p.stock ? `<p class="stock">${stockLabel(p)}${p.onePerPerson && !soldOut(p) ? ` · massimo ${p.masc ? 'uno' : 'una'} per persona` : ''}</p>` : ''}
@@ -2275,7 +2342,7 @@ function Wax() {
 <section class="sec alt"><div class="wrap">
   <h2>Le nostre wax melts</h2>
   <div class="pgrid-list" style="margin-top:34px">${catGrid('wax')}</div>
-  <div class="actions">${PRODUCTS.some(p => p.stagione) ? `<a class="btn solid" href="#/stagionali">SCOPRI LE COLLEZIONI STAGIONALI</a>` : ''}<a class="btn" href="#/shop/wax">Vedi tutte</a></div>
+  <div class="actions"><a class="btn solid" href="#/shop/wax">Scopri tutte le wax melts</a></div>
 </div></section>
 
 <section class="sec"><div class="wrap narrow">
@@ -2408,7 +2475,7 @@ const NAV = [
   ['shop', 'Shop', '#/shop'],
   ['wax', 'Wax melts', '#/wax-melts'],
   ['bomb', 'Bomboniere', '#/bomboniere'],
-  ['about', 'Essenza', '#/essenza'],
+  ['about', 'Chi siamo', '#/chi-siamo'],
   ['contatti', 'Contatti', '#/contatti']
 ];
 
@@ -2443,19 +2510,18 @@ const TITLES = {
 };
 
 function router() {
-  const [a, b] = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+  const [a, b, c] = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
   let html, key = 'home';
 
   switch (a) {
     case 'shop':
-      // I vecchi link a #/shop/natale portano alla collezione stagionale.
-      html = b === 'natale' ? Seasons('natale') : Shop(b);
+      // I vecchi link a #/shop/natale portano alle edizioni speciali.
+      if (b === 'natale') return location.replace(seasonHref('natale'));
+      html = Shop(b, c);
       key = 'shop';
       break;
     case 'stagionali':
-      html = Seasons(b);
-      key = 'shop';
-      break;
+      return location.replace(seasonHref(b));
     case 'prodotto':
       html = Product(b);
       key = 'shop';
@@ -2468,6 +2534,7 @@ function router() {
       html = Bomb();
       key = 'bomb';
       break;
+    case 'chi-siamo':
     case 'essenza':
       html = About();
       key = 'about';
@@ -2491,7 +2558,8 @@ function router() {
 
   setMenu(false);
   if ($('#famout')) famShow('mattina');
-  window.scrollTo(0, 0);
+  // #/bomboniere/richiesta apre la pagina direttamente sul modulo.
+  a === 'bomboniere' && b === 'richiesta' ? $('#quote').scrollIntoView() : window.scrollTo(0, 0);
   observeReveal();
 }
 
@@ -2600,8 +2668,8 @@ document.addEventListener('click', e => {
 
   if (action.dataset.filter) {
     const c = action.dataset.filter;
-    if (!$('#grid')) return location.hash = '#/shop/' + c;
-    $('#grid').innerHTML = catGrid(c);
+    if (!$('#shopbody')) return location.hash = '#/shop/' + c;
+    $('#shopbody').innerHTML = shopBody(c);
     document.querySelectorAll('#filters .chip').forEach(x => x.classList.toggle('on', x === action));
     try {
       history.replaceState(null, '', '#/shop/' + c);
