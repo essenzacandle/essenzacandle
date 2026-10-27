@@ -420,6 +420,27 @@
     gap: 8px;
   }
 
+  /* Su smartphone i filtri dello shop stanno su una riga che scorre fino al bordo dello schermo. */
+  @media (max-width: 599px) {
+    #filters {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      margin: 0 -22px;
+      padding: 0 22px;
+      scroll-padding-inline: 22px;
+      scrollbar-width: none;
+    }
+
+    #filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    #filters .chip {
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+  }
+
   .chip {
     min-height: 42px;
     padding: 0 18px;
@@ -708,17 +729,35 @@
     }
   }
 
+  /* Sotto i 900px le categorie della home scorrono in orizzontale: nessuna tessera resta sola su una riga. */
   .tiles {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 26px 14px;
-    margin-top: 44px;
+    display: flex;
+    gap: 14px;
+    margin: 44px -22px 0;
+    padding: 0 22px 6px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 22px;
+    scrollbar-width: none;
+  }
+
+  .tiles::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tiles .tile {
+    flex: 0 0 min(70%, 300px);
+    scroll-snap-align: start;
   }
 
   @media (min-width: 900px) {
     .tiles {
+      display: grid;
       grid-template-columns: repeat(var(--n, 4), 1fr);
       gap: 26px 22px;
+      margin: 44px 0 0;
+      padding: 0;
+      overflow: visible;
     }
   }
 
@@ -764,8 +803,51 @@
     border-bottom: 1px solid currentColor;
   }
 
+  /* Bomboniere nello shop: testo al centro che affiora piano, poi il pulsante. Le foto sono nella pagina Bomboniere. */
   .shop-bomb {
-    margin-top: 34px;
+    max-width: 58em;
+    margin: clamp(56px, 9vw, 104px) auto clamp(24px, 4vw, 48px);
+    text-align: center;
+  }
+
+  .shop-bomb .lead {
+    max-width: none;
+    text-wrap: balance;
+    font: 500 clamp(22px, 2.6vw, 28px) / 1.5 var(--serif);
+  }
+
+  /* Da desktop ogni frase sta su una riga: il bilanciamento le spezzerebbe senza motivo. */
+  @media (min-width: 760px) {
+    .shop-bomb .lead {
+      text-wrap: wrap;
+    }
+  }
+
+  .shop-bomb .actions {
+    justify-content: center;
+    margin-top: 36px;
+  }
+
+  .shop-bomb > * {
+    animation: bomb-in 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .shop-bomb > .actions {
+    animation-delay: 0.35s;
+  }
+
+  @keyframes bomb-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+      filter: blur(6px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .shop-bomb > * {
+      animation: none;
+    }
   }
 
   .tile {
@@ -961,8 +1043,10 @@
     text-decoration-thickness: 1px;
   }
 
+  /* Solo i margini verticali: quelli laterali restano quelli di .wrap. */
   .pagehead {
-    padding: clamp(48px, 8vw, 96px) 0 clamp(28px, 5vw, 56px);
+    padding-top: clamp(48px, 8vw, 96px);
+    padding-bottom: clamp(28px, 5vw, 56px);
   }
 
   .pagehead h1 {
@@ -1759,7 +1843,7 @@ const CATS = {
   },
   bomboniere: {
     name: 'Bomboniere',
-    intro: 'Piccole creazioni artigianali pensate per rendere speciali i tuoi momenti più importanti. Raccontaci la tua idea e realizziamo insieme qualcosa che parli di te.'
+    intro: 'Creazioni artigianali per rendere indelebili i tuoi momenti più importanti.<br>Raccontaci la tua idea e realizziamo insieme qualcosa che parli di te.'
   },
   // Da riattivare quando ci sarà una selezione pensata per il regalo.
   gift: { name: 'Idee regalo', hidden: true }
@@ -2170,12 +2254,9 @@ function shopBody(cat, g) {
   <p class="shop-intro">${open.desc}</p>
   <div class="pgrid-list" style="margin-top:34px">${groupItems(cat, g).map(card).join('')}</div>`;
   if (cat === 'bomboniere') return `
-  <div class="split shop-bomb">
-    ${media({src:'images/lavoro1.jpeg', art:'photo', ratio:'4/3', alt:'Bomboniere realizzate da Essenza'})}
-    <div class="stack">
-      <p class="lead">${c.intro}</p>
-      <div class="actions"><a class="btn solid" href="#/bomboniere/richiesta">Crea le tue bomboniere</a></div>
-    </div>
+  <div class="shop-bomb">
+    <p class="lead">${c.intro}</p>
+    <div class="actions"><a class="btn solid" href="#/bomboniere/richiesta">Crea le tue bomboniere</a></div>
   </div>`;
   if (!groups.length) return `<div class="pgrid-list" style="margin-top:34px">${catGrid(cat)}</div>`;
   return `
@@ -2558,6 +2639,8 @@ function router() {
 
   setMenu(false);
   if ($('#famout')) famShow('mattina');
+  // Su smartphone il filtro attivo potrebbe stare fuori dalla riga scorrevole.
+  $('#filters .on')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   // #/bomboniere/richiesta apre la pagina direttamente sul modulo.
   a === 'bomboniere' && b === 'richiesta' ? $('#quote').scrollIntoView() : window.scrollTo(0, 0);
   observeReveal();
@@ -2577,7 +2660,7 @@ const revealIO = 'IntersectionObserver' in window && new IntersectionObserver(en
 function observeReveal() {
   if (!revealIO || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   document.querySelectorAll('#app :is(h2, .lead, .btn, .tile, .peek, .pcard, .step, .reviews img)').forEach(el => {
-    if (el.closest('.hero, #buy')) return;
+    if (el.closest('.hero, #buy, .shop-bomb')) return;
     const sibs = [...el.parentElement.children];
     el.style.transitionDelay = `${(sibs.indexOf(el) % 4) * 90}ms`;
     el.classList.add('reveal');
@@ -2671,8 +2754,10 @@ document.addEventListener('click', e => {
     if (!$('#shopbody')) return location.hash = '#/shop/' + c;
     $('#shopbody').innerHTML = shopBody(c);
     document.querySelectorAll('#filters .chip').forEach(x => x.classList.toggle('on', x === action));
+    action.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    // Una voce nella cronologia per filtro: "indietro" torna al filtro precedente invece di uscire dallo shop.
     try {
-      history.replaceState(null, '', '#/shop/' + c);
+      history.pushState(null, '', '#/shop/' + c);
     } catch (_) {}
   } else if (action.dataset.var !== undefined || action.dataset.fr || action.dataset.mix) {
     const p = P[location.hash.split('/')[2]];
