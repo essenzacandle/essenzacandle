@@ -789,18 +789,30 @@
     }
   }
 
-  /* Lavori realizzati: una foto grande in apertura, poi le altre in proporzione 4/5. */
-  .works {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
+  /* Lavori realizzati: carosello sfogliabile, si intravede la foto successiva. */
+  .works-gal {
+    position: relative;
     margin-top: 34px;
   }
 
-  /* Le proporzioni stanno sul link: la foto lo riempie, ignorando quelle che media() mette in linea. */
+  .works {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .works::-webkit-scrollbar {
+    display: none;
+  }
+
   .work {
-    display: block;
+    flex: 0 0 82%;
     aspect-ratio: 4 / 5;
+    scroll-snap-align: start;
     cursor: zoom-in;
   }
 
@@ -809,38 +821,24 @@
     height: 100%;
   }
 
-  .work:first-child {
-    grid-column: 1 / -1;
-    aspect-ratio: 4 / 3;
-  }
-
   .work:focus-visible {
     outline: 2px solid var(--accent);
-    outline-offset: 3px;
+    outline-offset: -2px;
   }
 
-  /* Da desktop la seconda foto, alta e stretta, affianca la prima per tutta la sua altezza. */
+  @media (min-width: 600px) {
+    .work {
+      flex-basis: 44%;
+    }
+  }
+
   @media (min-width: 900px) {
     .works {
-      grid-template-columns: repeat(3, 1fr);
       gap: 26px;
     }
 
-    .work:first-child {
-      grid-column: 1 / 3;
-      grid-row: 1 / 3;
-    }
-
-    .work:nth-child(2) {
-      grid-column: 3;
-      grid-row: 1 / 3;
-      position: relative;
-      aspect-ratio: auto;
-    }
-
-    .work:nth-child(2) .media {
-      position: absolute;
-      inset: 0;
+    .work {
+      flex-basis: calc((100% - 52px) / 3);
     }
   }
 
@@ -2263,13 +2261,13 @@ function Wax() {
 </div></section>`;
 }
 
-// Solo bomboniere realizzate davvero da Essenza. La prima è la foto grande, la seconda quella alta accanto.
+// Solo bomboniere realizzate davvero da Essenza, alternando foto d'insieme e dettagli.
 const WORKS = [
   ['images/lavoro1.jpeg', 'Bomboniere in scatola bianca con nastro rosa e sigillo in ceralacca'],
-  ['images/bomboniera-candela.jpeg', 'Candele a forma di peonia realizzate a mano per le bomboniere'],
+  ['images/bomboniera2.jpeg', 'Candela a coste con fiocco azzurro e croce dorata, accanto alla sua scatola'],
   ['images/lavoro2.jpeg', 'Bomboniere sulla tavola di un ricevimento'],
   ['images/bomboniere.jpeg', 'Bomboniere a forma di rosa avvolte nel tulle con nastro verde salvia'],
-  ['images/lavoro3.jpeg', 'Bomboniere in scatola kraft con fiocco in raso']
+  ['images/bomboniera3.jpeg', 'Candele a fiore in scatola kraft con finestra e fiocco in raso']
 ];
 
 function Bomb() {
@@ -2280,8 +2278,12 @@ function Bomb() {
 <section class="sec alt"><div class="wrap">
   <h2>Lavori realizzati</h2>
   <p class="muted" style="margin-top:12px">Alcune delle bomboniere realizzate da Essenza.</p>
-  <div class="works">
-    ${WORKS.map(([src, alt], i) => `<a class="work" href="${src}" data-work="${i}" aria-label="Ingrandisci: ${esc(alt)}">${media({src, art:'photo', tone:(i%5)+1, alt})}</a>`).join('')}
+  <div class="works-gal" role="region" aria-label="Bomboniere realizzate">
+    <div class="works">
+      ${WORKS.map(([src, alt], i) => `<a class="work" href="${src}" data-work="${i}" aria-label="Ingrandisci: ${esc(alt)}">${media({src, art:'photo', tone:(i%5)+1, alt})}</a>`).join('')}
+    </div>
+    <button class="gal-btn prev" type="button" data-works-step="-1" aria-label="Foto precedenti" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="gal-btn next" type="button" data-works-step="1" aria-label="Foto successive"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
   </div>
 </div></section>
 
@@ -2618,6 +2620,24 @@ document.addEventListener('click', e => {
 /* =====================================================================
    LAVORI REALIZZATI: FOTO INGRANDITA
    ===================================================================== */
+// Le frecce scorrono di una foto alla volta; si nascondono agli estremi.
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-works-step]');
+  if (!btn) return;
+  const track = btn.parentElement.querySelector('.works');
+  const step = track.children[1].offsetLeft - track.children[0].offsetLeft;
+  const smooth = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+  track.scrollBy({ left: step * +btn.dataset.worksStep, behavior: smooth });
+});
+
+document.addEventListener('scroll', e => {
+  const track = e.target.classList?.contains('works') ? e.target : null;
+  if (!track) return;
+  const gal = track.parentElement;
+  gal.querySelector('.prev').disabled = track.scrollLeft < 2;
+  gal.querySelector('.next').disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 2;
+}, true);
+
 let lbIndex = 0;
 
 function lbShow(i) {
