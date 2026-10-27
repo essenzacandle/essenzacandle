@@ -789,6 +789,100 @@
     }
   }
 
+  /* Lavori realizzati: una foto grande in apertura, poi le altre in proporzione 4/5. */
+  .works {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 34px;
+  }
+
+  /* Le proporzioni stanno sul link: la foto lo riempie, ignorando quelle che media() mette in linea. */
+  .work {
+    display: block;
+    aspect-ratio: 4 / 5;
+    cursor: zoom-in;
+  }
+
+  .work .media {
+    width: 100%;
+    height: 100%;
+  }
+
+  .work:first-child {
+    grid-column: 1 / -1;
+    aspect-ratio: 4 / 3;
+  }
+
+  .work:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* Da desktop la seconda foto, alta e stretta, affianca la prima per tutta la sua altezza. */
+  @media (min-width: 900px) {
+    .works {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 26px;
+    }
+
+    .work:first-child {
+      grid-column: 1 / 3;
+      grid-row: 1 / 3;
+    }
+
+    .work:nth-child(2) {
+      grid-column: 3;
+      grid-row: 1 / 3;
+      position: relative;
+      aspect-ratio: auto;
+    }
+
+    .work:nth-child(2) .media {
+      position: absolute;
+      inset: 0;
+    }
+  }
+
+  /* Foto ingrandita dei lavori realizzati. */
+  .lb {
+    --pad: clamp(16px, 5vw, 64px);
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: var(--pad);
+    border: 0;
+    background: color-mix(in srgb, var(--bg) 96%, transparent);
+    color: var(--ink);
+  }
+
+  .lb[open] {
+    display: grid;
+    place-items: center;
+  }
+
+  .lb::backdrop {
+    background: transparent;
+  }
+
+  .lb img {
+    max-width: 100%;
+    max-height: calc(100dvh - 2 * var(--pad));
+    object-fit: contain;
+  }
+
+  .lb .lb-close {
+    top: 16px;
+    right: 16px;
+    margin-top: 0;
+  }
+
+  html:has(.lb[open]) {
+    overflow: hidden;
+  }
+
   .pcard {
     display: block;
     text-decoration: none;
@@ -1245,6 +1339,11 @@
     gap: 6px;
     font-size: 15px;
     color: var(--muted);
+  }
+
+  .form .hint {
+    font-size: 14px;
+    margin-bottom: 4px;
   }
 
   .form .two {
@@ -2164,36 +2263,35 @@ function Wax() {
 </div></section>`;
 }
 
+// Solo bomboniere realizzate davvero da Essenza. La prima è la foto grande, la seconda quella alta accanto.
+const WORKS = [
+  ['images/lavoro1.jpeg', 'Bomboniere in scatola bianca con nastro rosa e sigillo in ceralacca'],
+  ['images/bomboniera-candela.jpeg', 'Candele a forma di peonia realizzate a mano per le bomboniere'],
+  ['images/lavoro2.jpeg', 'Bomboniere sulla tavola di un ricevimento'],
+  ['images/bomboniere.jpeg', 'Bomboniere a forma di rosa avvolte nel tulle con nastro verde salvia'],
+  ['images/lavoro3.jpeg', 'Bomboniere in scatola kraft con fiocco in raso']
+];
+
 function Bomb() {
-  const bom = PRODUCTS.filter(p => p.cat === 'bomboniere');
   return `
 <div class="wrap pagehead"><h1>Bomboniere</h1><p class="lead">Un ricordo che profuma, pensato insieme a te e realizzato a mano.</p>
   <div class="actions"><a class="btn solid" href="#quote" data-scroll="quote">Richiedi un preventivo</a></div></div>
 
-<section class="sec" style="padding-top:0"><div class="wrap">
-  <h2>Come lavoriamo</h2>
-  ${steps([
-    ["Ispirazione", "Ci racconti l’occasione, lo stile che immagini, i colori e l'atmosfera che vuoi creare."],
-    ['Proposta', 'Ti mostriamo le possibilità e scegliamo insieme la proposta più adatta al tuo evento.'],
-    ["Profumazione", "Scegliamo la fragranze che più ti rappresenta, lasciandoci guidare dall'atmosfera che vuoi creare."],
-    ['Personalizzazione', 'Nome, data, nastri, biglietti e confezione su misura.'],
-    ['Realizzazione', 'Prepariamo ogni pezzo a mano e concordiamo tempi e consegne.']
-  ])}
-</div></section>
-
 <section class="sec alt"><div class="wrap">
   <h2>Lavori realizzati</h2>
   <p class="muted" style="margin-top:12px">Alcune delle bomboniere realizzate da Essenza.</p>
-  <div class="pgrid-list" style="margin-top:34px">
-    ${['images/bomboniere.jpeg','images/candele.jpeg','images/wax.jpeg','images/gift.jpeg','images/lavoro1.jpeg','images/lavoro2.jpeg','images/lavoro3.jpeg'].map((src, i) => media({src, tone:(i%5)+1, ratio:'4/5', label:'Foto realizzata', alt:'Realizzazione Essenza'})).join('')}
+  <div class="works">
+    ${WORKS.map(([src, alt], i) => `<a class="work" href="${src}" data-work="${i}" aria-label="Ingrandisci: ${esc(alt)}">${media({src, art:'photo', tone:(i%5)+1, alt})}</a>`).join('')}
   </div>
 </div></section>
 
 <section class="sec"><div class="wrap">
-  <h2>Parti da qui</h2>
-  <p class="muted" style="margin-top:12px">Due idee da cui iniziare. Ogni proposta può essere personalizzata in base al tuo evento.</p>
-  <div class="pgrid-list" style="margin-top:34px">${bom.map(card).join('')}</div>
-  <p class="muted" style="margin-top:28px">Per matrimoni, battesimi, comunioni, cresime, lauree e anniversari. Ogni bomboniera viene pensata insieme a te, dalla scelta del prodotto alla profumazione, fino alla confezione. Per questo, ogni proposta viene realizzata su richiesta.</p>
+  <h2>Come lavoriamo</h2>
+  ${steps([
+    ['Raccontaci la tua idea', 'Raccontaci l’occasione, il numero di bomboniere e lo stile che immagini.'],
+    ['Creiamo la tua proposta', 'Definiamo insieme la tipologia di bomboniera, i dettagli, i colori, le eventuali profumazioni e la confezione.'],
+    ['Realizziamo le tue bomboniere', 'Una volta concordata la proposta, ci occupiamo della realizzazione e della preparazione dell’ordine.']
+  ])}
 </div></section>
 
 <section class="sec alt" id="quote"><div class="wrap contact-grid">
@@ -2205,11 +2303,18 @@ function Bomb() {
       <label>Data della festa<input name="date" type="date"></label>
     </div>
     <label>Quantità indicativa<input name="qty" inputmode="numeric" placeholder="Es. 80"></label>
-    <label>Note, idee, colori<textarea name="note"></textarea></label>
+    <label>Raccontaci cosa hai in mente<span class="hint">Descrivici la bomboniera che immagini, i dettagli che desideri e qualsiasi idea possa aiutarci a creare una proposta su misura per te.</span><textarea name="note" rows="7"></textarea></label>
     <button class="btn solid block" type="submit">Invia su WhatsApp</button>
     <div class="fout" aria-live="polite"></div>
   </form>
-</div></section>`;
+</div></section>
+
+<dialog class="lb" id="lb" aria-label="Lavori realizzati">
+  <img alt="">
+  <button class="gal-btn lb-close" type="button" data-lb="close" aria-label="Chiudi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <button class="gal-btn prev" type="button" data-lb="-1" aria-label="Foto precedente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <button class="gal-btn next" type="button" data-lb="1" aria-label="Foto successiva"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+</dialog>`;
 }
 
 function About() {
@@ -2511,6 +2616,40 @@ document.addEventListener('click', e => {
 });
 
 /* =====================================================================
+   LAVORI REALIZZATI: FOTO INGRANDITA
+   ===================================================================== */
+let lbIndex = 0;
+
+function lbShow(i) {
+  lbIndex = (i + WORKS.length) % WORKS.length;
+  const img = $('#lb img');
+  [img.src, img.alt] = WORKS[lbIndex];
+}
+
+// Senza <dialog> il link apre semplicemente la foto.
+document.addEventListener('click', e => {
+  const lb = $('#lb');
+  if (!lb?.showModal) return;
+  const work = e.target.closest('[data-work]');
+  const btn = e.target.closest('[data-lb]');
+  if (work) {
+    e.preventDefault();
+    lbShow(+work.dataset.work);
+    lb.showModal();
+  } else if (btn) {
+    btn.dataset.lb === 'close' ? lb.close() : lbShow(lbIndex + +btn.dataset.lb);
+  } else if (e.target === lb) {
+    lb.close();
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (!$('#lb')?.open) return;
+  if (e.key === 'ArrowLeft') lbShow(lbIndex - 1);
+  if (e.key === 'ArrowRight') lbShow(lbIndex + 1);
+});
+
+/* =====================================================================
    MODULO CONTATTI E INVIO WHATSAPP
    ===================================================================== */
 document.addEventListener('submit', e => {
@@ -2521,7 +2660,7 @@ document.addEventListener('submit', e => {
 
   const d = Object.fromEntries(new FormData(f));
   const text = f.dataset.form === 'quote'
-    ? `Ciao! Vorrei un preventivo per delle bomboniere.\nNome: ${d.name}\nOccasione: ${d.occ}\nData: ${d.date || 'da definire'}\nQuantità: ${d.qty || 'da definire'}\nNote: ${d.note || '-'}`
+    ? `Ciao! Vorrei un preventivo per delle bomboniere.\nNome: ${d.name}\nOccasione: ${d.occ}\nData: ${d.date ? d.date.split('-').reverse().join('/') : 'da definire'}\nQuantità: ${d.qty || 'da definire'}\nCosa ho in mente: ${d.note.trim() || '-'}`
     : `Ciao! Sono ${d.name}.\nMi serve aiuto per: ${d.topic}\n${d.note}`;
 
   window.open(wa(text), '_blank');
