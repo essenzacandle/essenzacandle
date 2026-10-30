@@ -2,7 +2,7 @@
  *
  * Foglio "Scorte" (riga 1 = intestazioni):
  *   id                     | totale | rimasti
- *   mystery-box-natalizia  | 24     | 22
+ *   mystery-box-natalizia  | 24     | 21
  *   gnomi-natalizi         | 24     | 23
  *   pallina-natalizia      | 20     | 17
  *
