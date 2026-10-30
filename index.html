@@ -168,7 +168,7 @@
     padding: clamp(56px, 9vw, 112px) 0;
   }
 
-  /* Spazio tra l'ultima griglia di Shop e Collezioni stagionali e il footer */
+  /* Spazio tra il contenuto dello Shop e il footer */
   .pagebody {
     padding-bottom: clamp(56px, 9vw, 112px);
   }
@@ -418,6 +418,27 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+  }
+
+  /* Su smartphone i filtri dello shop stanno su una riga che scorre fino al bordo dello schermo. */
+  @media (max-width: 599px) {
+    #filters {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      margin: 0 -22px;
+      padding: 0 22px;
+      scroll-padding-inline: 22px;
+      scrollbar-width: none;
+    }
+
+    #filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    #filters .chip {
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
   }
 
   .chip {
@@ -708,17 +729,124 @@
     }
   }
 
+  /* Sotto i 900px le categorie della home scorrono in orizzontale: nessuna tessera resta sola su una riga. */
   .tiles {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 26px 14px;
-    margin-top: 44px;
+    display: flex;
+    gap: 14px;
+    margin: 44px -22px 0;
+    padding: 0 22px 6px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 22px;
+    scrollbar-width: none;
+  }
+
+  .tiles::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tiles .tile {
+    flex: 0 0 min(70%, 300px);
+    scroll-snap-align: start;
   }
 
   @media (min-width: 900px) {
     .tiles {
-      grid-template-columns: repeat(4, 1fr);
+      display: grid;
+      grid-template-columns: repeat(var(--n, 4), 1fr);
       gap: 26px 22px;
+      margin: 44px 0 0;
+      padding: 0;
+      overflow: visible;
+    }
+  }
+
+  /* Shop: introduzione della categoria e sezioni interne (Le forme Essenza, Edizioni speciali...). */
+  .shop-intro {
+    max-width: 36em;
+    margin: 34px 0 0;
+    color: var(--muted);
+  }
+
+  .shop-h {
+    margin-top: 14px;
+  }
+
+  .shop-h + .shop-intro {
+    margin-top: 14px;
+  }
+
+  .groups {
+    display: grid;
+    gap: 40px;
+    margin-top: 34px;
+  }
+
+  @media (min-width: 600px) {
+    .groups {
+      grid-template-columns: 1fr 1fr;
+      gap: 44px 22px;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .groups {
+      grid-template-columns: repeat(var(--n), 1fr);
+    }
+  }
+
+  .group .more {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 15px;
+    color: var(--ink);
+    border-bottom: 1px solid currentColor;
+  }
+
+  /* Bomboniere nello shop: testo al centro che affiora piano, poi il pulsante. Le foto sono nella pagina Bomboniere. */
+  .shop-bomb {
+    max-width: 58em;
+    margin: clamp(56px, 9vw, 104px) auto clamp(24px, 4vw, 48px);
+    text-align: center;
+  }
+
+  .shop-bomb .lead {
+    max-width: none;
+    text-wrap: balance;
+    font: 500 clamp(22px, 2.6vw, 28px) / 1.5 var(--serif);
+  }
+
+  /* Da desktop ogni frase sta su una riga: il bilanciamento le spezzerebbe senza motivo. */
+  @media (min-width: 760px) {
+    .shop-bomb .lead {
+      text-wrap: wrap;
+    }
+  }
+
+  .shop-bomb .actions {
+    justify-content: center;
+    margin-top: 36px;
+  }
+
+  .shop-bomb > * {
+    animation: bomb-in 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .shop-bomb > .actions {
+    animation-delay: 0.35s;
+  }
+
+  @keyframes bomb-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+      filter: blur(6px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .shop-bomb > * {
+      animation: none;
     }
   }
 
@@ -756,10 +884,24 @@
     margin: 0;
   }
 
-  .tile:hover h3 {
-    text-decoration: underline;
-    text-underline-offset: 5px;
-    text-decoration-thickness: 1px;
+  /* Hover delle categorie: alone luminoso invece della sottolineatura. */
+  .tile .media {
+    transition: box-shadow 0.5s ease;
+  }
+
+  .tile h3 {
+    transition: text-shadow 0.5s ease;
+  }
+
+  .tile:hover .media,
+  .tile:focus-visible .media {
+    box-shadow: 0 0 0 2px var(--accent), 0 0 22px 6px var(--accent), 0 0 60px 14px color-mix(in srgb, var(--accent) 60%, transparent);
+  }
+
+  .tile:hover h3,
+  .tile:focus-visible h3 {
+    color: var(--accent);
+    text-shadow: 0 0 10px var(--accent), 0 0 22px color-mix(in srgb, var(--accent) 70%, transparent);
   }
 
   .pgrid-list {
@@ -773,6 +915,98 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 48px 26px;
     }
+  }
+
+  /* Lavori realizzati: carosello sfogliabile, si intravede la foto successiva. */
+  .works-gal {
+    position: relative;
+    margin-top: 34px;
+  }
+
+  .works {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .works::-webkit-scrollbar {
+    display: none;
+  }
+
+  .work {
+    flex: 0 0 82%;
+    aspect-ratio: 4 / 5;
+    scroll-snap-align: start;
+    cursor: zoom-in;
+  }
+
+  .work .media {
+    width: 100%;
+    height: 100%;
+  }
+
+  .work:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+
+  @media (min-width: 600px) {
+    .work {
+      flex-basis: 44%;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .works {
+      gap: 26px;
+    }
+
+    .work {
+      flex-basis: calc((100% - 52px) / 3);
+    }
+  }
+
+  /* Foto ingrandita dei lavori realizzati. */
+  .lb {
+    --pad: clamp(16px, 5vw, 64px);
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: var(--pad);
+    border: 0;
+    background: color-mix(in srgb, var(--bg) 96%, transparent);
+    color: var(--ink);
+  }
+
+  .lb[open] {
+    display: grid;
+    place-items: center;
+  }
+
+  .lb::backdrop {
+    background: transparent;
+  }
+
+  .lb img {
+    max-width: 100%;
+    max-height: calc(100dvh - 2 * var(--pad));
+    object-fit: contain;
+  }
+
+  .lb .lb-close {
+    top: 16px;
+    right: 16px;
+    margin-top: 0;
+  }
+
+  html:has(.lb[open]) {
+    overflow: hidden;
   }
 
   .pcard {
@@ -809,8 +1043,10 @@
     text-decoration-thickness: 1px;
   }
 
+  /* Solo i margini verticali: quelli laterali restano quelli di .wrap. */
   .pagehead {
-    padding: clamp(48px, 8vw, 96px) 0 clamp(28px, 5vw, 56px);
+    padding-top: clamp(48px, 8vw, 96px);
+    padding-bottom: clamp(28px, 5vw, 56px);
   }
 
   .pagehead h1 {
@@ -834,6 +1070,20 @@
       grid-template-columns: repeat(var(--n, 3), 1fr);
       gap: 36px;
     }
+  }
+
+  /* Variante sfogliabile: i passaggi scorrono in orizzontale. */
+  .steps.scroll {
+    display: flex;
+    gap: 22px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 14px;
+  }
+
+  .steps.scroll .step {
+    flex: 0 0 min(78%, 300px);
+    scroll-snap-align: start;
   }
 
   .step {
@@ -892,9 +1142,44 @@
   }
 
   .quote {
-    font: 500 clamp(28px, 4.4vw, 46px) / 1.28 var(--serif);
+    font: 500 clamp(26px, 4.4vw, 46px) / 1.28 var(--serif);
     max-width: 20em;
     margin: 0 auto;
+    text-wrap: balance;
+  }
+
+  /* Chi siamo: foto e racconto affiancati, la frase finale chiude il testo. */
+  .about .stack {
+    max-width: 34em;
+  }
+
+  .about h2 {
+    font-size: clamp(28px, 3.4vw, 40px);
+    line-height: 1.2;
+  }
+
+  .about .about-close {
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font: 500 clamp(21px, 2.3vw, 25px) / 1.4 var(--serif);
+  }
+
+  @media (min-width: 900px) {
+    .about {
+      align-items: start;
+    }
+
+    .about > .media {
+      position: sticky;
+      top: 96px;
+    }
+  }
+
+  /* La citazione chiude la pagina: un filo la separa dal footer, che ha lo stesso sfondo. */
+  .about-quote {
+    padding: clamp(56px, 8vw, 96px) 0;
+    border-bottom: 1px solid var(--line);
   }
 
   details {
@@ -1219,6 +1504,11 @@
     color: var(--muted);
   }
 
+  .form .hint {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
   .form .two {
     display: grid;
     gap: 16px;
@@ -1493,7 +1783,9 @@ const CFG = {
   heroImg: './images/hero.jpeg',                   
   labels: true,
   // URL della web app Google Apps Script delle scorte (vedi scorte-google-sheet.gs). Vuoto = usa i numeri scritti in PRODUCTS.
-  stockApi: ''
+  stockApi: 'https://script.google.com/macros/s/AKfycbxJpWVKmKTjWGelT25XS8FurFCRBodMPb0Urjq7evqtrjOGT1BJHOkK9sHIupOXmLgssQ/exec',
+  // Link al video tutorial sulla pulizia dello scaldacera (pagina Wax melts). Vuoto = il link non compare.
+  waxVideo: ''
 };
 
 // Screenshot delle recensioni per "Le vostre parole" in home (es. 'images/recensione1.jpeg'). Vuoto = la sezione non compare.
@@ -1525,14 +1817,41 @@ const FRAGRANCES = [
 ];
 
 
-const CATS = {tutti:'Tutto', candele:'Candele decorative', wax:'Wax melts', bomboniere:'Bomboniere', gift:'Idee regalo'};
-// I prodotti con "stagione" stanno in "Collezioni stagionali", non nella griglia della loro categoria.
-const inCat = (p, c) => c === 'tutti' || (p.cat === c && !p.stagione);
-// Collezioni stagionali: una stagione compare finché ha almeno un prodotto. Foto da Wikimedia Commons (CC0).
-const SEASONS = {
-  autunno: { name: 'Autunno', img: 'images/collezione-autunno.jpeg', desc: 'Colori caldi e profumi avvolgenti' },
-  natale: { name: 'Natale', img: 'images/collezione-natale.jpeg', desc: 'Idee in cera per le feste' }
+// Categorie dello shop. "hidden: true" toglie la categoria da filtri e shop senza cancellarne i prodotti.
+// "groups" sono le sezioni interne: un gruppo compare solo se ha almeno un prodotto, e con un solo prodotto porta dritto alla sua pagina.
+// In quale gruppo sta un prodotto: con "stagione" va in "speciali", altrimenti nel suo "group" o, se manca, nel primo gruppo.
+// "img" del gruppo è facoltativa: senza, si usa la foto del primo prodotto del gruppo.
+const CATS = {
+  tutti: { name: 'Tutto' },
+  candele: {
+    name: 'Candele decorative',
+    intro: 'Sculture in cera bianca, senza profumazione, pensate per decorare i tuoi spazi con semplicità ed eleganza.',
+    groups: [
+      { id: 'forme', name: 'Le forme Essenza', desc: 'Le forme che raccontano lo stile Essenza: candele scultoree in cera bianca, essenziali e senza profumazione, pensate per accompagnare i tuoi spazi con discreta eleganza.' },
+      { id: 'speciali', name: 'Edizioni speciali', desc: 'Creazioni in edizione speciale, nate per celebrare le occasioni più belle dell’anno attraverso forme, dettagli e piccoli gesti da custodire.' }
+    ]
+  },
+  wax: {
+    name: 'Wax melts',
+    intro: 'Piccole chicche di cera profumata da sciogliere nel tuo bruciaessenze, per avvolgere ogni ambiente con la fragranza che ami.',
+    groups: [
+      { id: 'rituali', name: 'I Rituali Essenza', desc: 'Quattro fragranze, quattro momenti della giornata, un piccolo rituale da dedicare a te. Lasciati accompagnare dalle profumazioni Essenza e trasforma ogni momento in una pausa tutta tua.' },
+      { id: 'discovery', name: 'Discovery Box', desc: 'Il modo più semplice per entrare nel mondo Essenza. Scopri le quattro fragranze dei nostri Rituali e trova quella che accompagna meglio i tuoi momenti.' },
+      { id: 'chicche', name: 'Le nostre chicche', desc: 'Piccole chicche di cera profumata, dalle forme originali e irresistibili. Creazioni da sciogliere nel tuo bruciaessenze, per regalare ai tuoi spazi una fragranza speciale.' },
+      { id: 'speciali', name: 'Edizioni speciali', desc: 'Collezioni in edizione speciale, ispirate alle stagioni e alle occasioni da celebrare. Piccole creazioni profumate pensate per portare nell’ambiente tutta l’atmosfera dei momenti più belli dell’anno.' }
+    ]
+  },
+  bomboniere: {
+    name: 'Bomboniere',
+    intro: 'Creazioni artigianali per rendere indelebili i tuoi momenti più importanti.<br>Raccontaci la tua idea e realizziamo insieme qualcosa che parli di te.'
+  },
+  // Da riattivare quando ci sarà una selezione pensata per il regalo.
+  gift: { name: 'Idee regalo', hidden: true }
 };
+const groupOf = p => p.stagione ? 'speciali' : p.group || CATS[p.cat].groups?.[0].id;
+const inCat = (p, c) => c === 'tutti' ? !CATS[p.cat].hidden : p.cat === c;
+const groupItems = (c, g) => PRODUCTS.filter(p => p.cat === c && groupOf(p) === g);
+const groupsOf = c => (CATS[c].groups || []).filter(g => groupItems(c, g.id).length);
 const getDarkCandleSrc = src => {
   if (!src || !/\.(jpe?g|png|webp|avif|gif)$/i.test(src)) return src;
   return src.replace(/(\.[a-z0-9]+)$/i, '-dark$1');
@@ -1650,9 +1969,10 @@ const PRODUCTS = [
   {
     id: 'melts-classiche',
     cat: 'wax',
+    group: 'rituali',
     art: 'melts',
     tone: 2,
-    imgs: ['images/wax.jpeg'],
+    imgs: ['images/rituali.jpeg'],
     name: 'I rituali di Essenza',
     fragrances: 'all',
     mixOptions: [1, 2, 3, 4],
@@ -1665,9 +1985,10 @@ const PRODUCTS = [
   {
     id: 'melts-discovery',
     cat: 'wax',
+    group: 'discovery',
     art: 'melts',
     tone: 4,
-    imgs: ['images/wax.jpeg'],
+    imgs: ['images/discovery-box.jpeg'],
     name: 'Discovery Box',
     fragrances: [],
     custom: 'Profumazioni scelte a sorpresa. Ogni profumazione contiene 4 tartine.',
@@ -1682,44 +2003,14 @@ const PRODUCTS = [
     stagione: 'autunno',
     art: 'melts',
     tone: 3,
-    imgs: ['images/zucchette.jpeg'],
+    imgs: ['images/zucchette1.jpeg', 'images/zucchette2.jpeg'],
     name: 'Zucchette d’autunno',
     subtitle: 'Edizione limitata',
-    desc: 'Quattro zucchette in cera profumata, in tonalità autunnali assortite. Ogni scatolina è unica e i colori sono selezionati da Essenza.<br><br>Edizione limitata.',
+    desc: 'Tre zucchette in cera profumata, in tonalità autunnali assortite. Ogni scatolina è unica e i colori sono selezionati da Essenza.<br><br>Edizione limitata.',
     fragrances: [],
     custom: '',
     variants: [
       { label: 'Un formato', price: 6 }
-    ]
-  },
-  {
-    id: 'bomboniera-candela',
-    cat: 'bomboniere',
-    art: 'box',
-    tone: 5,
-    imgs: ['images/bomboniera-candela.jpeg'],
-    name: 'Bomboniera con candela',
-    subtitle: 'richiedi il tuo preventivo →',
-    fragrances: 'all',
-    custom: 'Nome, data, nastro, tag e dettagli su misura. Il prezzo dipende da quantità, modello e personalizzazione.',
-    quote: true,
-    variants: [
-      { label: 'Su misura', price: null, dimensions: 'In base al modello' }
-    ]
-  },
-  {
-    id: 'bomboniera-melts',
-    cat: 'bomboniere',
-    art: 'box',
-    tone: 2,
-    imgs: ['images/bomboniera-wax.jpeg'],
-    name: 'Bomboniera con wax melts',
-    subtitle: 'richiedi il tuo preventivo →',
-    fragrances: 'all',
-    custom: 'Confezione, biglietto e nastro personalizzabili. Il prezzo dipende da quantità e modello.',
-    quote: true,
-    variants: [
-      { label: 'Su misura', price: null, dimensions: 'In base al modello' }
     ]
   },
   {
@@ -1757,7 +2048,7 @@ const PRODUCTS = [
   },
   {
     id: 'mystery-box-natalizia',
-    cat: 'gift',
+    cat: 'candele',
     stagione: 'natale',
     art: 'gift',
     tone: 4,
@@ -1820,10 +2111,16 @@ const soldOut = p => !!p.stock && p.stock.left <= 0;
 const soldOutText = p => p.masc ? 'Esaurito' : 'Esaurita';
 const stockLabel = p => soldOut(p) ? soldOutText(p) : `Ne ${p.stock.left === 1 ? 'resta' : 'restano'} <b>${p.stock.left}</b> su ${p.stock.total}`;
 const card = p => `<a class="pcard" href="#/prodotto/${p.id}">${media({src:p.imgs[0], art:p.art, tone:p.tone, alt:p.name})}<h3>${p.name}</h3>${priceOf(p) ? `<div class="pr">${priceOf(p)}</div>` : ''}${p.subtitle ? `<div class="sub">${p.subtitle}</div>` : ''}${p.stock ? `<div class="sub stock" data-stock="${p.id}">${stockLabel(p)}</div>` : ''}</a>`;
-const catGrid = c => PRODUCTS.filter(p => inCat(p, c)).map(card).join('');
-// Filtri dello shop; dopo "Wax melts" il pulsante "Collezioni stagionali", finché c'è almeno un prodotto con "stagione".
-const shopChips = cat => `<div class="chips" id="filters" role="group" aria-label="Filtra per categoria">${Object.entries(CATS).map(([k,v]) => `<button class="chip ${k===cat?'on':''}" data-filter="${k}">${v}</button>` + (k === 'wax' && PRODUCTS.some(p => p.stagione) ? `<a class="chip ${cat==='stagionali'?'on':''}" href="#/stagionali">Collezioni stagionali</a>` : '')).join('')}</div>`;
-const steps = list => `<div class="steps" style="--n:${list.length}">${list.map((s,i) => `<div class="step"><b>${i+1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>`;
+// "Tutto" segue l'ordine di CATS e, dentro ogni categoria, quello dei suoi gruppi.
+const shopRank = p => Object.keys(CATS).indexOf(p.cat) * 100 + (CATS[p.cat].groups || []).findIndex(g => g.id === groupOf(p));
+const catGrid = c => PRODUCTS.filter(p => inCat(p, c)).sort((a, b) => shopRank(a) - shopRank(b)).map(card).join('');
+const shopChips = cat => `<div class="chips" id="filters" role="group" aria-label="Filtra per categoria">${Object.entries(CATS).filter(([, v]) => !v.hidden).map(([k, v]) => `<button class="chip ${k===cat?'on':''}" data-filter="${k}">${v.name}</button>`).join('')}</div>`;
+// Le vecchie collezioni stagionali sono ora le edizioni speciali della categoria dei loro prodotti.
+const seasonHref = s => {
+  const p = PRODUCTS.find(x => x.stagione === s && !CATS[x.cat].hidden);
+  return p ? `#/shop/${p.cat}/speciali` : '#/shop';
+};
+const steps = (list, cls = '') => `<div class="steps ${cls}" style="--n:${list.length}">${list.map((s,i) => `<div class="step"><b>${i+1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>`;
 const externalWA = (t, label, cls='btn') => `<a class="${cls}" href="${wa(t)}" target="_blank" rel="noopener">${label}</a>`;
 
 const ORDER_STEPS = [
@@ -1885,7 +2182,7 @@ function Home() {
     ['Wax melts', 'Fragranze che rendono casa, casa.', '#/wax-melts', 'images/wax-melts-categoria.jpeg'],
     ['Bomboniere', 'Ricordi da custodire', '#/bomboniere', 'images/bomboniere-categoria.jpeg'],
     ['Idee regalo', 'Pensieri speciali, scelti col cuore.', '#/shop/gift', 'images/idee-regalo-sezione.jpeg']
-  ];
+  ].filter(t => !(t[2] === '#/shop/gift' && CATS.gift.hidden));
   // Il banner compare finché in PRODUCTS c'è almeno un prodotto con stagione: 'natale'.
   const xmas = PRODUCTS.some(p => p.stagione === 'natale');
   const peeks = PEEKS.filter(([id]) => P[id]);
@@ -1893,7 +2190,7 @@ function Home() {
 <section class="hero" style="--hero-image:${CFG.heroImg ? `url('${esc(CFG.heroImg)}')` : 'none'}"><div class="wrap in">
   <h1 class="sr-only">Essenza</h1>
   <div class="hero-text">
-    ${xmas ? `<a class="promo" href="#/stagionali/natale"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C8.6 4.6 11.4 7.4 16 8 11.4 8.6 8.6 11.4 8 16 7.4 11.4 4.6 8.6 0 8 4.6 7.4 7.4 4.6 8 0z"/></svg><span><em>COLLEZIONE NATALIZIA</em> disponibile ora</span><span class="arr" aria-hidden="true">→</span></a>` : ''}
+    ${xmas ? `<a class="promo" href="${seasonHref('natale')}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C8.6 4.6 11.4 7.4 16 8 11.4 8.6 8.6 11.4 8 16 7.4 11.4 4.6 8.6 0 8 4.6 7.4 7.4 4.6 8 0z"/></svg><span><em>COLLEZIONE NATALIZIA</em> disponibile ora</span><span class="arr" aria-hidden="true">→</span></a>` : ''}
     <div class="actions">
       <a class="btn solid" href="#/shop">Scopri le collezioni</a>
       ${externalWA('Ciao! Vorrei informazioni sui prodotti Essenza.', 'Scrivici su WhatsApp')}
@@ -1905,7 +2202,7 @@ function Home() {
   <h2>Un piccolo mondo da vivere con i sensi.</h2>
   <p class="lead">Candele artigianali, wax melts e decorazioni in cera.</p>
 </div>
-<div class="wrap"><div class="tiles">
+<div class="wrap"><div class="tiles" style="--n:${tiles.length}">
   ${tiles.map(t => `<a class="tile" href="${t[2]}">${media({src:t[3], art:'gift', ratio:'3/4', cls:'rect', alt:t[0]})}<h3>${t[0]}</h3><p>${t[1]}</p></a>`).join('')}
 </div></div></section>
 
@@ -1935,27 +2232,39 @@ ${REVIEWS.length ? `<section class="sec alt"><div class="wrap center">
 </div></section>`;
 }
 
-function Shop(cat) {
-  cat = CATS[cat] ? cat : 'tutti';
+function Shop(cat, g) {
+  cat = CATS[cat] && !CATS[cat].hidden ? cat : 'tutti';
   return `
-<div class="wrap pagehead"><h1>Collezioni</h1><p class="lead">Candele, wax melts, bomboniere e idee regalo.</p></div>
+<div class="wrap pagehead"><h1>Collezioni</h1><p class="lead">Candele decorative, wax melts e bomboniere.</p></div>
 <div class="wrap pagebody">
   ${shopChips(cat)}
-  <div class="pgrid-list" id="grid" style="margin-top:34px">${catGrid(cat)}</div>
+  <div id="shopbody">${shopBody(cat, g)}</div>
 </div>`;
 }
 
-function Seasons(s) {
-  s = SEASONS[s] ? s : null;
+// Contenuto sotto i filtri: un gruppo aperto, la presentazione dei gruppi della categoria, o la griglia di "Tutto".
+function shopBody(cat, g) {
+  const c = CATS[cat];
+  const groups = groupsOf(cat);
+  const open = groups.find(x => x.id === g);
+  if (open) return `
+  <a class="crumb" href="#/shop/${cat}" style="margin-top:34px">‹ ${c.name}</a>
+  <h2 class="shop-h">${open.name}</h2>
+  <p class="shop-intro">${open.desc}</p>
+  <div class="pgrid-list" style="margin-top:34px">${groupItems(cat, g).map(card).join('')}</div>`;
+  if (cat === 'bomboniere') return `
+  <div class="shop-bomb">
+    <p class="lead">${c.intro}</p>
+    <div class="actions"><a class="btn solid" href="#/bomboniere/richiesta">Crea le tue bomboniere</a></div>
+  </div>`;
+  if (!groups.length) return `<div class="pgrid-list" style="margin-top:34px">${catGrid(cat)}</div>`;
   return `
-<div class="wrap pagehead"><h1>Collezioni stagionali</h1><p class="lead">Edizioni limitate che cambiano con le stagioni.</p></div>
-<div class="wrap pagebody">
-  ${shopChips('stagionali')}
-  ${s ? `<a class="crumb" href="#/stagionali" style="margin-top:34px">‹ Tutte le collezioni stagionali</a>
-  <h2 style="margin-top:18px">${SEASONS[s].name}</h2>
-  <div class="pgrid-list" style="margin-top:34px">${PRODUCTS.filter(p => p.stagione === s).map(card).join('')}</div>`
-  : `<div class="tiles">${Object.entries(SEASONS).filter(([k]) => PRODUCTS.some(p => p.stagione === k)).map(([k,v]) => `<a class="tile" href="#/stagionali/${k}">${media({src:v.img, cls:'arch', alt:v.name})}<h3>${v.name}</h3><p>${v.desc}</p></a>`).join('')}</div>`}
-</div>`;
+  <p class="shop-intro">${c.intro}</p>
+  <div class="groups" style="--n:${groups.length}">${groups.map(gr => {
+    const items = groupItems(cat, gr.id);
+    const href = items.length === 1 ? `#/prodotto/${items[0].id}` : `#/shop/${cat}/${gr.id}`;
+    return `<a class="tile group" href="${href}">${media({src:gr.img || items[0].imgs[0], art:'photo', ratio:'4/3', cls:'rect', alt:gr.name})}<h3>${gr.name}</h3><p>${gr.desc}</p><span class="more">${items.length === 1 ? 'Scopri' : 'Vedi i prodotti'} →</span></a>`;
+  }).join('')}</div>`;
 }
 
 function Product(id) {
@@ -1963,11 +2272,12 @@ function Product(id) {
   if (!p) return Shop('tutti');
   const availableFragrances = fragList(p);
   sel = {v:0, f: availableFragrances[0]?.id || null, frags:[], mix:null, q:1};
-  // Prima gli altri prodotti della stessa collezione stagionale (se lo è anche questo), poi stessa categoria e idee regalo, poi il resto.
-  const rank = x => p.stagione && x.stagione === p.stagione ? 0 : (x.cat === p.cat || x.cat === 'gift') ? 1 : 2;
-  const rel = PRODUCTS.filter(x => x.id !== p.id).sort((a, b) => rank(a) - rank(b)).slice(0, 3);
+  // Prima gli altri prodotti dello stesso gruppo, poi della stessa categoria, poi il resto; mai quelli delle categorie nascoste.
+  const rank = x => x.cat !== p.cat ? 2 : groupOf(x) === groupOf(p) ? 0 : 1;
+  const rel = PRODUCTS.filter(x => x.id !== p.id && !CATS[x.cat].hidden).sort((a, b) => rank(a) - rank(b)).slice(0, 3);
+  const grp = CATS[p.cat].groups?.find(g => g.id === groupOf(p));
   return `
-<div class="wrap">${p.stagione ? `<a class="crumb" href="#/stagionali/${p.stagione}">‹ ${SEASONS[p.stagione].name}</a>` : `<a class="crumb" href="#/shop/${p.cat}">‹ ${CATS[p.cat]}</a>`}
+<div class="wrap"><a class="crumb" href="#/shop/${p.cat}${grp ? '/' + grp.id : ''}">‹ ${grp ? grp.name : CATS[p.cat].name}</a>
   <div class="pdp">
     ${Gallery(p)}
     <div class="pinfo" id="buy">${Buy(p)}</div>
@@ -2054,7 +2364,7 @@ function Buy(p) {
   const quote = !!p.quote;
   const info = `Ciao! Vorrei qualche informazione su: ${p.name}.`;
   return `
-<span class="cat">${CATS[p.cat]}</span>
+<span class="cat">${CATS[p.cat].name}</span>
 <h1>${p.name}</h1>
 <div class="price">${currentPrice != null ? eur(currentPrice) : 'Preventivo su richiesta'}</div>
 ${p.stock ? `<p class="stock">${stockLabel(p)}${p.onePerPerson && !soldOut(p) ? ` · massimo ${p.masc ? 'uno' : 'una'} per persona` : ''}</p>` : ''}
@@ -2083,44 +2393,36 @@ function Wax() {
 <div class="wrap pagehead"><h1>Wax melts</h1></div>
 
 <section class="sec" style="padding-top:0"><div class="wrap split">
-  ${media({src:'./images/wax.jpeg', art:'melts', tone:2, ratio:'4/5', alt:'Wax melts', loading:'eager'})}
+  ${media({src:'./images/wax-melts-categoria.jpeg', art:'melts', tone:2, ratio:'4/5', alt:'Wax melts', loading:'eager'})}
   <div class="stack">
-    <p class="lead">un piccolo gesto, un nuovo profumo, un'atmosfera diversa.</p>
+    <p class="lead">Un momento per te.</p>
     <p>Scegli la fragranza che più ti rappresenta, inseriscila nel tuo scaldacera e lascia che il profumo faccia il resto.</p>
     <p>Le wax melts sono il modo più semplice per cambiare atmosfera ogni volta che ne hai voglia.</p>
-    <p>Vuoi provarle? Nel <a href="#/prodotto/melts-discovery">Discovery Box</a> trovi quattro profumi per cominciare.</p>
+    <p>Vuoi provarle? <a href="#/prodotto/melts-discovery">Scopri la Discovery Box Essenza</a> per cominciare.</p>
   </div>
 </div></section>
 
 <section class="sec alt"><div class="wrap narrow center stack">
-  <h2>Da dove nasce l’idea</h2>
-  <p class="lead">Amavo il profumo di una candela, ma non volevo dipendere da una fiamma. Ho cominciato a provare cere e fragranze, un cubetto alla volta, finché il profumo riempiva la stanza nel modo giusto: presente, ma mai invadente.</p>
-  <p class="muted">Le wax melts di Essenza sono nate così, dal desiderio di scegliere il proprio profumo con più libertà.</p>
-</div></section>
-
-<section class="sec alt"><div class="wrap">
-  <h2>Come si usano</h2>
-  ${steps([
-    ['Scegli il profumo', 'Uno o due cubetti bastano per una stanza.'],
-    ['Inserisci la wax melt', 'Metti i cubetti nella vaschetta, sopra la fonte di calore.'],
-    ['Accendi', 'Con scaldacera elettrico o a tealight. Non lasciarlo mai incustodito.'],
-    ['Cambia quando vuoi', 'Quando il profumo si affievolisce, sostituisci la cera e scegli una nuova fragranza.']
-  ])}
+  <h2>Come nasce l’idea?</h2>
+  <p class="lead">Amavo il profumo delle candele, quella sensazione di calore e familiarità che sanno regalare. Desideravo, però, un modo diverso di vivere quell’esperienza, con la libertà di cambiare fragranza ogni volta che ne avessi voglia.</p>
+  <p>Ho iniziato a sperimentare con cere e fragranze, dando vita alle wax melts: piccole cialde di cera profumata senza stoppino, pensate per diffondere nell’ambiente le fragranze che ami.</p>
+  <p class="muted">Un modo diverso di vivere il piacere di una candela profumata, con la libertà di cambiare fragranza ogni volta che vuoi e creare l’atmosfera perfetta per ogni tuo momento.</p>
 </div></section>
 
 <section class="sec"><div class="wrap">
-  <h2>ogni profumo ha il suo modo di vivere</h2>
-  <div class="vs">
-    <div><h3>Candela</h3><p>una fiamma, una luce calda, un profumo che accompagna i tuoi momenti.</p><p class="muted">per te se cerchi: atmosfera · decorazione · ritualità</p></div>
-    <div><h3>Wax melts</h3><p>una fragranza da cambiare ogni volta che vuoi, senza stoppino e senza fiamma.</p><p class="muted">per te se cerchi: varietà · profumo · libertà di cambiare</p></div>
-  </div>
+  <h2>Come si usano?</h2>
+  ${steps([
+    ['Scegli la fragranza', 'Scegli il profumo che preferisci.'],
+    ['Inserisci la wax melt', 'Posizionala nella vaschetta del tuo scaldacera.'],
+    ['Lascia diffondere il profumo', 'Il calore scioglie la cera e diffonde la fragranza nell’ambiente.'],
+    ['Cambia fragranza', 'Quando il profumo si esaurisce, lascia raffreddare la cera e rimuovila seguendo le istruzioni dello scaldacera.']
+  ], 'scroll')}
 </div></section>
 
 <section class="sec alt"><div class="wrap">
-  <div class="chips" id="fams" role="group" aria-label="Famiglie olfattive">${FAMILIES.map((f,i) => `<button class="chip ${i===0?'on':''}" data-fam="${f.id}">${f.name}</button>`).join('')}</div>
-  <div id="famout"></div>
-  <p class="muted" style="margin-top:26px">La selezione delle fragranze può cambiare durante l'anno, seguendo le stagioni e le nuove collezioni.</p>
-  <div class="actions"><a class="btn solid" href="#/contatti">scrivici per scoprire le fragranze disponibili →</a></div>
+  <h2>Le nostre wax melts</h2>
+  <div class="pgrid-list" style="margin-top:34px">${catGrid('wax')}</div>
+  <div class="actions"><a class="btn solid" href="#/shop/wax">Scopri tutte le wax melts</a></div>
 </div></section>
 
 <section class="sec"><div class="wrap narrow">
@@ -2130,46 +2432,50 @@ function Wax() {
   <details><summary>Come le conservo?</summary><p>In un luogo fresco e asciutto, lontano dalla luce diretta e da fonti di calore, nella loro confezione chiusa.</p></details>
   <details><summary>Come cambio fragranza?</summary><p>Quando il profumo si affievolisce, lascia raffreddare e solidificare la cera, poi rimuovila dallo scaldacera e inserisci una nuova fragranza.</p></details>
   <details><summary>Serve uno scaldacera?</summary><p>Sì, le wax melts si usano con uno scaldacera, elettrico o a tealight. Scrivici se vuoi un consiglio su quale scegliere.</p></details>
+  ${CFG.waxVideo ? `<p style="margin-top:26px"><a href="${esc(CFG.waxVideo)}" target="_blank" rel="noopener">Prenditi cura del tuo brucia essenza →</a></p>` : ''}
 </div></section>
 
-
-<section class="sec"><div class="wrap">
-  <h2>Le nostre wax melts</h2>
-  <div class="pgrid-list" style="margin-top:34px">${catGrid('wax')}</div>
-  <div class="actions"><a class="btn" href="#/shop/wax">Vedi tutte</a>${PRODUCTS.some(p => p.stagione) ? `<a class="btn" href="#/stagionali">Collezioni stagionali</a>` : ''}</div>
+<section class="sec alt"><div class="wrap">
+  <div class="chips" id="fams" role="group" aria-label="Famiglie olfattive">${FAMILIES.map((f,i) => `<button class="chip ${i===0?'on':''}" data-fam="${f.id}">${f.name}</button>`).join('')}</div>
+  <div id="famout"></div>
+  <p class="muted" style="margin-top:26px">La selezione delle fragranze può cambiare durante l'anno, seguendo le stagioni e le nuove collezioni.</p>
+  <div class="actions"><a class="btn solid" href="#/contatti">scrivici per scoprire le fragranze disponibili →</a></div>
 </div></section>`;
 }
 
+// Solo bomboniere realizzate davvero da Essenza, alternando foto d'insieme e dettagli.
+const WORKS = [
+  ['images/lavoro1.jpeg', 'Bomboniere in scatola bianca con nastro rosa e sigillo in ceralacca'],
+  ['images/bomboniera2.jpeg', 'Candela a coste con fiocco azzurro e croce dorata, accanto alla sua scatola'],
+  ['images/lavoro2.jpeg', 'Bomboniere sulla tavola di un ricevimento'],
+  ['images/bomboniere.jpeg', 'Bomboniere a forma di rosa avvolte nel tulle con nastro verde salvia'],
+  ['images/bomboniera3.jpeg', 'Candele a fiore in scatola kraft con finestra e fiocco in raso']
+];
+
 function Bomb() {
-  const bom = PRODUCTS.filter(p => p.cat === 'bomboniere');
   return `
 <div class="wrap pagehead"><h1>Bomboniere</h1><p class="lead">Un ricordo che profuma, pensato insieme a te e realizzato a mano.</p>
   <div class="actions"><a class="btn solid" href="#quote" data-scroll="quote">Richiedi un preventivo</a></div></div>
 
-<section class="sec" style="padding-top:0"><div class="wrap">
-  <h2>Come lavoriamo</h2>
-  ${steps([
-    ["Ispirazione", "Ci racconti l’occasione, lo stile che immagini, i colori e l'atmosfera che vuoi creare."],
-    ['Proposta', 'Ti mostriamo le possibilità e scegliamo insieme la proposta più adatta al tuo evento.'],
-    ["Profumazione", "Scegliamo la fragranze che più ti rappresenta, lasciandoci guidare dall'atmosfera che vuoi creare."],
-    ['Personalizzazione', 'Nome, data, nastri, biglietti e confezione su misura.'],
-    ['Realizzazione', 'Prepariamo ogni pezzo a mano e concordiamo tempi e consegne.']
-  ])}
-</div></section>
-
 <section class="sec alt"><div class="wrap">
   <h2>Lavori realizzati</h2>
   <p class="muted" style="margin-top:12px">Alcune delle bomboniere realizzate da Essenza.</p>
-  <div class="pgrid-list" style="margin-top:34px">
-    ${['images/bomboniere.jpeg','images/candele.jpeg','images/wax.jpeg','images/gift.jpeg','images/lavoro1.jpeg','images/lavoro2.jpeg','images/lavoro3.jpeg'].map((src, i) => media({src, tone:(i%5)+1, ratio:'4/5', label:'Foto realizzata', alt:'Realizzazione Essenza'})).join('')}
+  <div class="works-gal" role="region" aria-label="Bomboniere realizzate">
+    <div class="works">
+      ${WORKS.map(([src, alt], i) => `<a class="work" href="${src}" data-work="${i}" aria-label="Ingrandisci: ${esc(alt)}">${media({src, art:'photo', tone:(i%5)+1, alt})}</a>`).join('')}
+    </div>
+    <button class="gal-btn prev" type="button" data-works-step="-1" aria-label="Foto precedenti" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="gal-btn next" type="button" data-works-step="1" aria-label="Foto successive"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
   </div>
 </div></section>
 
 <section class="sec"><div class="wrap">
-  <h2>Parti da qui</h2>
-  <p class="muted" style="margin-top:12px">Due idee da cui iniziare. Ogni proposta può essere personalizzata in base al tuo evento.</p>
-  <div class="pgrid-list" style="margin-top:34px">${bom.map(card).join('')}</div>
-  <p class="muted" style="margin-top:28px">Per matrimoni, battesimi, comunioni, cresime, lauree e anniversari. Ogni bomboniera viene pensata insieme a te, dalla scelta del prodotto alla profumazione, fino alla confezione. Per questo, ogni proposta viene realizzata su richiesta.</p>
+  <h2>Come lavoriamo</h2>
+  ${steps([
+    ['Raccontaci la tua idea', 'Raccontaci l’occasione, il numero di bomboniere e lo stile che immagini.'],
+    ['Creiamo la tua proposta', 'Definiamo insieme la tipologia di bomboniera, i dettagli, i colori, le eventuali profumazioni e la confezione.'],
+    ['Realizziamo le tue bomboniere', 'Una volta concordata la proposta, ci occupiamo della realizzazione e della preparazione dell’ordine.']
+  ])}
 </div></section>
 
 <section class="sec alt" id="quote"><div class="wrap contact-grid">
@@ -2181,38 +2487,37 @@ function Bomb() {
       <label>Data della festa<input name="date" type="date"></label>
     </div>
     <label>Quantità indicativa<input name="qty" inputmode="numeric" placeholder="Es. 80"></label>
-    <label>Note, idee, colori<textarea name="note"></textarea></label>
+    <label>Raccontaci cosa hai in mente<span class="hint">Descrivici la bomboniera che immagini, i dettagli che desideri e qualsiasi idea possa aiutarci a creare una proposta su misura per te.</span><textarea name="note" rows="7"></textarea></label>
     <button class="btn solid block" type="submit">Invia su WhatsApp</button>
     <div class="fout" aria-live="polite"></div>
   </form>
-</div></section>`;
+</div></section>
+
+<dialog class="lb" id="lb" aria-label="Lavori realizzati">
+  <img alt="">
+  <button class="gal-btn lb-close" type="button" data-lb="close" aria-label="Chiudi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <button class="gal-btn prev" type="button" data-lb="-1" aria-label="Foto precedente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <button class="gal-btn next" type="button" data-lb="1" aria-label="Foto successiva"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+</dialog>`;
 }
 
 function About() {
   return `
-<div class="wrap pagehead"><h1>Essenza</h1><p class="lead">Non prodotti industriali, ma qualcosa che viene progettato e realizzato con cura.</p></div>
-<section class="sec" style="padding-top:0"><div class="wrap split">
-  ${media({src:'images/essenza.jpeg', tone:3, ratio:'4/5', alt:'Il laboratorio Essenza'})}
+<div class="wrap pagehead"><h1>Chi siamo</h1></div>
+<section class="sec" style="padding-top:0"><div class="wrap split about">
+  ${media({src:'images/essenza.jpeg', art:'photo', tone:3, ratio:'1170/1350', alt:'La fondatrice di Essenza al lavoro sulle sue creazioni'})}
   <div class="stack">
-    <h2>Perché è nata Essenza</h2>
-    <p>Essenza nasce da un pensiero semplice: rendere speciali i momenti di ogni giorno.</p>
-    <p>Una candela accesa cambia la luce, il profumo di una stanza e, a volte, il modo in cui ci sentiamo.</p>
-    <p>Ho iniziato a creare perchè volevo dare forma a queste sensazioni: oggetti semplici, belli da vedere, e piacevoli da vivere, realizzati lentamente e con cura.</p>
-    <p>Essenza un piccolo laboratorio artigianale dove ogni creazione viene pensata, provata e curata prima di arrivare a te.</p>
+    <h2>Essenza nasce nel gennaio 2025, quasi per gioco.</h2>
+    <p>Tutto è cominciato con un kit per realizzare candele ricevuto in regalo. Quello che inizialmente sembrava un semplice passatempo si è trasformato, poco alla volta, in una passione da cui non sono più riuscita a separarmi.</p>
+    <p>Mi sono innamorata di questo mondo, delle infinite possibilità che offre e della libertà di sperimentare, creare e dare forma alle idee. Un mondo in cui posso sentirmi me stessa e ritrovare qualcosa che desideravo da tempo: uno spazio tutto mio, in cui esprimere liberamente la mia creatività.</p>
+    <p>Il percorso non è sempre stato lineare. Ci sono stati momenti in cui mi sono allontanata da questo progetto, ma qualcosa mi ha sempre riportata qui. Finché, nel gennaio 2025, ho deciso di dare un nome a questa passione e trasformarla in Essenza.</p>
+    <p>Oggi, attraverso le mie creazioni, desidero condividere ciò che questo mondo rappresenta per me: la bellezza delle cose semplici, la cura dei piccoli dettagli e il piacere di rallentare, anche solo per qualche minuto.</p>
+    <p>Perché credo che, a volte, basti davvero poco per ritrovare il proprio equilibrio: una fragranza familiare, una candela accesa, un momento tutto per sé.</p>
+    <p class="about-close">Essenza è un invito a rallentare, riscoprire la semplicità e ritagliarsi un momento tutto per sé.</p>
   </div>
 </div></section>
 
-<section class="sec alt"><div class="wrap center stack"><p class="quote">Un profumo non si sceglie con la testa. Si riconosce, come una casa.</p></div></section>
-
-<section class="sec"><div class="wrap">
-  <h2>Cosa ci sta a cuore</h2>
-  ${steps([
-    ['Fatto con cura', 'Ogni pezzo è pensato e realizzato con attenzione ai dettagli.'],
-    ['Profumi che si sentono', 'Fragranze equilibrate, per stanze vissute ogni giorno.'],
-    ['Su misura', 'Per regali e bomboniere partiamo da te e da ciò che immagini.']
-  ])}
-  <div class="actions"><a class="btn solid" href="#/shop">Scopri le collezioni</a><a class="btn" href="#/contatti">Scrivici</a></div>
-</div></section>`;
+<section class="sec alt about-quote"><div class="wrap center"><p class="quote">Un profumo non si sceglie con la testa.<br>Si riconosce, come una casa.</p></div></section>`;
 }
 
 function Contact() {
@@ -2250,7 +2555,7 @@ const NAV = [
   ['shop', 'Shop', '#/shop'],
   ['wax', 'Wax melts', '#/wax-melts'],
   ['bomb', 'Bomboniere', '#/bomboniere'],
-  ['about', 'Essenza', '#/essenza'],
+  ['about', 'Chi siamo', '#/chi-siamo'],
   ['contatti', 'Contatti', '#/contatti']
 ];
 
@@ -2280,24 +2585,23 @@ const TITLES = {
   shop: 'Collezioni — Essenza',
   wax: 'Wax melts — Essenza',
   bomb: 'Bomboniere — Essenza',
-  about: 'La storia di Essenza',
+  about: 'Chi siamo — Essenza',
   contatti: 'Contatti — Essenza'
 };
 
 function router() {
-  const [a, b] = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+  const [a, b, c] = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
   let html, key = 'home';
 
   switch (a) {
     case 'shop':
-      // I vecchi link a #/shop/natale portano alla collezione stagionale.
-      html = b === 'natale' ? Seasons('natale') : Shop(b);
+      // I vecchi link a #/shop/natale portano alle edizioni speciali.
+      if (b === 'natale') return location.replace(seasonHref('natale'));
+      html = Shop(b, c);
       key = 'shop';
       break;
     case 'stagionali':
-      html = Seasons(b);
-      key = 'shop';
-      break;
+      return location.replace(seasonHref(b));
     case 'prodotto':
       html = Product(b);
       key = 'shop';
@@ -2310,6 +2614,7 @@ function router() {
       html = Bomb();
       key = 'bomb';
       break;
+    case 'chi-siamo':
     case 'essenza':
       html = About();
       key = 'about';
@@ -2333,7 +2638,10 @@ function router() {
 
   setMenu(false);
   if ($('#famout')) famShow('mattina');
-  window.scrollTo(0, 0);
+  // Su smartphone il filtro attivo potrebbe stare fuori dalla riga scorrevole.
+  $('#filters .on')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  // #/bomboniere/richiesta apre la pagina direttamente sul modulo.
+  a === 'bomboniere' && b === 'richiesta' ? $('#quote').scrollIntoView() : window.scrollTo(0, 0);
   observeReveal();
 }
 
@@ -2351,7 +2659,7 @@ const revealIO = 'IntersectionObserver' in window && new IntersectionObserver(en
 function observeReveal() {
   if (!revealIO || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   document.querySelectorAll('#app :is(h2, .lead, .btn, .tile, .peek, .pcard, .step, .reviews img)').forEach(el => {
-    if (el.closest('.hero, #buy')) return;
+    if (el.closest('.hero, #buy, .shop-bomb')) return;
     const sibs = [...el.parentElement.children];
     el.style.transitionDelay = `${(sibs.indexOf(el) % 4) * 90}ms`;
     el.classList.add('reveal');
@@ -2442,11 +2750,13 @@ document.addEventListener('click', e => {
 
   if (action.dataset.filter) {
     const c = action.dataset.filter;
-    if (!$('#grid')) return location.hash = '#/shop/' + c;
-    $('#grid').innerHTML = catGrid(c);
+    if (!$('#shopbody')) return location.hash = '#/shop/' + c;
+    $('#shopbody').innerHTML = shopBody(c);
     document.querySelectorAll('#filters .chip').forEach(x => x.classList.toggle('on', x === action));
+    action.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    // Una voce nella cronologia per filtro: "indietro" torna al filtro precedente invece di uscire dallo shop.
     try {
-      history.replaceState(null, '', '#/shop/' + c);
+      history.pushState(null, '', '#/shop/' + c);
     } catch (_) {}
   } else if (action.dataset.var !== undefined || action.dataset.fr || action.dataset.mix) {
     const p = P[location.hash.split('/')[2]];
@@ -2487,6 +2797,58 @@ document.addEventListener('click', e => {
 });
 
 /* =====================================================================
+   LAVORI REALIZZATI: FOTO INGRANDITA
+   ===================================================================== */
+// Le frecce scorrono di una foto alla volta; si nascondono agli estremi.
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-works-step]');
+  if (!btn) return;
+  const track = btn.parentElement.querySelector('.works');
+  const step = track.children[1].offsetLeft - track.children[0].offsetLeft;
+  const smooth = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+  track.scrollBy({ left: step * +btn.dataset.worksStep, behavior: smooth });
+});
+
+document.addEventListener('scroll', e => {
+  const track = e.target.classList?.contains('works') ? e.target : null;
+  if (!track) return;
+  const gal = track.parentElement;
+  gal.querySelector('.prev').disabled = track.scrollLeft < 2;
+  gal.querySelector('.next').disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 2;
+}, true);
+
+let lbIndex = 0;
+
+function lbShow(i) {
+  lbIndex = (i + WORKS.length) % WORKS.length;
+  const img = $('#lb img');
+  [img.src, img.alt] = WORKS[lbIndex];
+}
+
+// Senza <dialog> il link apre semplicemente la foto.
+document.addEventListener('click', e => {
+  const lb = $('#lb');
+  if (!lb?.showModal) return;
+  const work = e.target.closest('[data-work]');
+  const btn = e.target.closest('[data-lb]');
+  if (work) {
+    e.preventDefault();
+    lbShow(+work.dataset.work);
+    lb.showModal();
+  } else if (btn) {
+    btn.dataset.lb === 'close' ? lb.close() : lbShow(lbIndex + +btn.dataset.lb);
+  } else if (e.target === lb) {
+    lb.close();
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (!$('#lb')?.open) return;
+  if (e.key === 'ArrowLeft') lbShow(lbIndex - 1);
+  if (e.key === 'ArrowRight') lbShow(lbIndex + 1);
+});
+
+/* =====================================================================
    MODULO CONTATTI E INVIO WHATSAPP
    ===================================================================== */
 document.addEventListener('submit', e => {
@@ -2497,7 +2859,7 @@ document.addEventListener('submit', e => {
 
   const d = Object.fromEntries(new FormData(f));
   const text = f.dataset.form === 'quote'
-    ? `Ciao! Vorrei un preventivo per delle bomboniere.\nNome: ${d.name}\nOccasione: ${d.occ}\nData: ${d.date || 'da definire'}\nQuantità: ${d.qty || 'da definire'}\nNote: ${d.note || '-'}`
+    ? `Ciao! Vorrei un preventivo per delle bomboniere.\nNome: ${d.name}\nOccasione: ${d.occ}\nData: ${d.date ? d.date.split('-').reverse().join('/') : 'da definire'}\nQuantità: ${d.qty || 'da definire'}\nCosa ho in mente: ${d.note.trim() || '-'}`
     : `Ciao! Sono ${d.name}.\nMi serve aiuto per: ${d.topic}\n${d.note}`;
 
   window.open(wa(text), '_blank');
@@ -2518,10 +2880,17 @@ function loadStock() {
   fetch(CFG.stockApi)
     .then(r => r.json())
     .then(data => {
+      // Ogni prodotto con i numeri nel foglio diventa a pezzi limitati, anche se in PRODUCTS non ha "stock".
+      let added = false;
       Object.entries(data).forEach(([id, st]) => {
-        if (P[id]?.stock) P[id].stock = { total: st.total, left: st.left };
+        if (!P[id]) return;
+        added = added || !P[id].stock;
+        P[id].stock = { total: st.total, left: st.left };
       });
-      refreshStock();
+      if (!added) return refreshStock();
+      const y = scrollY;
+      router();
+      scrollTo(0, y);
     })
     .catch(() => {});
 }
