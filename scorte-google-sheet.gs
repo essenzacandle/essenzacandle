@@ -4,7 +4,7 @@
  *   id                     | totale | rimasti
  *   mystery-box-natalizia  | 24     | 22
  *   gnomi-natalizi         | 24     | 23
- *   pallina-natalizia      | 20     | 18
+ *   pallina-natalizia      | 20     | 17
  *
  * GET  → restituisce le scorte di tutti i prodotti in JSON.
  * POST → corpo = id del prodotto: scala "rimasti" di 1 e annota l'ordine nel foglio "Ordini".
