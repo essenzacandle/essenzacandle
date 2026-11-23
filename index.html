@@ -1827,8 +1827,8 @@ const CATS = {
     name: 'Candele decorative',
     intro: 'Sculture in cera bianca, senza profumazione, pensate per decorare i tuoi spazi con semplicità ed eleganza.',
     groups: [
-      { id: 'forme', name: 'Le forme Essenza', desc: 'Le forme che raccontano lo stile Essenza: candele scultoree in cera bianca, essenziali e senza profumazione, pensate per accompagnare i tuoi spazi con discreta eleganza.' },
-      { id: 'speciali', name: 'Edizioni speciali', desc: 'Creazioni in edizione speciale, nate per celebrare le occasioni più belle dell’anno attraverso forme, dettagli e piccoli gesti da custodire.' }
+      { id: 'forme', name: 'Le forme Essenza', img: 'images/forme-candele.jpeg', desc: 'Le forme che raccontano lo stile Essenza: candele scultoree in cera bianca, essenziali e senza profumazione, pensate per accompagnare i tuoi spazi con discreta eleganza.' },
+      { id: 'speciali', name: 'Collezioni stagionali', img: 'images/edizioni-speciali.jpeg', desc: 'Creazioni in edizione speciale, nate per celebrare le occasioni più belle dell’anno attraverso forme, dettagli e piccoli gesti da custodire.' }
     ]
   },
   wax: {
@@ -1988,27 +1988,16 @@ const PRODUCTS = [
     group: 'discovery',
     art: 'melts',
     tone: 4,
-    imgs: ['images/discovery-box.jpeg'],
+    imgs: ['images/discovery-box.jpeg', 'images/bruciaessenze.jpeg'],
     name: 'Discovery Box',
+    contents: [
+      '4 fragranze × 4 tartine = 16 tartine',
+      'Bruciaessenze artigianale in gesso ceramico incluso'
+    ],
     fragrances: [],
     custom: 'Profumazioni scelte a sorpresa. Ogni profumazione contiene 4 tartine.',
     variants: [
       { label: 'Discovery Box', price: 35, dimensions: '4 fragranze × 4 tartine = 16 tartine' }
-    ]
-  },
-  {
-    id: 'bruciaessenze-gesso',
-    cat: 'wax',
-    group: 'discovery',
-    art: 'box',
-    tone: 4,
-    imgs: ['images/bruciaessenze.jpeg'],
-    name: 'Bruciaessenze in gesso ceramico',
-    desc: 'Bruciaessenze artigianale in gesso ceramico, per sciogliere le tue wax melts.',
-    fragrances: [],
-    custom: '',
-    variants: [
-      { label: 'Un formato', price: 0 }
     ]
   },
   {
