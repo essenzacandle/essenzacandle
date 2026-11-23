@@ -1838,7 +1838,7 @@ const CATS = {
       { id: 'rituali', name: 'I Rituali Essenza', desc: 'Quattro fragranze, quattro momenti della giornata, un piccolo rituale da dedicare a te. Lasciati accompagnare dalle profumazioni Essenza e trasforma ogni momento in una pausa tutta tua.' },
       { id: 'discovery', name: 'Discovery Box', desc: 'Il modo più semplice per entrare nel mondo Essenza. Scopri le quattro fragranze dei nostri Rituali e trova quella che accompagna meglio i tuoi momenti.' },
       { id: 'chicche', name: 'Le nostre chicche', desc: 'Piccole chicche di cera profumata, dalle forme originali e irresistibili. Creazioni da sciogliere nel tuo bruciaessenze, per regalare ai tuoi spazi una fragranza speciale.' },
-      { id: 'speciali', name: 'Edizioni speciali', desc: 'Collezioni in edizione speciale, ispirate alle stagioni e alle occasioni da celebrare. Piccole creazioni profumate pensate per portare nell’ambiente tutta l’atmosfera dei momenti più belli dell’anno.' }
+      { id: 'speciali', name: 'Edizioni limitate', img: 'images/edizioni-limitate.jpeg', desc: 'Collezioni in edizione limitata, ispirate alle stagioni e alle occasioni da celebrare. Piccole creazioni profumate pensate per portare nell’ambiente tutta l’atmosfera dei momenti più belli dell’anno.' }
     ]
   },
   bomboniere: {
@@ -1993,8 +1993,22 @@ const PRODUCTS = [
     fragrances: [],
     custom: 'Profumazioni scelte a sorpresa. Ogni profumazione contiene 4 tartine.',
     variants: [
-      { label: 'Discovery Box', price: 20, dimensions: '4 fragranze × 4 tartine = 16 tartine' },
-      { label: 'Discovery Box Plus', price: 30, dimensions: '6 fragranze × 4 tartine = 24 tartine' }
+      { label: 'Discovery Box', price: 35, dimensions: '4 fragranze × 4 tartine = 16 tartine' }
+    ]
+  },
+  {
+    id: 'bruciaessenze-gesso',
+    cat: 'wax',
+    group: 'discovery',
+    art: 'box',
+    tone: 4,
+    imgs: ['images/bruciaessenze.jpeg'],
+    name: 'Bruciaessenze in gesso ceramico',
+    desc: 'Bruciaessenze artigianale in gesso ceramico, per sciogliere le tue wax melts.',
+    fragrances: [],
+    custom: '',
+    variants: [
+      { label: 'Un formato', price: 0 }
     ]
   },
   {
